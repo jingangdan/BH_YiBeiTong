@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="180dip"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="180dip"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                style="@style/setting_text"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/tv_sm_home_page"
+                style="@style/setting_text"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="首页" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#EEEEEE"></View>
+
+            <TextView
+                android:id="@+id/tv_sm_order_manage"
+                style="@style/setting_text"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="订单管理" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#EEEEEE"></View>
+
+            <TextView
+                android:id="@+id/tv_sm_goods_manage"
+                style="@style/setting_text"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="商品管理" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#EEEEEE"></View>
+
+            <TextView
+                android:id="@+id/tv_sm_shop_manage"
+                style="@style/setting_text"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="店铺管理" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#EEEEEE"></View>
+
+            <TextView
+                android:id="@+id/tv_sm_sales_manage"
+                style="@style/setting_text"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="促销管理" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#EEEEEE"></View>
+
+            <TextView
+                android:id="@+id/tv_sm_shop_count"
+                style="@style/setting_text"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="店铺统计" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#EEEEEE"></View>
+
+            <TextView
+                android:id="@+id/tv_sm_comment"
+                style="@style/setting_text"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="评价留言" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#EEEEEE"></View>
+
+            <TextView
+                android:id="@+id/tv_sm_without"
+                style="@style/setting_text"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="退出账号" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#EEEEEE"></View>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

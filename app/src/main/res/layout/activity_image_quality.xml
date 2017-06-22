@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_image_quality_back"
+            style="@style/iv_back"
+            android:src="@mipmap/ic_back001" />
+
+        <TextView
+            style="@style/title_text"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="图片质量" />
+
+    </RelativeLayout>
+
+    <View style="@style/view_title"></View>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!---->
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="智能模式" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="#E1E1E1" />
+
+            </RelativeLayout>
+
+            <!---->
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="高质量（适合Wi_Fi环境）" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="#E1E1E1" />
+
+            </RelativeLayout>
+
+            <!---->
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="普通（适合3G和2G网络）" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="#E1E1E1" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#D7D7D7"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="图片质量会影响到页面刷新速度。请根据自己的网络状况，选择适合自己的图片质量"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

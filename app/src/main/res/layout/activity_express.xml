@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#E1E1E1">
+
+    <RelativeLayout
+        android:layout_alignParentTop="true"
+        android:id="@+id/rel_express_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/activity_base"></include>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/rel_express_header"
+        android:layout_above="@+id/rel_express_footer"
+        android:id="@+id/rel_express"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.bh.yibeitong.refresh.PullToRefreshView
+            android:id="@+id/puToRefreshView_express"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dip"
+            android:layout_weight="1"
+            android:background="#00000000">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <com.bh.yibeitong.refresh.MyGridView
+                        android:id="@+id/myGridView_express"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="#EEEEEE"
+                        android:dividerHeight="10dp"
+                        android:numColumns="2"/>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </com.bh.yibeitong.refresh.PullToRefreshView>
+
+    </RelativeLayout>
+
+    <!--<ListView
+        android:id="@+id/lv_express"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ListView>-->
+
+    <RelativeLayout
+        android:id="@+id/rel_express_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#E6E6E6" />
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
+            <FrameLayout
+                android:id="@+id/lin_express_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:background="@mipmap/ic_yuan">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/ic_shopcart_white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="0"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_express_all_price"
+                style="@style/title_second_text"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/lin_express_left"
+                android:text="购物车是空的" />
+
+            <Button
+                android:id="@+id/but_express_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:background="@null"
+                android:text="还差9.00元"
+                android:textColor="#666" />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

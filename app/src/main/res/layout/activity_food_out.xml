@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_base"></include>
+
+    <com.bh.yibeitong.view.DropDownMenu
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/foodout_dropDownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:dddividerColor="#999"
+        app:ddmaskColor="@color/mask_color"
+        app:ddmenuBackgroundColor="#fff"
+        app:ddmenuSelectedIcon="@mipmap/drop_down_selected_icon"
+        app:ddmenuTextSize="18dp"
+        app:ddmenuUnselectedIcon="@mipmap/drop_down_unselected_icon"
+        app:ddtextSelectedColor="@color/drop_down_selected"
+        app:ddtextUnselectedColor="@color/drop_down_unselected"
+        app:ddunderlineColor="#999" />
+
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/but_screen_food"
+            style="@style/button_screen_style"
+            android:text="美食外卖"/>
+
+        <Button
+            android:id="@+id/but_screen_order"
+            style="@style/button_screen_style"
+            android:text="默认排序" />
+
+        <Button
+            android:id="@+id/but_screen_sprice"
+            style="@style/button_screen_style"
+            android:text="起送价" />
+
+    </LinearLayout>
+
+    <View style="@style/view_bady"></View>
+
+    &lt;!&ndash;&ndash;&gt;
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>-->
+
+</LinearLayout>

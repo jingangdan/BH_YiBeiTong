@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/iv_percen_back"
+            style="@style/iv_back"
+            android:src="@mipmap/ic_back001" />
+
+        <TextView
+            style="@style/title_text"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="个人信息" />
+
+    </RelativeLayout>
+
+    <View style="@style/view_title"></View>
+
+    <!---->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!---->
+            <RelativeLayout
+                android:id="@+id/rel_percen_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/seletor"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="头像" />
+
+                <ImageView
+                    android:id="@+id/iv_percen_header_right"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_next001" />
+
+                <com.bh.yibeitong.view.RoundImageView
+                    android:id="@+id/iv_percen_header"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/iv_percen_header_right"
+                    android:src="@mipmap/ic_launcher" />
+
+
+            </RelativeLayout>
+
+            <!--会员积分-->
+            <RelativeLayout
+                android:id="@+id/rel_percen_member_jifen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/seletor"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="会员积分" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <!--基本资料-->
+            <RelativeLayout
+                android:id="@+id/rel_percen_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/seletor"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="基本资料" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <!--我得收货地址-->
+            <RelativeLayout
+                android:id="@+id/rel_percen_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/seletor"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="我的收货地址" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

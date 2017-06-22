@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center|left"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_item_vpb_c_header"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@mipmap/ic_adai"
+            android:paddingRight="5dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_item_vpb_c_user"
+                style="@style/setting_text"
+                android:text="user"
+                android:layout_marginBottom="5dp"
+                android:textColor="#333"/>
+
+            <TextView
+                android:id="@+id/tv_item_vpb_c_time"
+                style="@style/setting_text"
+                android:text="time"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="left">
+
+        <TextView
+            android:text="
+        &lt;/LinearLayout>"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView3"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tv_item_vpb_c_content"
+            style="@style/setting_text"
+            android:text="content"/>
+
+    </LinearLayout>
+
+</LinearLayout>

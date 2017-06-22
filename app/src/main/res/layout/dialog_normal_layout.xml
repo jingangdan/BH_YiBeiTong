@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/button_red_shape"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#a2cb34"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/title_text_witht"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="提示"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:gravity="center"
+            android:padding="10dp">
+
+
+            <TextView
+                android:id="@+id/message"
+                style="@style/setting_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="left|center"
+                android:text="提示框" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1.0px"
+            android:background="#ffd0d0d0" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="#EEEEEE"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/positiveButton"
+                style="@style/title_text_witht"
+                android:layout_height="40dp"
+                android:layout_width="110dp"
+                android:background="@drawable/buttonshape"
+                android:gravity="center"
+                android:text="ok"
+                android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/negativeButton"
+                style="@style/title_text_witht"
+                android:layout_width="110dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20.0dip"
+                android:background="@drawable/button_red_shape"
+                android:gravity="center"
+                android:text="cancel"
+                android:textSize="14dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

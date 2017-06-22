@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_download_back"
+            style="@style/iv_back"
+            android:src="@mipmap/ic_back001" />
+
+        <TextView
+            style="@style/title_text"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="自动下载安装包" />
+
+    </RelativeLayout>
+
+    <View style="@style/view_title"></View>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!---->
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="Wi_Fi下自动下载安装包" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="#E1E1E1" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="为了保证给您更好的体验，在不占用您正常使用时间的情况下完成更新，您可以选择打开此功能"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#D7D7D7"></View>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

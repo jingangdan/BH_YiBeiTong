@@ -1,0 +1,89 @@
+[
+    {
+        "outputFile": "E:\\install\\AndroidProject\\BH_YiBeiTong\\library\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 31,
+                    "startColumn": 4,
+                    "startOffset": 2975,
+                    "endColumn": 43,
+                    "endOffset": 3014
+                },
+                "from": {
+                    "file": "E:\\install\\AndroidProject\\BH_YiBeiTong\\library\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 31,
+                        "startColumn": 4,
+                        "startOffset": 2975,
+                        "endColumn": 43,
+                        "endOffset": 3014
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 32,
+                    "startColumn": 4,
+                    "startOffset": 3019,
+                    "endLine": 50,
+                    "endColumn": 12,
+                    "endOffset": 3889
+                },
+                "from": {
+                    "file": "E:\\install\\AndroidProject\\BH_YiBeiTong\\library\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 32,
+                        "startColumn": 4,
+                        "startOffset": 3019,
+                        "endLine": 50,
+                        "endColumn": 12,
+                        "endOffset": 3889
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 51,
+                    "startColumn": 4,
+                    "startOffset": 3894,
+                    "endLine": 70,
+                    "endColumn": 12,
+                    "endOffset": 4834
+                },
+                "from": {
+                    "file": "E:\\install\\AndroidProject\\BH_YiBeiTong\\library\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 51,
+                        "startColumn": 4,
+                        "startOffset": 3894,
+                        "endLine": 70,
+                        "endColumn": 12,
+                        "endOffset": 4834
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 71,
+                    "startColumn": 4,
+                    "startOffset": 4839,
+                    "endLine": 89,
+                    "endColumn": 12,
+                    "endOffset": 5709
+                },
+                "from": {
+                    "file": "E:\\install\\AndroidProject\\BH_YiBeiTong\\library\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 71,
+                        "startColumn": 4,
+                        "startOffset": 4839,
+                        "endLine": 89,
+                        "endColumn": 12,
+                        "endOffset": 5709
+                    }
+                }
+            }
+        ]
+    }
+]

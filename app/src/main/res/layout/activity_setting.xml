@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_base"></include>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"></View>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="#fff">
+
+                <TextView
+                    style="@style/title_second_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="账号："/>
+
+                <TextView
+                    android:id="@+id/tv_setting_num"
+                    style="@style/title_second_text"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"></View>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="#fff">
+
+                <TextView
+                    android:id="@+id/tv_setting_phone"
+                    style="@style/title_second_text"
+                    android:layout_alignParentRight="true"/>
+
+                <TextView
+                    style="@style/title_second_text"
+                    android:text="手机号："
+                    android:layout_alignParentLeft="true" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"></View>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="#fff">
+
+                <TextView
+                    style="@style/title_second_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="会员账号："/>
+
+                <TextView
+                    android:id="@+id/tv_setting_member"
+                    style="@style/title_second_text"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <!---->
+            <RelativeLayout
+                android:id="@+id/rel_setting_information"
+                style="@style/linearlayout_style"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="个人信息" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_setting_notify"
+                style="@style/linearlayout_style"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="通知消息" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <!---->
+            <RelativeLayout
+                android:id="@+id/rel_setting_common"
+                style="@style/linearlayout_style"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="通用设置" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <!--<View style="@style/view_bady"></View>-->
+
+            <RelativeLayout
+                android:id="@+id/rel_setting_image"
+                style="@style/linearlayout_style"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="图片质量" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rel_setting_download"
+                style="@style/linearlayout_style"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="自动下载最新安装包" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true" />
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentRight="true" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_setting_dabout"
+                style="@style/linearlayout_style"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="关于我们" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <!---->
+            <RelativeLayout
+                android:id="@+id/rel_setting_Feedback"
+                style="@style/linearlayout_style"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="意见反馈" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <Button
+                    android:id="@+id/but_log_off"
+                    style="@style/button_style"
+                    android:text="退出登录" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

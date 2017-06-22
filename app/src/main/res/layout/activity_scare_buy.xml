@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/content_header"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:gravity="center">
+            
+            <TextView
+                style="@style/setting_text"
+                android:text="00:00"
+                android:textColor="#fff"/>
+
+            <TextView
+                style="@style/setting_text"
+                android:text="已开抢"
+                android:textColor="#fff"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:gravity="center">
+
+            <TextView
+                style="@style/setting_text"
+                android:text="06:00"
+                android:textColor="#fff"/>
+
+            <TextView
+                style="@style/setting_text"
+                android:text="已开抢"
+                android:textColor="#fff"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:gravity="center"
+            android:background="#FD343A">
+
+            <TextView
+                style="@style/setting_text"
+                android:text="08:00"
+                android:textColor="#fff"/>
+
+            <TextView
+                style="@style/setting_text"
+                android:text="抢购中"
+                android:textColor="#fff"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:gravity="center">
+
+            <TextView
+                style="@style/setting_text"
+                android:text="10:00"
+                android:textColor="#fff"/>
+
+            <TextView
+                style="@style/setting_text"
+                android:text="未开抢"
+                android:textColor="#fff"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:gravity="center">
+
+            <TextView
+                style="@style/setting_text"
+                android:text="12:00"
+                android:textColor="#fff"/>
+
+            <TextView
+                style="@style/setting_text"
+                android:text="未开抢"
+                android:textColor="#fff"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

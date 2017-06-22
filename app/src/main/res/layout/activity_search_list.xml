@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_base"></include>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.bh.yibeitong.refresh.PullToRefreshView
+            android:id="@+id/puToRefreshView_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/setting_text"
+                            android:layout_width="match_parent"
+                            android:gravity="left"
+                            android:padding="10dp"
+                            android:text="商家" />
+
+                        <TextView
+                            android:id="@+id/tv_seller_muyou"
+                            style="@style/setting_text"
+                            android:layout_width="match_parent"
+                            android:background="#fff"
+                            android:gravity="left"
+                            android:padding="10dp"
+                            android:text="未查询到相关商家。。。"
+                            android:visibility="gone" />
+
+                        <com.bh.yibeitong.refresh.MyListView
+                            android:id="@+id/myListView_search_seller"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/setting_text"
+                            android:layout_width="match_parent"
+                            android:gravity="left"
+                            android:padding="10dp"
+                            android:text="商品" />
+
+                        <TextView
+                            android:id="@+id/tv_goods_muyou"
+                            style="@style/setting_text"
+                            android:layout_width="match_parent"
+                            android:background="#fff"
+                            android:gravity="left"
+                            android:padding="10dp"
+                            android:text="未查询到相关商品。。。"
+                            android:visibility="gone" />
+
+                        <com.bh.yibeitong.refresh.MyListView
+                            android:id="@+id/myListView_search_good"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </com.bh.yibeitong.refresh.PullToRefreshView>
+
+    </RelativeLayout>
+
+</LinearLayout>

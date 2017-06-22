@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_base"></include>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tl_order_detaile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="#a2cb34"
+        app:tabTextColor="#a2cb34">
+
+    </android.support.design.widget.TabLayout>
+
+    <com.bh.yibeitong.view.NoScrollViewPager
+        android:id="@+id/vp_order_detaile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </com.bh.yibeitong.view.NoScrollViewPager>
+
+</LinearLayout>

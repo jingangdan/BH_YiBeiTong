@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/lin_shopcart_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <include layout="@layout/activity_base"></include>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lin_order_header"
+        android:layout_below="@+id/lin_shopcart_header">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EEEEEE"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></View>
+
+            <!--我的收货地址-->
+            <RelativeLayout
+                android:id="@+id/rel_my_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#F9A3A3"
+                android:padding="10dp">
+
+                <Button
+                    android:id="@+id/but_my_address"
+                    style="@style/title_text_witht"
+                    android:layout_alignParentLeft="true"
+                    android:background="@null"
+                    android:clickable="false"
+                    android:drawableLeft="@mipmap/ic_address"
+                    android:text="添加/选择收货地址"
+                    android:textSize="14dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <!--配送时间-->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"></View>
+
+            <!--添加备注-->
+            <RelativeLayout
+                android:id="@+id/rel_send_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/tv_send_time"
+                    style="@style/setting_text"
+                    android:layout_alignParentRight="true"
+                    android:text="立即配送" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="配送时间" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff">
+
+                <EditText
+                    style="@style/setting_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="left"
+                    android:hint="添加备注"
+                    android:padding="10dp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></View>
+
+            <!--在线支付-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="在线支付" />
+
+                <CheckBox
+                    android:id="@+id/cb_online_payment"
+                    style="@style/custom_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:checked="true" />
+
+            </RelativeLayout>
+
+            <!--货到付款-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="货到付款" />
+
+                <CheckBox
+                    android:id="@+id/cb_cash_ondelivery"
+                    style="@style/custom_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:checked="false" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></View>
+
+            <!--优惠券-->
+            <RelativeLayout
+                android:id="@+id/rel_order_youhuiquan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="优惠券" />
+
+                <TextView
+                    android:id="@+id/tv_order_youhuiquan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/iv_youhuiquan" />
+
+                <ImageView
+                    android:id="@+id/iv_youhuiquan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <!--积分抵扣-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="积分抵扣" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/iv_jifen"
+                    android:text="木有积分" />
+
+                <ImageView
+                    android:id="@+id/iv_jifen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></View>
+
+            <!--店铺-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="易贝通曹王庄店" />
+
+                <Button
+                    android:id="@+id/but_order_onedelfs"
+                    style="@style/button_style_write"
+                    android:layout_width="65dp"
+                    android:layout_height="35dp"
+                    android:layout_toLeftOf="@+id/but_order_sellers"
+                    android:text="到店自取"
+                    android:textSize="12dp" />
+
+                <Button
+                    android:id="@+id/but_order_sellers"
+                    style="@style/button_style_red"
+                    android:layout_width="65dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="5dp"
+                    android:text="商家配送"
+                    android:textSize="12dp" />
+
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></View>
+
+            <com.bh.yibeitong.refresh.MyListView
+                android:id="@+id/mlv_shopcart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff">
+
+            </com.bh.yibeitong.refresh.MyListView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+
+            <!--优惠券-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="优惠券" />
+
+                <TextView
+                    android:id="@+id/tv_youhuiquan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+
+            <!--配送费-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="配送费" />
+
+                <TextView
+                    android:id="@+id/tv_order_distribution_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:text="￥0" />
+
+            </RelativeLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+            <!--订单总计-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <!--订单总计-->
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/setting_text"
+                        android:layout_width="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_weight="1"
+                        android:text="订单总计：" />
+
+                    <TextView
+                        android:id="@+id/tv_order_allprice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:text="￥"
+                        android:textColor="#FD2A2A"
+                        android:textSize="22dp" />
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/lin_order_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/but_makeorder"
+            style="@style/button_style"
+            android:text="立即下单" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

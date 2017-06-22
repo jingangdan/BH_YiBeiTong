@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_member_back"
+            style="@style/iv_back"
+            android:src="@mipmap/ic_back001" />
+
+        <TextView
+            style="@style/title_text"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="会员积分详情" />
+
+    </RelativeLayout>
+
+    <View style="@style/view_title"></View>
+
+    <!---->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true"
+            android:text="累计做单" />
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentRight="true"
+            android:text="0元" />
+
+    </RelativeLayout>
+
+    <!---->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true"
+            android:text="累计提成金额" />
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentRight="true"
+            android:text="0元" />
+
+    </RelativeLayout>
+
+    <!---->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true"
+            android:text="历史赠送权" />
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentRight="true"
+            android:text="0个" />
+
+    </RelativeLayout>
+
+    <!---->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="#D7D7D7"></View>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true"
+            android:text="当前赠送权" />
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentRight="true"
+            android:text="0个" />
+
+    </RelativeLayout>
+
+    <!---->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="#D7D7D7"></View>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true"
+            android:text="累计赠送积分" />
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentRight="true"
+            android:text="0分" />
+
+    </RelativeLayout>
+    <!---->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="#D7D7D7"></View>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true"
+            android:text="提成总积分" />
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentRight="true"
+            android:text="0分" />
+
+        <!---->
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="#D7D7D7"></View>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true"
+            android:text="可用积分" />
+
+        <TextView
+            style="@style/setting_text"
+            android:layout_alignParentRight="true"
+            android:text="0个" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="#D7D7D7"></View>
+
+
+</LinearLayout>

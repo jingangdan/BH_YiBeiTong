@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--内容部分-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#a2cb34"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@mipmap/ic_yuan_white"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_tongji" />
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/title_text_witht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="今日营业统计"
+                android:textSize="14dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:background="#a2cb34"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/tv_seller_turnover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="32dp"
+                    style="@style/title_text_witht"/>
+
+                <TextView
+                    android:textSize="16dp"
+                    style="@style/title_text_witht"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="营业额"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1.0dp"
+                android:layout_height="fill_parent"
+                android:background="#fff"></View>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="32dp"
+                    style="@style/title_text_witht"/>
+
+                <TextView
+                    android:id="@+id/tv_seller_order_num"
+                    android:textSize="16dp"
+                    style="@style/title_text_witht"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="订单数"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.0dp"
+            android:background="#fff"></View>
+
+        <!--账户余额-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#a2cb34"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_seller_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="账户余额\n￥0.00"
+                android:gravity="center"
+                android:layout_alignParentLeft="true"
+                style="@style/title_text_witht"
+                android:textSize="16dp"
+                android:layout_centerVertical="true"/>
+
+            <Button
+                android:id="@+id/but_seller_pay"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="立即结算"
+                style="@style/button_style_seller"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

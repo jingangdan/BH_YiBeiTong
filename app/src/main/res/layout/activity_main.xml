@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.bh.yibeitong.actitvity.MainActivity">
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/view_line">
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:layout_above="@+id/lin_footer"
+        android:background="#999">
+
+    </View>
+
+    <LinearLayout
+        android:id="@+id/lin_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal">
+
+        <!-- 首页-->
+        <LinearLayout
+            android:id="@+id/lin_home_page"
+            style="@style/lin_footer_style">
+
+            <ImageView
+                android:id="@+id/iv_home_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/home001" />
+
+            <TextView
+                android:id="@+id/tv_home_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="首页"
+                android:textColor="#999"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+        <!--我的订单-->
+        <LinearLayout
+            android:id="@+id/lin_orders"
+            style="@style/lin_footer_style">
+
+            <ImageView
+                android:id="@+id/iv_orders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/order001" />
+
+            <TextView
+                android:id="@+id/tv_orders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我的订单"
+                android:textColor="#999"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:drawableTop="@mipmap/shopcar001"
+            android:padding="5dp"
+            android:text="购物车"
+            android:textColor="#999"
+            android:textSize="12dp"
+            android:visibility="gone" />
+
+        <!--购物车-->
+        <LinearLayout
+            android:id="@+id/lin_shopping"
+            style="@style/lin_footer_style">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_shopcar_num"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@+id/iv_shopping"
+                    android:background="@drawable/shopcarshape"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="#fff"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/iv_shopping"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/shopcar001" />
+
+                <TextView
+                    android:id="@+id/tv_shopping"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_shopping"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="购物车"
+                    android:textColor="#999"
+                    android:textSize="12dp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!--个人中心-->
+        <LinearLayout
+            android:id="@+id/lin_personal_center"
+            style="@style/lin_footer_style">
+
+            <ImageView
+                android:id="@+id/iv_personal_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/mine001" />
+
+            <TextView
+                android:id="@+id/tv_personal_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个人中心"
+                android:textColor="#999"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

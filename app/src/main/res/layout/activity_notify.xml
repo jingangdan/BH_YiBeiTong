@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_notify_back"
+            style="@style/iv_back"
+            android:src="@mipmap/ic_back001" />
+
+        <TextView
+            style="@style/title_text"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="通知消息" />
+
+    </RelativeLayout>
+
+    <View style="@style/view_title"></View>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!---->
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="消息提示音" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="#E1E1E1" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="提示音设置，当有消息时，允许声音提示"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+            <!---->
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="接收新消息通知" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="#E1E1E1" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#D7D7D7"></View>
+
+            <!---->
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="开始时间" />
+
+                <TextView
+                    android:id="@+id/tv_startTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/iv_startTime"
+                    android:text="12:00" />
+
+                <ImageView
+                    android:id="@+id/iv_startTime"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#D7D7D7"></View>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#D7D7D7"></View>
+
+            <!---->
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="结束时间" />
+
+                <TextView
+                    android:id="@+id/tv_endTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/iv_endTime"
+                    android:text="12:00" />
+
+
+                <ImageView
+                    android:id="@+id/iv_endTime"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="新消息主要通过消息推送的方式提醒最新活动和商品，你可以选择接收消息的时间段"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="易贝通活动" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="降价提醒" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="服务窗" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="通知消息" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/linearlayout_style"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="我的提醒" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_next001" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#D7D7D7"></View>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

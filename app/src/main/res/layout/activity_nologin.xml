@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="#a2cb34">
+
+        <TextView
+            android:id="@+id/tv_nologin_title"
+            style="@style/title_text_witht"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="个人中心"/>
+
+    </LinearLayout>
+
+    <!---->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            style="@style/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="还未登录"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/but_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/button_style"
+            android:text="点击登录/注册"/>
+
+    </LinearLayout>
+
+</LinearLayout>

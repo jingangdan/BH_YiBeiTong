@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_base"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/title_second_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="订单名称：" />
+
+        <TextView
+            android:id="@+id/tv_order_name"
+            style="@style/title_second_text" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/title_second_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="订单金额：" />
+
+        <TextView
+            android:id="@+id/tv_order_money"
+            style="@style/title_second_text" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_pay_xingzhuang" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"></View>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/title_second_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="还需支付：" />
+
+        <TextView
+            android:id="@+id/tv_order_price"
+            style="@style/title_second_text"
+            android:textColor="#F92621" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/title_second_text"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_pay_weixin"
+            android:text="微信支付" />
+
+        <CheckBox
+            android:id="@+id/cb_weixin"
+            style="@style/custom_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+
+        <ImageView
+            android:id="@+id/iv_pay_weixin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/ic_weixin" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"></View>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_pay_zhifubao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/ic_zhifubao" />
+
+        <TextView
+            style="@style/title_second_text"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_pay_zhifubao"
+            android:text="支付宝支付" />
+
+        <CheckBox
+            android:id="@+id/cb_zhifubao"
+            style="@style/custom_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:checked="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_pay_yue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/ic_yue" />
+
+        <TextView
+            style="@style/title_second_text"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_pay_yue"
+            android:text="余额支付" />
+
+        <CheckBox
+            android:id="@+id/cb_yue"
+            style="@style/custom_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/but_payment"
+            style="@style/button_style"
+            android:text="确认支付" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

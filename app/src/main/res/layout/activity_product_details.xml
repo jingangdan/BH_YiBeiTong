@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?><!--商品详情页-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_base"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            style="@style/title_second_text"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="商品" />
+
+        <TextView
+            style="@style/title_second_text"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="详情" />
+
+        <TextView
+            style="@style/title_second_text"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="评价" />
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:src="@mipmap/shopcar001" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <!---->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/ic_adai" />
+
+        </LinearLayout>
+
+        <!---->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+
+            <TextView
+                style="@style/title_second_text"
+                android:text="易贝通豪华机器人图标" />
+
+        </LinearLayout>
+
+        <!---->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+
+            <TextView
+                style="@style/title_second_text"
+                android:text="￥10000.00"
+                android:textColor="#FB0706" />
+
+        </LinearLayout>
+
+        <!--产品参数-->
+        <RelativeLayout
+            android:id="@+id/rel_product_parameter"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                style="@style/title_second_text"
+                android:layout_alignParentLeft="true"
+                android:text="产品参数" />
+
+            <TextView
+                android:id="@+id/tv_product_parameter"
+                style="@style/title_second_text"
+                android:layout_alignParentRight="true"
+                android:text="123" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="#999"></View>
+
+        <!---->
+        <RelativeLayout
+            android:id="@+id/rel_product_color"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                style="@style/title_second_text"
+                android:layout_alignParentLeft="true"
+                android:text="选择颜色分类" />
+
+            <TextView
+                android:id="@+id/tv_product_color"
+                style="@style/title_second_text"
+                android:layout_alignParentRight="true"
+                android:text="红的" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:background="#FB0706"
+                android:padding="5dp"
+                android:text="立即购买"
+                android:textColor="#fff"
+                android:textSize="18dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#a2cb34"
+                android:padding="5dp"
+                android:text="加入购物车"
+                android:textColor="#fff"
+                android:textSize="18dp" />
+
+
+        </LinearLayout>
+
+        <!--底部 不知道写啥-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                style="@style/title_second_text"
+                android:layout_alignParentLeft="true" />
+
+            <TextView
+                style="@style/title_second_text"
+                android:layout_alignParentRight="true" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

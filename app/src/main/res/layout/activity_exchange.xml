@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#EEEEEE">
+
+    <include layout="@layout/activity_base"></include>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="#fff">
+
+        <TextView
+            android:id="@+id/textView_myjifen"
+            style="@style/setting_text"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="我的积分" />
+
+        <TextView
+            android:id="@+id/tv_my_jifen"
+            style="@style/setting_text"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="3dp"
+            android:layout_toRightOf="@+id/textView_myjifen"
+            android:text="0.00"
+            android:textColor="#FA4C0F"/>
+
+        <TextView
+            android:id="@+id/tv_exchange_notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="兑换记录"
+            android:background="@drawable/button_red_shape"
+            android:textColor="#fff"
+            android:padding="5dp"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="#ccc"></View>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <com.bh.yibeitong.refresh.MyGridView
+            android:id="@+id/mgv_exchange"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="2">
+
+        </com.bh.yibeitong.refresh.MyGridView>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_feed_back"
+            style="@style/iv_back"
+            android:src="@mipmap/ic_back001" />
+
+        <TextView
+            style="@style/title_text"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="意见反馈" />
+
+    </RelativeLayout>
+
+    <View style="@style/view_title"></View>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tl_setting_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="#a2cb34">
+
+    </android.support.design.widget.TabLayout>
+
+    <com.bh.yibeitong.view.NoScrollViewPager
+        android:id="@+id/vp_setting_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </com.bh.yibeitong.view.NoScrollViewPager>
+
+
+</LinearLayout>
