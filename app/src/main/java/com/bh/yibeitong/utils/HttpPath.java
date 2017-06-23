@@ -571,6 +571,9 @@ public class HttpPath {
     * 参数  登录验证*/
     public static String GETSIGN = "action=getsign&";
 
+    /*特色服务模块*/
+    public static String GETTESE = "action=gettese&";
+
 
     //完整接口 测试
     public static String path = "http://www.ybt9.com/index.php?ctrl=app&action=goodsindex&page=1&datatype=json&";

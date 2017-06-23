@@ -560,9 +560,12 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                 if (!isVisibile) {
                     lin_shop_manage.setVisibility(View.VISIBLE);
                     isVisibile = true;
+                    iv_isVisibile.setImageResource(R.mipmap.ic_top);
+
                 } else {
                     lin_shop_manage.setVisibility(View.GONE);
                     isVisibile = false;
+                    iv_isVisibile.setImageResource(R.mipmap.ic_under);
                 }
 
                 break;

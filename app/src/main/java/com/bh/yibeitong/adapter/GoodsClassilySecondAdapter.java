@@ -75,11 +75,13 @@ public class GoodsClassilySecondAdapter extends BaseAdapter {
 
         //ListView点击改变背景 文字
         if(mSelect == position){
-            vh.name.setTextColor(Color.rgb(162,203,52));
-            vh.lin_item_good_classily_second.setBackgroundResource(R.drawable.kuang_red);
+            //白字 绿背景
+            vh.name.setTextColor(Color.rgb(255,255,255));
+            vh.lin_item_good_classily_second.setBackgroundResource(R.drawable.linstyle_green);
         }else{
+            //灰字白背景
             vh.name.setTextColor(Color.rgb(153, 153, 153));
-            vh.lin_item_good_classily_second.setBackgroundResource(R.drawable.kuang_black);
+            vh.lin_item_good_classily_second.setBackgroundResource(R.drawable.linstyle_white);
         }
 
         String name = childBeen.get(position).getName();

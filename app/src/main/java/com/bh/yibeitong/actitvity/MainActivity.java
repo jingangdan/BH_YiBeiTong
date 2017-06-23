@@ -361,7 +361,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
-
     //双击的时间间隔
     private long millis = 0;
 
