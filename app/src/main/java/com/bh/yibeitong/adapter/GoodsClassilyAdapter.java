@@ -76,11 +76,8 @@ public class GoodsClassilyAdapter extends BaseAdapter{
         //点击改变背景
         if(mSelect == position){
             vh.lin_shop_good.setBackgroundColor(Color.WHITE);
-            vh.goodName.setTextColor(Color.rgb(162,203,52));
-
         }else{
             vh.lin_shop_good.setBackgroundColor(Color.argb(225, 225, 225, 225));
-            vh.goodName.setTextColor(Color.rgb(153, 153, 153));
         }
 
         vh.goodName.setText(msgBeen.get(position).getName());

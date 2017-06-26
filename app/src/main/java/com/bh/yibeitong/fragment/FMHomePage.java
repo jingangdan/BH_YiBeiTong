@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -97,28 +96,28 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         PullToRefreshView.OnFooterRefreshListener, ActivityCompat.OnRequestPermissionsResultCallback,
         BaseSliderView.OnSliderClickListener,
         MyScrollView.ISmartScrollChangedListener {
-    private ImageView iv_scanning;//扫一哈子
+    //private ImageView iv_scanning;//扫一哈子
 
     private View view;
 
     /**
      * 自营专区  直营便利店 二手交易 小区信息
      */
-    private LinearLayout lin_self_support, lin_directly_mark, lin_second_hand, lin_village_manage;
+    //private LinearLayout lin_self_support, lin_directly_mark, lin_second_hand, lin_village_manage;
 
     /**
      * 预约服务 美食外卖 收发快递 更多
      */
-    private LinearLayout lin_appointment, lin_food_out, lin_express, lin_more;
+    //private LinearLayout lin_appointment, lin_food_out, lin_express, lin_more;
 
     //积分专区 抢购专区 商家入驻 跑腿服务
-    private ImageView iv_integral, iv_scare_buying, iv_business, iv_run;
+    //private ImageView iv_integral, iv_scare_buying, iv_business, iv_run;
 
     /**
      * 地址
      */
-    public EditText et_address;
-    private TextView tv_shopname;
+    //public EditText et_address;
+    //private TextView tv_shopname;
 
     private TextView tv_gointo_shop;//进入店铺
 
@@ -153,7 +152,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
     /*查看本地存储*/
     UserInfo userInfo;
-    private String jingang;//还得召唤我的大名！！！
+    //private String jingang;//还得召唤我的大名！！！
 
     /*轮播图*/
     private SliderLayout sliderLayout;
@@ -161,7 +160,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     private ProgressDialog pd;
 
     /*搜索店铺、商品*/
-    private EditText et_search;
+    //private EditText et_search;
 
     //没有网络显示
     private LinearLayout lin_no_network;
@@ -170,7 +169,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     private LinearLayout lin_yes_network;
 
     //顶部
-    private RelativeLayout rel_jingang;
+    //private RelativeLayout rel_jingang;
 
     /*界面修改*/
     private RelativeLayout rel_new_header;//背景
@@ -181,7 +180,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     private LinearLayout lin_jifen, lin_qianggou, lin_ruzhu, lin_paotui;
 
     /*签到 充值 联系电话*/
-    private Button but_sign, but_recharge, but_phone;
+    //private Button but_sign, but_recharge, but_phone;
 
     /*接口地址*/
     private String PATH = "";
@@ -224,53 +223,53 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
      */
     private void initData() {
         userInfo = new UserInfo(getActivity().getApplication());
-        jingang = userInfo.getLogin();
+        //jingang = userInfo.getLogin();
 
-        lin_self_support = (LinearLayout) view.findViewById(R.id.lin_self_support);
-        lin_directly_mark = (LinearLayout) view.findViewById(R.id.lin_directly_mark);
-        lin_second_hand = (LinearLayout) view.findViewById(R.id.lin_second_hand);
-        lin_village_manage = (LinearLayout) view.findViewById(R.id.lin_village_manage);
-
-        lin_self_support.setOnClickListener(this);
-        lin_directly_mark.setOnClickListener(this);
-        lin_second_hand.setOnClickListener(this);
-        lin_village_manage.setOnClickListener(this);
-
-        //
-        iv_integral = (ImageView) view.findViewById(R.id.iv_integral);
-        iv_scare_buying = (ImageView) view.findViewById(R.id.iv_scare_buying);
-        iv_business = (ImageView) view.findViewById(R.id.iv_business);
-        iv_run = (ImageView) view.findViewById(R.id.iv_run);
-
-        iv_integral.setOnClickListener(this);
-        iv_scare_buying.setOnClickListener(this);
-        iv_business.setOnClickListener(this);
-        iv_run.setOnClickListener(this);
+//        lin_self_support = (LinearLayout) view.findViewById(R.id.lin_self_support);
+//        lin_directly_mark = (LinearLayout) view.findViewById(R.id.lin_directly_mark);
+//        lin_second_hand = (LinearLayout) view.findViewById(R.id.lin_second_hand);
+//        lin_village_manage = (LinearLayout) view.findViewById(R.id.lin_village_manage);
+//
+//        lin_self_support.setOnClickListener(this);
+//        lin_directly_mark.setOnClickListener(this);
+//        lin_second_hand.setOnClickListener(this);
+//        lin_village_manage.setOnClickListener(this);
 
         //
-        lin_appointment = (LinearLayout) view.findViewById(R.id.lin_appointment);
-        lin_food_out = (LinearLayout) view.findViewById(R.id.lin_food_out);
-        lin_express = (LinearLayout) view.findViewById(R.id.lin_express);
-        lin_more = (LinearLayout) view.findViewById(R.id.lin_more);
+//        iv_integral = (ImageView) view.findViewById(R.id.iv_integral);
+//        iv_scare_buying = (ImageView) view.findViewById(R.id.iv_scare_buying);
+//        iv_business = (ImageView) view.findViewById(R.id.iv_business);
+//        iv_run = (ImageView) view.findViewById(R.id.iv_run);
+//
+//        iv_integral.setOnClickListener(this);
+//        iv_scare_buying.setOnClickListener(this);
+//        iv_business.setOnClickListener(this);
+//        iv_run.setOnClickListener(this);
 
-        lin_appointment.setOnClickListener(this);
-        lin_food_out.setOnClickListener(this);
-        lin_express.setOnClickListener(this);
-        lin_more.setOnClickListener(this);
+        //
+//        lin_appointment = (LinearLayout) view.findViewById(R.id.lin_appointment);
+//        lin_food_out = (LinearLayout) view.findViewById(R.id.lin_food_out);
+//        lin_express = (LinearLayout) view.findViewById(R.id.lin_express);
+//        lin_more = (LinearLayout) view.findViewById(R.id.lin_more);
+//
+//        lin_appointment.setOnClickListener(this);
+//        lin_food_out.setOnClickListener(this);
+//        lin_express.setOnClickListener(this);
+//        lin_more.setOnClickListener(this);
 
         //地址
-        et_address = (EditText) view.findViewById(R.id.et_address);
-        et_address.setOnClickListener(this);
-        tv_shopname = (TextView) view.findViewById(R.id.tv_shopname);
-        tv_shopname.setOnClickListener(this);
+//        et_address = (EditText) view.findViewById(R.id.et_address);
+//        et_address.setOnClickListener(this);
+//        tv_shopname = (TextView) view.findViewById(R.id.tv_shopname);
+//        tv_shopname.setOnClickListener(this);
 
         //进入店铺
         tv_gointo_shop = (TextView) view.findViewById(R.id.tv_gointo_shop);
         tv_gointo_shop.setOnClickListener(this);
 
         //扫一哈子
-        iv_scanning = (ImageView) view.findViewById(R.id.iv_scanning);
-        iv_scanning.setOnClickListener(this);
+//        iv_scanning = (ImageView) view.findViewById(R.id.iv_scanning);
+//        iv_scanning.setOnClickListener(this);
 
         //垂直跑马灯
         marqueeView = (MarqueeView) view.findViewById(R.id.marqueeView);
@@ -280,8 +279,8 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
         myGridView = (MyGridView) view.findViewById(R.id.myGridView);
 
-        et_search = (EditText) view.findViewById(R.id.et_home_page_search);
-        et_search.setOnClickListener(this);
+//        et_search = (EditText) view.findViewById(R.id.et_home_page_search);
+//        et_search.setOnClickListener(this);
 
         //没有网络或加载数据失败的情况
         lin_no_network = (LinearLayout) view.findViewById(R.id.lin_no_network);
@@ -292,7 +291,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         lin_yes_network = (LinearLayout) view.findViewById(R.id.lin_yes_network);
 
         //
-        rel_jingang = (RelativeLayout) view.findViewById(R.id.rel_jingang);
+        //rel_jingang = (RelativeLayout) view.findViewById(R.id.rel_jingang);
 
         /*界面修改*/
         rel_new_header = (RelativeLayout) view.findViewById(R.id.rel_new_header);
@@ -315,13 +314,13 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         lin_paotui.setOnClickListener(this);
 
         /*签到 充值 联系电话*/
-        but_sign = (Button) view.findViewById(R.id.but_sign);
-        but_recharge = (Button) view.findViewById(R.id.but_recharge);
-        but_phone = (Button) view.findViewById(R.id.but_phone);
-
-        but_sign.setOnClickListener(this);
-        but_recharge.setOnClickListener(this);
-        but_phone.setOnClickListener(this);
+//        but_sign = (Button) view.findViewById(R.id.but_sign);
+//        but_recharge = (Button) view.findViewById(R.id.but_recharge);
+//        but_phone = (Button) view.findViewById(R.id.but_phone);
+//
+//        but_sign.setOnClickListener(this);
+//        but_recharge.setOnClickListener(this);
+//        but_phone.setOnClickListener(this);
 
         //新版商品分类
         mgv_classifly = (MyGridView) view.findViewById(R.id.mgv_goods_classify);
@@ -329,11 +328,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         /*轮播图*/
         sliderLayout = (SliderLayout) view.findViewById(R.id.sliderLayout);
 
-
-        /*listItems = getListItems();
-
-        mgvAdapter = new MyGridViewAdapter(getActivity(), listItems);
-        mgv_classifly.setAdapter(mgvAdapter);*/
         mPullToRefreshView.setOnHeaderRefreshListener(this);
         mPullToRefreshView.setOnFooterRefreshListener(this);
         mPullToRefreshView.setLastUpdated(new Date().toLocaleString());
@@ -369,7 +363,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     public void onScrolledToTop(boolean isToTop) {
         if (isToTop) {
             //透明
-            rel_jingang.setBackgroundColor(Color.BLACK);
+            //rel_jingang.setBackgroundColor(Color.BLACK);
             rel_new_header.getBackground().setAlpha(55);
 
             iv_new_scaning.setImageResource(R.mipmap.ic_new_scanning);
@@ -380,7 +374,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
         } else {
             //白色
-            rel_jingang.setBackgroundColor(Color.WHITE);
+            //rel_jingang.setBackgroundColor(Color.WHITE);
 
             rel_new_header.setBackgroundColor(Color.WHITE);
             iv_new_scaning.setImageResource(R.mipmap.ic_new_scanning2);
@@ -544,7 +538,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         GetSign getSign = GsonUtil.gsonIntance().gsonToBean(result, GetSign.class);
                         System.out.println("" + getSign.isError());
                         if (getSign.isError() == true) {
-                            but_sign.setText("已签到");
+                            //but_sign.setText("已签到");
                         }
 
                     }
@@ -594,7 +588,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
                         if (error.isError() == true) {
                         } else {
-                            but_sign.setText("已签到");
+                            //but_sign.setText("已签到");
                         }
                         toast("签到成功" + error.getMsg().toString());
 
@@ -696,10 +690,10 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
                         userInfo.saveShopDet(goodsIndex.getMsg().getShopdet().getLimitcost());
 
-                        et_address.setText(shopName);
+                        //et_address.setText(shopName);
                         et_new_address.setText("送至：" + shopName);
 
-                        tv_shopname.setText("(当前店铺：" + shopName + "）");
+                        //tv_shopname.setText("(当前店铺：" + shopName + "）");
 
                         if (goodsIndex.getMsg().getCatefoodslist().toString().equals("[]")) {
                             toast("没有更多数据");
@@ -724,7 +718,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                     }
 
                     @Override
-                    public void onCancelled(Callback.CancelledException cex) {
+                    public void onCancelled(CancelledException cex) {
                         System.out.println("onCancelled");
                     }
 
@@ -1107,7 +1101,11 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
                     } else if (type.equals("tesefuwu")) {
                         //toast("tesefuwu" + msgBeanList.get(i).getName());
-                        startActivity(new Intent(getActivity(), SpecialActivity.class));
+                        intent = new Intent(getActivity(), SpecialActivity.class);
+                        intent.putExtra("shopid", shopid);
+                        startActivity(intent);
+
+                        //startActivity(new Intent(getActivity(), SpecialActivity.class));
 
                     } else if (type.equals("fenlei")) {
                         //toast("fenlei" + msgBeanList.get(i).getName());
@@ -1173,137 +1171,104 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.et_address:
-                //定位
-                intent = new Intent(getActivity(), LocationActivity.class);
-                startActivityForResult(intent, 10);
-                break;
+//            case R.id.et_address:
+//                //定位
+//                intent = new Intent(getActivity(), LocationActivity.class);
+//                startActivityForResult(intent, 10);
+//                break;
 
-            case R.id.et_home_page_search:
-                //搜索店铺、商品
-                intent = new Intent(getActivity(), SearchActivity.class);
-                intent.putExtra("lat", latitude);
-                intent.putExtra("lng", longtitude);
-                intent.putExtra("shopid", shopid);
-                startActivity(intent);
+//            case R.id.et_home_page_search:
+//                //搜索店铺、商品
+//                intent = new Intent(getActivity(), SearchActivity.class);
+//                intent.putExtra("lat", latitude);
+//                intent.putExtra("lng", longtitude);
+//                intent.putExtra("shopid", shopid);
+//                startActivity(intent);
+//
+//                break;
 
-                break;
+//            case R.id.lin_self_support:
+//                //自营专区
+//                intent = new Intent(getActivity(), SelfSupportActivity.class);
+//                intent.putExtra("latitude", latitude);
+//                intent.putExtra("longitude", longtitude);
+//                intent.putExtra("shopid", shopid);
+//                intent.putExtra("shopName", shopName);
+//                startActivityForResult(intent, 10);
+//
+//                break;
 
-            case R.id.lin_self_support:
-                //自营专区
-                intent = new Intent(getActivity(), SelfSupportActivity.class);
-                intent.putExtra("latitude", latitude);
-                intent.putExtra("longitude", longtitude);
-                intent.putExtra("shopid", shopid);
-                intent.putExtra("shopName", shopName);
-                startActivityForResult(intent, 10);
+//            case R.id.lin_directly_mark:
+//                //直营便利店
+//                intent = new Intent(getActivity(), DirectlyMarkActivity.class);
+//                intent.putExtra("latitude", latitude);
+//                intent.putExtra("longitude", longtitude);
+//                intent.putExtra("shopid", shopid);
+//                intent.putExtra("shopName", shopName);
+//                startActivityForResult(intent, 10);
+//
+//                break;
 
-                break;
+//            case R.id.lin_second_hand:
+//                //二手交易
+//                if (jingang.equals("")) {
+//                    //未登录
+//                    startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
+//                } else if (jingang.equals("0")) {
+//                    //未登录
+//                    startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
+//                } else if (jingang.equals("1")) {
+//                    //已登录
+//                    intent = new Intent(getActivity(), SecondHandActivity.class);
+//                    intent.putExtra("id", "1");
+//                    startActivity(intent);
+//                    //startActivity(new Intent(getActivity(), VillageActivity.class));
+//                }
+//
+//                break;
 
-            case R.id.lin_directly_mark:
-                //直营便利店
-                intent = new Intent(getActivity(), DirectlyMarkActivity.class);
-                intent.putExtra("latitude", latitude);
-                intent.putExtra("longitude", longtitude);
-                intent.putExtra("shopid", shopid);
-                intent.putExtra("shopName", shopName);
-                startActivityForResult(intent, 10);
+//            case R.id.lin_village_manage:
+//                //小区信息
+//                //进入之前判断是否已经登录
+//                if (jingang.equals("")) {
+//                    //未登录
+//                    startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
+//                } else if (jingang.equals("0")) {
+//                    //未登录
+//                    startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
+//                } else if (jingang.equals("1")) {
+//                    //已登录
+//                    intent = new Intent(getActivity(), VillageActivity.class);
+//                    intent.putExtra("mkid", "2");
+//                    startActivity(intent);
+//                }
+//                break;
+//            case R.id.lin_appointment:
+//                //预约服务
+//                startActivity(new Intent(getActivity(), WillOpenActivity.class));
+//                break;
 
-                break;
+//            case R.id.lin_food_out:
+//                //美食外卖
+//                intent = new Intent(getActivity(), FoodOutActivity.class);
+//                intent.putExtra("latitude", latitude);
+//                intent.putExtra("longitude", longtitude);
+//                intent.putExtra("shopid", shopid);
+//                intent.putExtra("shopName", shopName);
+//                startActivityForResult(intent, 10);
+//
+//                break;
 
-            case R.id.lin_second_hand:
-                //二手交易
-                //intent = new Intent()
-                //startActivity(new Intent(getActivity(), WillOpenActivity.class));
-                if (jingang.equals("")) {
-                    //未登录
-                    startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
-                } else if (jingang.equals("0")) {
-                    //未登录
-                    startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
-                } else if (jingang.equals("1")) {
-                    //已登录
-                    intent = new Intent(getActivity(), SecondHandActivity.class);
-                    intent.putExtra("id", "1");
-                    startActivity(intent);
-                    //startActivity(new Intent(getActivity(), VillageActivity.class));
-                }
+//            case R.id.lin_express:
+//                //收发快递
+//                Intent intent = new Intent(getActivity(), ExpressActivity.class);
+//                intent.putExtra("shopid", shopid);
+//                startActivity(intent);
+//                break;
 
-                break;
-
-            case R.id.lin_village_manage:
-                //小区信息
-                //进入之前判断是否已经登录
-                if (jingang.equals("")) {
-                    //未登录
-                    startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
-                } else if (jingang.equals("0")) {
-                    //未登录
-                    startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
-                } else if (jingang.equals("1")) {
-                    //已登录
-                    intent = new Intent(getActivity(), VillageActivity.class);
-                    intent.putExtra("mkid", "2");
-                    startActivity(intent);
-                    //startActivity(new Intent(getActivity(), VillageActivity.class));
-                }
-
-
-                break;
-            case R.id.lin_appointment:
-                //预约服务
-                startActivity(new Intent(getActivity(), WillOpenActivity.class));
-                break;
-
-            case R.id.lin_food_out:
-                //美食外卖
-                intent = new Intent(getActivity(), FoodOutActivity.class);
-                intent.putExtra("latitude", latitude);
-                intent.putExtra("longitude", longtitude);
-                intent.putExtra("shopid", shopid);
-                intent.putExtra("shopName", shopName);
-                startActivityForResult(intent, 10);
-
-                break;
-
-            case R.id.lin_express:
-                //收发快递
-                Intent intent = new Intent(getActivity(), ExpressActivity.class);
-                intent.putExtra("shopid", shopid);
-                startActivity(intent);
-
-                //startActivity(new Intent(getActivity(), ExpressActivity.class));
-                break;
-
-            case R.id.lin_more:
-                //更多
-
-                break;
-
-            case R.id.iv_integral:
-                //积分专区
-                //startActivity(new Intent(getActivity(), WillOpenActivity.class));
-                // startActivity(new Intent(getActivity(), WillOpenActivity.class));
-
-                break;
-
-            case R.id.iv_scare_buying:
-                //抢购专区
-                //startActivity(new Intent(getActivity(), ScareBuyActivity.class));
-                //startActivity(new Intent(getActivity(), WillOpenActivity.class));
-                break;
-
-            case R.id.iv_business:
-                //商家入驻
-                //startActivity(new Intent(getActivity(), BusinessActivity.class));
-                startActivity(new Intent(getActivity(), WillOpenActivity.class));
-                break;
-
-            case R.id.iv_run:
-                //跑腿服务
-                //startActivity(new Intent(getActivity(), RunLegActivity.class));
-                startActivity(new Intent(getActivity(), WillOpenActivity.class));
-                break;
+//            case R.id.lin_more:
+//                //更多
+//                break;
 
             case R.id.tv_gointo_shop:
                 //进入店铺
@@ -1321,27 +1286,27 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
                 break;
 
-            case R.id.iv_scanning:
-                //扫一哈子 6.0系统需要手动设置摄像头权限
-
-                if (ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(
-                            getActivity(), new String[]{
-                                    Manifest.permission.CAMERA
-                            }, 9
-                    );
-
-                } else {
-
-                    intent = new Intent(getActivity(), ZXingCaptureActivity.class);
-                    intent.putExtra("shopid", shopid);
-                    intent.putExtra("coder", "2");
-                    startActivity(intent);
-
-                }
-
-                break;
+//            case R.id.iv_scanning:
+//                //扫一哈子 6.0系统需要手动设置摄像头权限
+//
+//                if (ContextCompat.checkSelfPermission(getActivity(),
+//                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(
+//                            getActivity(), new String[]{
+//                                    Manifest.permission.CAMERA
+//                            }, 9
+//                    );
+//
+//                } else {
+//
+//                    intent = new Intent(getActivity(), ZXingCaptureActivity.class);
+//                    intent.putExtra("shopid", shopid);
+//                    intent.putExtra("coder", "2");
+//                    startActivity(intent);
+//
+//                }
+//
+//                break;
 
             case R.id.but_load_again:
                 //重新加载
@@ -1368,13 +1333,10 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                     intent.putExtra("coder", "2");
                     startActivity(intent);
 
-                    //startActivity(new Intent(getActivity(), ZXingCaptureActivity.class));
-
                 }
                 break;
             case R.id.iv_new_search:
                 //新版搜索
-
                 intent = new Intent(getActivity(), SearchActivity.class);
                 intent.putExtra("lat", latitude);
                 intent.putExtra("lng", longtitude);
@@ -1390,7 +1352,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
             case R.id.lin_jinfen:
                 //新版积分专区
-                //startActivity(new Intent(getActivity(), WillOpenActivity.class));
 
                 String url_jifen = "https://www.ybt9.com/index.php?ctrl=app&action=specialpage&&id=11&lat="
                         + latitude + "&lng" + longtitude + "=&mapname=" + address;
@@ -1402,7 +1363,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
             case R.id.lin_qianggou:
                 //新版 抢购专区
-                //startActivity(new Intent(getActivity(), WillOpenActivity.class));
 
                 String qianggou = "https://www.ybt9.com/index.php?ctrl=app&action=specialpage&&id=4&" +
                         "lat=" + latitude + "&lng=" + longtitude + "&mapname=" + address;
@@ -1413,9 +1373,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                 break;
 
             case R.id.lin_ruzhu:
-                //新版 商家入驻
-                //startActivity(new Intent(getActivity(), WillOpenActivity.class));
-
                 //改为签到
                 if (!(userInfo.getUserInfo().equals(""))) {
                     Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
@@ -1424,10 +1381,8 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         pwd = userInfo.getPwd();
 
                         if (userInfo.getCode().equals("0")) {
-                            //System.out.println("我的验证码"+userInfo.getCode());
                             signToDay(uid, pwd);
                         } else {
-                            //System.out.println("我的手机号"+phone);
                             signToDay("phone", phone);
                         }
 
@@ -1448,43 +1403,43 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                 //改为充值
                 break;
 
-            case R.id.but_sign:
-                //签到
-                if (!(userInfo.getUserInfo().equals(""))) {
-                    Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
-                    uid = register.getMsg().getUid();
-                    if (!(userInfo.getPwd().equals(""))) {
-                        pwd = userInfo.getPwd();
+//            case R.id.but_sign:
+//                //签到
+//                if (!(userInfo.getUserInfo().equals(""))) {
+//                    Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
+//                    uid = register.getMsg().getUid();
+//                    if (!(userInfo.getPwd().equals(""))) {
+//                        pwd = userInfo.getPwd();
+//
+//                        if (userInfo.getCode().equals("0")) {
+//                            //System.out.println("我的验证码"+userInfo.getCode());
+//                            signToDay(uid, pwd);
+//                        } else {
+//                            //System.out.println("我的手机号"+phone);
+//                            signToDay("phone", phone);
+//                        }
+//
+//                    }
+//                } else {
+//                    toast("未登录");
+//                }
+//
+//                break;
 
-                        if (userInfo.getCode().equals("0")) {
-                            //System.out.println("我的验证码"+userInfo.getCode());
-                            signToDay(uid, pwd);
-                        } else {
-                            //System.out.println("我的手机号"+phone);
-                            signToDay("phone", phone);
-                        }
-
-                    }
-                } else {
-                    toast("未登录");
-                }
-
-                break;
-
-            case R.id.but_recharge:
-                //充值
+//            case R.id.but_recharge:
+//                //充值
 //                intent = new Intent(getActivity(), YuEActivity.class);
 //                startActivity(intent);
+//
+//                break;
 
-                break;
-
-            case R.id.but_phone:
-                //联系电话
-                intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "17865069350"));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-
-                break;
+//            case R.id.but_phone:
+//                //联系电话
+//                intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "17865069350"));
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
+//
+//                break;
 
             default:
                 break;
@@ -1529,7 +1484,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         } else {
             //无网络连接  显示缓存数 据
             //toast("无网络连接");
-            et_address.setText("定位失败");
+            //et_address.setText("定位失败");
             et_new_address.setText("定位失败");
 
             //6.0读写权限的手动设置

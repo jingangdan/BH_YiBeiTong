@@ -45,7 +45,7 @@ public class Tese {
         private String id;
         private String name;
         private String action;
-        private Object img;
+        private String img;
         private String orderid;
 
         public String getId() {
@@ -72,11 +72,11 @@ public class Tese {
             this.action = action;
         }
 
-        public Object getImg() {
+        public String getImg() {
             return img;
         }
 
-        public void setImg(Object img) {
+        public void setImg(String img) {
             this.img = img;
         }
 

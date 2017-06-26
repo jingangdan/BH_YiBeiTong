@@ -8,93 +8,82 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:background="#ccc"
         android:orientation="vertical">
 
+        <!--顶部 扫一扫 搜索-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_shop_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:padding="3dp"
+                android:src="@mipmap/back001" />
+
+            <ImageView
+                android:id="@+id/iv_shop_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="5dp"
+                android:src="@mipmap/ic_new_search" />
+
+        </RelativeLayout>
+
+        <!--店铺名称 简介-->
         <LinearLayout
-            android:background="@mipmap/ic_shop_background001"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-            <!--顶部 扫一扫 搜索-->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/ic_adai" />
 
-                <ImageView
-                    android:id="@+id/iv_shop_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:padding="3dp"
-                    android:src="@mipmap/back001" />
-
-                <ImageView
-                    android:id="@+id/iv_shop_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:padding="5dp"
-                    android:src="@mipmap/ic_new_search" />
-
-            </RelativeLayout>
-
-            <!--店铺名称 简介-->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal">
+                android:layout_weight="5"
+                android:orientation="vertical"
+                android:padding="5dp">
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="3dp"
-                    android:src="@mipmap/ic_shop_yingye" />
+                <TextView
+                    android:id="@+id/tv_shop_name"
+                    style="@style/text_witht"
+                    android:layout_marginBottom="3dp"
+                    android:text="易贝通便利店"
+                    android:textSize="16dp" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="5"
-                    android:orientation="vertical"
-                    android:padding="5dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/tv_shop_name"
+                        android:id="@+id/tv_new_shop_limist"
                         style="@style/text_witht"
-                        android:layout_marginBottom="3dp"
-                        android:text="易贝通便利店"
-                        android:textSize="16dp" />
+                        android:layout_alignParentLeft="true"
+                        android:text="配送费 运费" />
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/iv_manage_visibile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:padding="5dp"
+                        android:src="@mipmap/new_drop_down" />
 
-                        <TextView
-                            android:id="@+id/tv_new_shop_limist"
-                            style="@style/text_witht"
-                            android:layout_alignParentLeft="true"
-                            android:layout_centerVertical="true"
-                            android:text="配送费 运费" />
-
-                        <ImageView
-                            android:id="@+id/iv_manage_visibile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginRight="10dp"
-                            android:padding="5dp"
-                            android:src="@mipmap/ic_under" />
-
-                    </RelativeLayout>
-
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
-
 
         </LinearLayout>
 
@@ -103,7 +92,6 @@
             android:id="@+id/lin_shop_manage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@mipmap/ic_shop_background002"
             android:orientation="vertical"
             android:padding="5dp"
             android:visibility="gone">
@@ -177,7 +165,7 @@
                 android:id="@+id/lv_shop_goods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#E1E1E1"
+                android:background="#EEEEEE"
                 android:divider="#fff"
                 android:dividerHeight="0.8dp"
                 android:scrollbars="none">

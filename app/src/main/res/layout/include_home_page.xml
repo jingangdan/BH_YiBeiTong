@@ -19,8 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp"
-        android:visibility="gone">
+        android:padding="10dp" >
 
         <ImageView
             android:layout_width="wrap_content"
@@ -55,13 +54,12 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:orientation="horizontal">
 
-        <!--自营专区-->
+        &lt;!&ndash;自营专区&ndash;&gt;
         <LinearLayout
             android:id="@+id/lin_self_support"
             style="@style/linearlayout_style">
@@ -78,7 +76,7 @@
                 android:textSize="12dp" />
         </LinearLayout>
 
-        <!--直营便利店-->
+        &lt;!&ndash;直营便利店&ndash;&gt;
         <LinearLayout
             android:id="@+id/lin_directly_mark"
             style="@style/linearlayout_style">
@@ -96,7 +94,7 @@
                 android:textSize="12dp" />
         </LinearLayout>
 
-        <!--二手交易-->
+        &lt;!&ndash;二手交易&ndash;&gt;
         <LinearLayout
             android:id="@+id/lin_second_hand"
             style="@style/linearlayout_style">
@@ -114,7 +112,7 @@
 
         </LinearLayout>
 
-        <!--小区信息-->
+        &lt;!&ndash;小区信息&ndash;&gt;
         <LinearLayout
             android:id="@+id/lin_village_manage"
             style="@style/linearlayout_style">
@@ -131,15 +129,14 @@
                 android:textSize="12dp" />
         </LinearLayout>
 
-    </LinearLayout>
+    </LinearLayout>-->
 
-    <LinearLayout
-        android:visibility="gone"
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!--预约服务-->
+        &lt;!&ndash;预约服务&ndash;&gt;
         <LinearLayout
             android:id="@+id/lin_appointment"
             style="@style/linearlayout_style">
@@ -156,7 +153,7 @@
                 android:textSize="12dp" />
         </LinearLayout>
 
-        <!--没事外卖-->
+        &lt;!&ndash;没事外卖&ndash;&gt;
         <LinearLayout
             android:id="@+id/lin_food_out"
             style="@style/linearlayout_style">
@@ -173,7 +170,7 @@
                 android:textSize="12dp" />
         </LinearLayout>
 
-        <!--收发快递-->
+        &lt;!&ndash;收发快递&ndash;&gt;
         <LinearLayout
             android:id="@+id/lin_express"
             style="@style/linearlayout_style">
@@ -190,7 +187,7 @@
                 android:textSize="12dp" />
         </LinearLayout>
 
-        <!--更多-->
+        &lt;!&ndash;更多&ndash;&gt;
         <LinearLayout
             android:id="@+id/lin_more"
             style="@style/linearlayout_style">
@@ -207,54 +204,7 @@
                 android:textSize="12dp" />
         </LinearLayout>
 
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#EEEEEE"></View>
-
-    <LinearLayout
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/but_sign"
-            style="@style/button_screen_style"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="签到" />
-
-        <View
-            android:layout_width="0.8dp"
-            android:layout_height="match_parent"
-            android:background="#EEEEEE"></View>
-
-        <Button
-            android:id="@+id/but_recharge"
-            style="@style/button_screen_style"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="充值" />
-
-        <View
-            android:layout_width="0.8dp"
-            android:layout_height="match_parent"
-            android:background="#EEEEEE"></View>
-
-        <Button
-            android:id="@+id/but_phone"
-            style="@style/button_screen_style"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="在线电话" />
-
-    </LinearLayout>
+    </LinearLayout>-->
 
     <View
         android:layout_width="match_parent"
@@ -276,14 +226,6 @@
             android:src="@mipmap/new_banner" />
 
     </LinearLayout>
-
-    <com.bh.yibeitong.refresh.MyGridView
-        android:id="@+id/mgv_recommed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:numColumns="3">
-
-    </com.bh.yibeitong.refresh.MyGridView>
 
     <!--首页推荐 店铺优选-->
     <LinearLayout
@@ -314,9 +256,7 @@
                 android:gravity="center_vertical"
                 android:text="便利店优选" />
 
-
         </LinearLayout>
-
 
     </LinearLayout>
 
@@ -338,35 +278,6 @@
                 android:layout_height="wrap_content"
                 android:src="@mipmap/icon_jifen" />
 
-            <!--<LinearLayout-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_vertical"-->
-            <!--android:layout_weight="2"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="3dp"-->
-            <!--android:text="积分专区"-->
-            <!--android:textColor="#EDD83D" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="热门商品 积分兑换"-->
-            <!--android:textSize="12dp" />-->
-
-            <!--</LinearLayout>-->
-
-            <!--<ImageView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:src="@mipmap/icon_vip" />-->
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -382,57 +293,7 @@
                 android:layout_height="wrap_content"
                 android:src="@mipmap/icon_qianggou" />
 
-            <!--<LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:text="抢购专区"
-                    android:textColor="#E3404A" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="最低一元起"
-                    android:textSize="12dp" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@mipmap/icon_panic_buying" />-->
-
         </LinearLayout>
-
-
-        <ImageView
-            android:src="@mipmap/ic_jifen001"
-            android:id="@+id/iv_integral"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/seletor"
-            android:visibility="gone" />
-
-
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/iv_scare_buying"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/seletor"
-            android:src="@mipmap/qianggou" />
-
 
     </LinearLayout>
 
@@ -454,35 +315,6 @@
                 android:layout_height="wrap_content"
                 android:src="@mipmap/icon_sign"/>
 
-            <!--<LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:text="商家入驻"
-                    android:textColor="#DF6BF0" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="邀请您的加入"
-                    android:textSize="12dp" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@mipmap/icon_join" />-->
-
         </LinearLayout>
 
         <LinearLayout
@@ -496,56 +328,10 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/icon_recharge"/>
-
-            <!--<LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:text="跑腿服务"
-                    android:textColor="#5A9F0E" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="您身边的跑腿专家"
-                    android:textSize="12dp" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@mipmap/icon_run_errands" />-->
+                android:src="@mipmap/icon_recharge"
+                android:id="@+id/imageView4" />
 
         </LinearLayout>
-
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/iv_business"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/seletor"
-            android:src="@mipmap/shangjia" />
-
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/iv_run"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/seletor"
-            android:src="@mipmap/paotui" />
 
     </LinearLayout>
 
@@ -622,11 +408,4 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.8dp"
-        android:background="#999"></View>
-
-
 </LinearLayout>
-

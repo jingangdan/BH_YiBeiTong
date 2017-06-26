@@ -42,7 +42,6 @@ import com.bh.yibeitong.seller.activity.SellerLoginActivity;
 import com.bh.yibeitong.ui.LoginRegisterActivity;
 import com.bh.yibeitong.ui.SettingActivity;
 import com.bh.yibeitong.ui.address.ManageAddressActivity;
-import com.bh.yibeitong.ui.homepage.JoinActivity;
 import com.bh.yibeitong.ui.percen.AboutUsActivity;
 import com.bh.yibeitong.ui.percen.ExChangeActivity;
 import com.bh.yibeitong.ui.percen.YouHuiQuanActivity;
@@ -113,9 +112,8 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
     String s_yue, s_youhuiquan, s_jifen;
     int i_youhuiquan;
 
-    /*管理收货地址  我的收藏  兑换礼品  邀请好友  关于我们  商家入驻     检查版本更新*/
-    private RelativeLayout mAddress, collect, exchange, invite, aboutUs, updata,
-            rel_sign;
+    /*管理收货地址  我的收藏  兑换礼品   关于我们      检查版本更新 签到*/
+    private LinearLayout mAddress, collect, exchange, aboutUs, updata, rel_sign;
 
     //显示签到状态
     private TextView tv_sign;
@@ -180,8 +178,6 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
         but_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
-
                 pop = new PopupWindow(getActivity());
                 view_pop = getActivity().getLayoutInflater().inflate(R.layout.pop_login_type, null);
                 view_pop.setAnimation(AnimationUtils.loadAnimation(
@@ -257,9 +253,6 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
             System.out.println("离开FMPerCen");
         } else {
             System.out.println("刷新FMPerCen");
-            //initData();
-
-
         }
     }
 
@@ -293,26 +286,23 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
         jifen = (TextView) view.findViewById(R.id.tv_percen_jifen);
 
         /**/
-        mAddress = (RelativeLayout) view.findViewById(R.id.rel_percen_maddress);
-        collect = (RelativeLayout) view.findViewById(R.id.rel_percen_collect);
-        exchange = (RelativeLayout) view.findViewById(R.id.rel_percen_exchange);
-        invite = (RelativeLayout) view.findViewById(R.id.rel_percen_invite);
-        aboutUs = (RelativeLayout) view.findViewById(R.id.rel_percen_about);
+        mAddress = (LinearLayout) view.findViewById(R.id.lin_percen001);
+        collect = (LinearLayout) view.findViewById(R.id.lin_percen002);
+        exchange = (LinearLayout) view.findViewById(R.id.lin_percen003);
+        aboutUs = (LinearLayout) view.findViewById(R.id.lin_percen005);
+        updata = (LinearLayout) view.findViewById(R.id.lin_percen006);
+        updata.setOnClickListener(this);
+
+        //签到
+        rel_sign = (LinearLayout) view.findViewById(R.id.lin_percen004);
+        rel_sign.setOnClickListener(this);
         //enter = (RelativeLayout) view.findViewById(R.id.rel_percen_enter);
 
         mAddress.setOnClickListener(this);
         collect.setOnClickListener(this);
         exchange.setOnClickListener(this);
-        invite.setOnClickListener(this);
         aboutUs.setOnClickListener(this);
         //enter.setOnClickListener(this);
-
-        updata = (RelativeLayout) view.findViewById(R.id.rel_percen_updata);
-        updata.setOnClickListener(this);
-
-        //签到
-        rel_sign = (RelativeLayout) view.findViewById(R.id.rel_percen_sign);
-        rel_sign.setOnClickListener(this);
 
         tv_sign = (TextView) view.findViewById(R.id.tv_percen_sign);
 
@@ -364,7 +354,6 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
                 intent.putExtra("phone", phone);
                 intent.putExtra("member", member);
                 startActivity(intent);
-                //startActivity(new Intent(getActivity(), SettingActivity.class));
 
                 break;
 
@@ -374,7 +363,6 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
 //                intent.putExtra("yue", s_yue);
 //                startActivity(intent);
 
-                //startActivity(new Intent(getActivity(), YuEActivity.class));
                 break;
 
             case R.id.lin_collect_seller:
@@ -386,39 +374,28 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
                 //积分
                 break;
 
-            case R.id.rel_percen_maddress:
+            case R.id.lin_percen001:
                 //管理收货地址
                 startActivity(new Intent(getActivity(), ManageAddressActivity.class));
                 break;
 
-            case R.id.rel_percen_collect:
+            case R.id.lin_percen002:
                 //我的收藏
                 break;
 
-            case R.id.rel_percen_exchange:
+            case R.id.lin_percen003:
                 //兑换礼品
                 intent = new Intent(getActivity(), ExChangeActivity.class);
                 intent.putExtra("", "");//传值 积分
                 startActivity(intent);
                 break;
 
-            case R.id.rel_percen_invite:
-                //邀请好友
-                toast("充值");
-
-                break;
-
-            case R.id.rel_percen_about:
+            case R.id.lin_percen005:
                 startActivity(new Intent(getActivity(), AboutUsActivity.class));
                 //关于我们
                 break;
 
-            /*case R.id.rel_percen_enter:
-                //商家入驻
-                toast("签到");
-                break;*/
-
-            case R.id.rel_percen_sign:
+            case R.id.lin_percen004:
                 //签到
                 if (!(userInfo.getUserInfo().equals(""))) {
                     Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
@@ -441,7 +418,7 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
 
                 break;
 
-            case R.id.rel_percen_updata:
+            case R.id.lin_percen006:
                 //检查版本更新
                 //toast("检查版本更新");
                 //new checkNewestVersionAsyncTask().execute();

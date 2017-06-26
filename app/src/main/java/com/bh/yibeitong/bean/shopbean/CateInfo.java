@@ -8,10 +8,9 @@ import java.util.List;
  */
 
 public class CateInfo {
-
     /**
      * error : false
-     * msg : {"cateinfo":{"id":"489","name":"奶乳饮品","keywd":"","desc":"","parent_id":"0","shopid":"23","orderid":"3","img":""},"childcate":[{"id":"492","name":"乳饮料","keywd":"","desc":"","parent_id":"489","shopid":"23","orderid":"3","img":""},{"id":"491","name":"酸奶","keywd":"","desc":"","parent_id":"489","shopid":"23","orderid":"2","img":""},{"id":"490","name":"纯奶","keywd":"","desc":"","parent_id":"489","shopid":"23","orderid":"1","img":""}]}
+     * msg : {"cateinfo":{"newid":"2","id":"0","name":"休闲零食","keywd":null,"desc":null,"parent_id":"0","shopid":"8","orderid":"0","img":null,"img2":null},"childcate":[{"newid":"3","id":"1607","name":"饼干","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"4","id":"1608","name":"点心","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"5","id":"1609","name":"速食品","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"6","id":"1610","name":"糖果","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"7","id":"1611","name":"巧克力","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"8","id":"1614","name":"休闲熟食","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"9","id":"1615","name":"膨化食品","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"10","id":"1616","name":"休闲杂项","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null}]}
      */
 
     private boolean error;
@@ -35,8 +34,8 @@ public class CateInfo {
 
     public static class MsgBean {
         /**
-         * cateinfo : {"id":"489","name":"奶乳饮品","keywd":"","desc":"","parent_id":"0","shopid":"23","orderid":"3","img":""}
-         * childcate : [{"id":"492","name":"乳饮料","keywd":"","desc":"","parent_id":"489","shopid":"23","orderid":"3","img":""},{"id":"491","name":"酸奶","keywd":"","desc":"","parent_id":"489","shopid":"23","orderid":"2","img":""},{"id":"490","name":"纯奶","keywd":"","desc":"","parent_id":"489","shopid":"23","orderid":"1","img":""}]
+         * cateinfo : {"newid":"2","id":"0","name":"休闲零食","keywd":null,"desc":null,"parent_id":"0","shopid":"8","orderid":"0","img":null,"img2":null}
+         * childcate : [{"newid":"3","id":"1607","name":"饼干","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"4","id":"1608","name":"点心","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"5","id":"1609","name":"速食品","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"6","id":"1610","name":"糖果","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"7","id":"1611","name":"巧克力","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"8","id":"1614","name":"休闲熟食","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"9","id":"1615","name":"膨化食品","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null},{"newid":"10","id":"1616","name":"休闲杂项","keywd":"","desc":"","parent_id":"2","shopid":"8","orderid":"999","img":"","img2":null}]
          */
 
         private CateinfoBean cateinfo;
@@ -60,24 +59,36 @@ public class CateInfo {
 
         public static class CateinfoBean {
             /**
-             * id : 489
-             * name : 奶乳饮品
-             * keywd :
-             * desc :
+             * newid : 2
+             * id : 0
+             * name : 休闲零食
+             * keywd : null
+             * desc : null
              * parent_id : 0
-             * shopid : 23
-             * orderid : 3
-             * img :
+             * shopid : 8
+             * orderid : 0
+             * img : null
+             * img2 : null
              */
 
+            private String newid;
             private String id;
             private String name;
-            private String keywd;
-            private String desc;
+            private Object keywd;
+            private Object desc;
             private String parent_id;
             private String shopid;
             private String orderid;
-            private String img;
+            private Object img;
+            private Object img2;
+
+            public String getNewid() {
+                return newid;
+            }
+
+            public void setNewid(String newid) {
+                this.newid = newid;
+            }
 
             public String getId() {
                 return id;
@@ -95,19 +106,19 @@ public class CateInfo {
                 this.name = name;
             }
 
-            public String getKeywd() {
+            public Object getKeywd() {
                 return keywd;
             }
 
-            public void setKeywd(String keywd) {
+            public void setKeywd(Object keywd) {
                 this.keywd = keywd;
             }
 
-            public String getDesc() {
+            public Object getDesc() {
                 return desc;
             }
 
-            public void setDesc(String desc) {
+            public void setDesc(Object desc) {
                 this.desc = desc;
             }
 
@@ -135,27 +146,38 @@ public class CateInfo {
                 this.orderid = orderid;
             }
 
-            public String getImg() {
+            public Object getImg() {
                 return img;
             }
 
-            public void setImg(String img) {
+            public void setImg(Object img) {
                 this.img = img;
+            }
+
+            public Object getImg2() {
+                return img2;
+            }
+
+            public void setImg2(Object img2) {
+                this.img2 = img2;
             }
         }
 
         public static class ChildcateBean {
             /**
-             * id : 492
-             * name : 乳饮料
+             * newid : 3
+             * id : 1607
+             * name : 饼干
              * keywd :
              * desc :
-             * parent_id : 489
-             * shopid : 23
-             * orderid : 3
+             * parent_id : 2
+             * shopid : 8
+             * orderid : 999
              * img :
+             * img2 : null
              */
 
+            private String newid;
             private String id;
             private String name;
             private String keywd;
@@ -164,6 +186,15 @@ public class CateInfo {
             private String shopid;
             private String orderid;
             private String img;
+            private Object img2;
+
+            public String getNewid() {
+                return newid;
+            }
+
+            public void setNewid(String newid) {
+                this.newid = newid;
+            }
 
             public String getId() {
                 return id;
@@ -229,10 +260,19 @@ public class CateInfo {
                 this.img = img;
             }
 
+            public Object getImg2() {
+                return img2;
+            }
+
+            public void setImg2(Object img2) {
+                this.img2 = img2;
+            }
+
             @Override
             public String toString() {
                 return "ChildcateBean{" +
-                        "id='" + id + '\'' +
+                        "newid='" + newid + '\'' +
+                        ", id='" + id + '\'' +
                         ", name='" + name + '\'' +
                         ", keywd='" + keywd + '\'' +
                         ", desc='" + desc + '\'' +
@@ -240,6 +280,7 @@ public class CateInfo {
                         ", shopid='" + shopid + '\'' +
                         ", orderid='" + orderid + '\'' +
                         ", img='" + img + '\'' +
+                        ", img2=" + img2 +
                         '}';
             }
         }

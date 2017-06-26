@@ -229,7 +229,7 @@ public class CateInfoActivity extends BaseTextActivity {
         });
 
         builder.setNegativeButton("取消",
-                new android.content.DialogInterface.OnClickListener() {
+                new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -261,14 +261,14 @@ public class CateInfoActivity extends BaseTextActivity {
     public void getShopCart(String shopid) {
         String PATH = HttpPath.PATH + HttpPath.GETCART + "shopid=" + shopid;
 
-        System.out.println("" + PATH);
+        System.out.println("购物车" + PATH);
         RequestParams params = new RequestParams(PATH);
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
 
-                        System.out.println("店铺" + result);
+                        System.out.println("购物车" + result);
                         ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
 
                         int size = shopCart.getMsg().getList().size();
@@ -338,14 +338,14 @@ public class CateInfoActivity extends BaseTextActivity {
         String PATH = HttpPath.path + HttpPath.CATE_INFO +
                 "shopid=" + shopid + "&cateid=" + cateid;
 
-        System.out.println("" + PATH);
+        System.out.println("分类下子分类" + PATH);
 
         RequestParams params = new RequestParams(PATH);
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
-                        System.out.println("获取分类下子分类" + result);
+                        System.out.println("分类下子分类" + result);
                         final CateInfo cateInfo = GsonUtil.gsonIntance().gsonToBean(result, CateInfo.class);
 
                         childcateBeen = cateInfo.getMsg().getChildcate();
@@ -354,7 +354,7 @@ public class CateInfoActivity extends BaseTextActivity {
                         hlv_cateinfo.setAdapter(cateInfoAdapter);
 
                         String cateid = cateInfo.getMsg().getChildcate().get(0).getId();
-                        parentid = cateInfo.getMsg().getCateinfo().getId();
+                        parentid = cateInfo.getMsg().getCateinfo().getNewid();
 
                         getCateInfoGoods(shopid, cateid, parentid, "", "");
 
@@ -365,13 +365,12 @@ public class CateInfoActivity extends BaseTextActivity {
 
                                 String cateid = cateInfo.getMsg().getChildcate().get(i).getId();
 
-                                parentid = cateInfo.getMsg().getCateinfo().getId();
+                                parentid = cateInfo.getMsg().getCateinfo().getNewid();
 
                                 getCateInfoGoods(shopid, cateid, parentid, "", "");
 
                             }
                         });
-
 
                     }
 
@@ -413,7 +412,7 @@ public class CateInfoActivity extends BaseTextActivity {
                 "shopid=" + shopid + "&cateid=" + cateid + "&parentid=" + parentid +
                 "&price=" + price + "&sell=" + sell;
 
-        System.out.println("" + PATH);
+        System.out.println("分类下商品分类" + PATH);
 
         RequestParams params = new RequestParams(PATH);
         x.http().get(params,
@@ -423,7 +422,6 @@ public class CateInfoActivity extends BaseTextActivity {
                         System.out.println("分类下商品分类" + result);
                         CateInfoGoods cateInfoGoods = GsonUtil.gsonIntance().gsonToBean(result, CateInfoGoods.class);
 
-                        System.out.println("aaaaaaaaaa" + cateInfoGoods);
                         goodslistBeen = cateInfoGoods.getMsg().getGoodslist();
                         cateInfoGoodsAdapter = new CateInfoGoodsAdapter(CateInfoActivity.this, goodslistBeen);
                         mgv_cateinfo.setAdapter(cateInfoGoodsAdapter);
