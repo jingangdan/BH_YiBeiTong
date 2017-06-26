@@ -171,6 +171,7 @@ public class ExpressActivity extends BaseTextActivity {
         PATH = HttpPath.PATH + HttpPath.MKKD + "shopid=" + shopid;
         RequestParams params = new RequestParams(PATH);
 
+        System.out.println("收发快递"+PATH);
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
                     @Override

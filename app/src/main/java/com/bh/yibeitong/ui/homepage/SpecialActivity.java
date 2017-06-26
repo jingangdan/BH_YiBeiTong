@@ -11,14 +11,13 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 
+import com.bh.yibeitong.Interface.OnItemClickListener;
+import com.bh.yibeitong.Interface.OnItemLongClickListener;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseTextActivity;
+import com.bh.yibeitong.bean.homepage.Link;
 import com.bh.yibeitong.bean.homepage.Tese;
 import com.bh.yibeitong.ui.LoginRegisterActivity;
 import com.bh.yibeitong.ui.express.ExpressActivity;
@@ -44,10 +43,6 @@ public class SpecialActivity extends BaseTextActivity {
     /*接口地址*/
     private String PATH = "";
 
-    /*UI显示*/
-    private ListView listView;
-    private TeseListAdapter teseListAdapter;
-
     /*接收页面差传值*/
     private Intent intent;
     private String shopid;
@@ -59,6 +54,10 @@ public class SpecialActivity extends BaseTextActivity {
     //尝试一下RecyclerView
     private RecyclerView recyclerView;
     private HomeAdapter adapter;
+
+    /*刷新控件*/
+    private SwipeRefreshLayout swipeRefreshLayout;
+
 
     @Override
     protected void setRootView() {
@@ -77,9 +76,6 @@ public class SpecialActivity extends BaseTextActivity {
         setListener();
 
     }
-    private GridLayoutManager mLayoutManager;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private LinearLayoutManager linearLayoutManager;
 
     /*组件初始化*/
     public void initData() {
@@ -89,15 +85,9 @@ public class SpecialActivity extends BaseTextActivity {
         intent = getIntent();
         shopid = intent.getStringExtra("shopid");
 
-        listView = (ListView) findViewById(R.id.lv_tese);
-
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-//        linearLayoutManager = new LinearLayoutManager(this);
-//        recyclerView.setLayoutManager(linearLayoutManager);
 
         swipeRefreshLayout=(SwipeRefreshLayout) findViewById(R.id.line_swipe_refresh) ;
         //调整SwipeRefreshLayout的位置
@@ -140,13 +130,131 @@ public class SpecialActivity extends BaseTextActivity {
                     public void onSuccess(String result) {
                         System.out.println("特色服务" + result);
 
-                        Tese tese = GsonUtil.gsonIntance().gsonToBean(result, Tese.class);
-//                        teseListAdapter = new TeseListAdapter(SpecialActivity.this, tese.getMsg());
-//                        listView.setAdapter(teseListAdapter);
+                        final Tese tese = GsonUtil.gsonIntance().gsonToBean(result, Tese.class);
 
-                        recyclerView.setAdapter(
-                                adapter = new HomeAdapter(SpecialActivity.this,tese.getMsg()));
                         //recyclerview设置适配器
+                        adapter = new HomeAdapter(SpecialActivity.this, tese.getMsg());
+
+                        GridLayoutManager llmv;
+                        llmv = new GridLayoutManager(SpecialActivity.this, 2, GridLayoutManager.VERTICAL, false);
+                        llmv.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                            @Override
+                            public int getSpanSize(int position) {
+                                String imgwidth = tese.getMsg().get(position).getImgwidth();
+                                if (imgwidth.equals("50")) {
+                                    return 1;
+                                } else if (imgwidth.equals("100")) {
+                                    return 2;
+                                }
+                                return 1;
+                            }
+                        });
+                        recyclerView.setLayoutManager(llmv);
+
+                        recyclerView.setAdapter(adapter);
+
+                        adapter.setOnItemClickListener(new OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                System.out.println("" + tese.getMsg().get(position).getName());
+
+                                String id = tese.getMsg().get(position).getOrderid();
+                                String action = tese.getMsg().get(position).getAction();
+                                if (action.equals("sssm")) {
+                                    //送水上门
+                                    intent = new Intent(SpecialActivity.this, SendWaterActivity.class);
+                                    intent.putExtra("shopid", shopid);
+                                    startActivity(intent);
+
+                                } else if (action.equals("mkkd")) {
+                                    //收发快递
+                                    intent = new Intent(SpecialActivity.this, ExpressActivity.class);
+                                    intent.putExtra("shopid", shopid);
+                                    startActivity(intent);
+
+                                } else if (action.equals("luntan")) {
+                                    //小区信息
+                                    //进入之前判断是否已经登录
+                                    if (jingang.equals("")) {
+                                        //未登录
+                                        startActivity(new Intent(SpecialActivity.this, LoginRegisterActivity.class));
+                                    } else if (jingang.equals("0")) {
+                                        //未登录
+                                        startActivity(new Intent(SpecialActivity.this, LoginRegisterActivity.class));
+                                    } else if (jingang.equals("1")) {
+                                        //已登录
+                                        intent = new Intent(SpecialActivity.this, VillageActivity.class);
+                                        intent.putExtra("mkid", id);
+                                        startActivity(intent);
+                                    }
+
+                                } else if (action.equals("togethersay")) {
+                                    //二手交易
+                                    //进入之前判断是否已经登录
+                                    if (jingang.equals("")) {
+                                        //未登录
+                                        startActivity(new Intent(SpecialActivity.this, LoginRegisterActivity.class));
+                                    } else if (jingang.equals("0")) {
+                                        //未登录
+                                        startActivity(new Intent(SpecialActivity.this, LoginRegisterActivity.class));
+                                    } else if (jingang.equals("1")) {
+                                        //已登录
+                                        intent = new Intent(SpecialActivity.this, SecondHandActivity.class);
+                                        intent.putExtra("id", "1");
+                                        startActivity(intent);
+                                    }
+
+                                } else if (action.equals("#")) {
+                                    toast("暂未开发");
+                                } else if (action.equals("tscar")) {
+                                    getTscar(action);
+                                } else {
+                                    toast("  ");
+                                }
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onError(Throwable ex, boolean isOnCallback) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException cex) {
+
+                    }
+
+                    @Override
+                    public void onFinished() {
+
+                    }
+                });
+
+    }
+
+    /**
+     * 获取外链
+     * @param action
+     */
+    public void getTscar(String action) {
+        PATH = HttpPath.PATH + "action=" + action;
+        RequestParams params = new RequestParams(PATH);
+        x.http().get(params,
+                new Callback.CommonCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        System.out.println("获取定汽车外链");
+                        Link link = GsonUtil.gsonIntance().gsonToBean(result, Link.class);
+
+                        if(link.isError() == false){
+                            intent = new Intent(SpecialActivity.this, JoinActivity.class);
+                            intent.putExtra("title", "定汽车");
+                            intent.putExtra("url", link.getMsg().toString());
+                            startActivity(intent);
+                        }
 
                     }
 
@@ -171,121 +279,19 @@ public class SpecialActivity extends BaseTextActivity {
     /**
      * 特色服务模块适配器
      */
-    public class TeseListAdapter extends BaseAdapter {
-        private Context mContext;
-        private List<Tese.MsgBean> msgBeenList;
-
-        public TeseListAdapter(Context mContext, List<Tese.MsgBean> msgBeenList) {
-            this.mContext = mContext;
-            this.msgBeenList = msgBeenList;
-        }
-
-        @Override
-        public int getCount() {
-            return msgBeenList.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return msgBeenList.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            ViewHolder vh;
-            if (view == null) {
-                vh = new ViewHolder();
-                view = LayoutInflater.from(mContext).inflate(R.layout.item_tese, null);
-
-                vh.iv_img = (ImageView) view.findViewById(R.id.iv_item_tese_img);
-
-                view.setTag(vh);
-            } else {
-                vh = (ViewHolder) view.getTag();
-            }
-
-            String img = msgBeenList.get(i).getImg();
-
-            System.out.println("img = " + img);
-
-            if (img.equals("")) {
-                vh.iv_img.setImageResource(R.mipmap.yibeitong001);
-
-            } else {
-                x.image().bind(vh.iv_img, "http://www.ybt9.com/" + img);
-            }
-
-            /*点击listView的item*/
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    String id = msgBeenList.get(i).getOrderid();
-                    String action = msgBeenList.get(i).getAction();
-                    if (action.equals("sssm")) {
-                        //送水上门
-                        intent = new Intent(SpecialActivity.this, SendWaterActivity.class);
-                        intent.putExtra("shopid", shopid);
-                        startActivity(intent);
-
-                    } else if (action.equals("mkkd")) {
-                        //收发快递
-                        intent = new Intent(SpecialActivity.this, ExpressActivity.class);
-                        intent.putExtra("shopid", shopid);
-                        startActivity(intent);
-
-                    } else if (action.equals("luntan")) {
-                        //小区信息
-                        //进入之前判断是否已经登录
-                        if (jingang.equals("")) {
-                            //未登录
-                            startActivity(new Intent(SpecialActivity.this, LoginRegisterActivity.class));
-                        } else if (jingang.equals("0")) {
-                            //未登录
-                            startActivity(new Intent(SpecialActivity.this, LoginRegisterActivity.class));
-                        } else if (jingang.equals("1")) {
-                            //已登录
-                            intent = new Intent(SpecialActivity.this, VillageActivity.class);
-                            intent.putExtra("mkid", id);
-                            startActivity(intent);
-                        }
-
-                    } else if (action.equals("togethersay")) {
-                        //二手交易
-                        //进入之前判断是否已经登录
-                        if (jingang.equals("")) {
-                            //未登录
-                            startActivity(new Intent(SpecialActivity.this, LoginRegisterActivity.class));
-                        } else if (jingang.equals("0")) {
-                            //未登录
-                            startActivity(new Intent(SpecialActivity.this, LoginRegisterActivity.class));
-                        } else if (jingang.equals("1")) {
-                            //已登录
-                            intent = new Intent(SpecialActivity.this, SecondHandActivity.class);
-                            intent.putExtra("id", "1");
-                            startActivity(intent);
-                        }
-
-                    } else {
-                        toast("错误   ");
-                    }
-                }
-            });
-
-            return view;
-        }
-
-        public class ViewHolder {
-            ImageView iv_img;
-        }
-    }
-
-
     class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
+
+        private OnItemClickListener mOnItemClickListener;
+        private OnItemLongClickListener mOnItemLongClickListener;
+
+        public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+            this.mOnItemClickListener = mOnItemClickListener;
+        }
+
+        public void setOnItemLongClickListener(OnItemLongClickListener mOnItemLongClickListener) {
+            this.mOnItemLongClickListener = mOnItemLongClickListener;
+        }
+
         private Context mContext;
         private List<Tese.MsgBean> msgBeen;
 
@@ -303,7 +309,28 @@ public class SpecialActivity extends BaseTextActivity {
         }
 
         @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
+        public void onBindViewHolder(final MyViewHolder holder, int position) {
+            if (mOnItemClickListener != null) {
+                //为ItemView设置监听器
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = holder.getLayoutPosition(); // 1
+                        mOnItemClickListener.onItemClick(holder.itemView, position); // 2
+                    }
+                });
+            }
+            if (mOnItemLongClickListener != null) {
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int position = holder.getLayoutPosition();
+                        mOnItemLongClickListener.onItemLongClick(holder.itemView, position);
+                        //返回true 表示消耗了事件 事件不会继续传递
+                        return true;
+                    }
+                });
+            }
 
             String img = msgBeen.get(position).getImg();
 
