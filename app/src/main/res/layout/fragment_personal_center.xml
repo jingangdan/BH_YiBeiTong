@@ -647,8 +647,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_centerVertical="true"
                                 android:layout_marginRight="10dp"
-                                android:layout_toLeftOf="@+id/iv_percen_sign"
-                                android:text="签到" />
+                                android:layout_toLeftOf="@+id/iv_percen_sign" />
 
                         </RelativeLayout>
 

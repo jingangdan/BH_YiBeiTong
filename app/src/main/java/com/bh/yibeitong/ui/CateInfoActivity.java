@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -61,7 +62,8 @@ public class CateInfoActivity extends BaseTextActivity {
     private List<CateInfo.MsgBean.ChildcateBean> childcateBeen;
 
     /*分类下商品分类*/
-    private MyGridView mgv_cateinfo;
+    //private MyGridView mgv_cateinfo;
+    private GridView gridView;
     private CateInfoGoodsAdapter cateInfoGoodsAdapter;
     private List<CateInfoGoods.MsgBean.GoodslistBean> goodslistBeen;
 
@@ -96,7 +98,8 @@ public class CateInfoActivity extends BaseTextActivity {
         limitcost = Double.parseDouble(userInfo.getShopDet());
 
         hlv_cateinfo = (HorizontalListView) findViewById(R.id.hlv_cateinfo);
-        mgv_cateinfo = (MyGridView) findViewById(R.id.mgv_cateinfo);
+        //mgv_cateinfo = (MyGridView) findViewById(R.id.mgv_cateinfo);
+        gridView = (GridView) findViewById(R.id.gv_cateinfo);
 
         lin_zonghe = (LinearLayout) findViewById(R.id.lin_cateinfo_zonghe);
         lin_price = (LinearLayout) findViewById(R.id.lin_cateinfo_price);
@@ -424,7 +427,8 @@ public class CateInfoActivity extends BaseTextActivity {
 
                         goodslistBeen = cateInfoGoods.getMsg().getGoodslist();
                         cateInfoGoodsAdapter = new CateInfoGoodsAdapter(CateInfoActivity.this, goodslistBeen);
-                        mgv_cateinfo.setAdapter(cateInfoGoodsAdapter);
+                        //mgv_cateinfo.setAdapter(cateInfoGoodsAdapter);
+                        gridView.setAdapter(cateInfoGoodsAdapter);
                     }
 
                     @Override
@@ -571,12 +575,12 @@ public class CateInfoActivity extends BaseTextActivity {
                 vh.shopCart_sub = (ImageView) convertView.findViewById(R.id.iv_shopnew_sub);
 
                 /*新版 商品展示*/
-                vh.iv_img = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_img);
-                vh.iv_add = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_add);
-                vh.iv_sub = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_sub);
-                vh.tv_name = (TextView) convertView.findViewById(R.id.tv_item_shopnew_name);
-                vh.tv_cost = (TextView) convertView.findViewById(R.id.tv_item_shopnew_cost);
-                vh.tv_num = (TextView) convertView.findViewById(R.id.tv_item_shopnew_num);
+//                vh.iv_img = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_img);
+//                vh.iv_add = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_add);
+//                vh.iv_sub = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_sub);
+//                vh.tv_name = (TextView) convertView.findViewById(R.id.tv_item_shopnew_name);
+//                vh.tv_cost = (TextView) convertView.findViewById(R.id.tv_item_shopnew_cost);
+//                vh.tv_num = (TextView) convertView.findViewById(R.id.tv_item_shopnew_num);
 
                 convertView.setTag(vh);
             } else {
@@ -588,8 +592,6 @@ public class CateInfoActivity extends BaseTextActivity {
             String name = goodslistBeanList.get(position).getName();
             final String cost = goodslistBeanList.get(position).getCost();
             String sellcount = String.valueOf(goodslistBeanList.get(position).getSellcount());
-            String point = goodslistBeanList.get(position).getPoint();//不知道代表什么 先代表购物车内商品数量吧
-
             final String shopid = goodslistBeanList.get(position).getShopid();
 
             final int cartNum = goodslistBeanList.get(position).getCartnum();
@@ -605,7 +607,7 @@ public class CateInfoActivity extends BaseTextActivity {
             final int str_cartNum = goodslistBeanList.get(position).getCartnum();
 
         /*点击图片查看商品详细信息*/
-            vh.iv_img.setOnClickListener(new View.OnClickListener() {
+            vh.imager.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     System.out.println("点击" + position);
@@ -627,7 +629,7 @@ public class CateInfoActivity extends BaseTextActivity {
             });
 
             if (imgPath.equals("")) {
-                vh.iv_img.setImageResource(R.mipmap.yibeitong001);
+                vh.imager.setImageResource(R.mipmap.yibeitong001);
 
             } else {
                 //xUtils Bitmap用法
@@ -636,23 +638,23 @@ public class CateInfoActivity extends BaseTextActivity {
                 bitmapUtils.configDiskCacheEnabled(true);
                 bitmapUtils.configMemoryCacheEnabled(false);
                 bitmapUtils.display(vh.imager, imgPath);*/
-                x.image().bind(vh.iv_img, "http://www.ybt9.com/" + imgPath);
+                x.image().bind(vh.imager, "http://www.ybt9.com/" + imgPath);
             }
 
-            vh.tv_name.setText("" + name);
+            vh.name.setText("" + name);
             vh.sellcount.setText("月售  " + sellcount);
-            vh.tv_cost.setText("￥" + cost);
+            vh.cost.setText("￥" + cost);
 
             //vh.tv_num.setText(point);
 
-            vh.tv_num.setText("" + cartNum);
+            vh.shopCart_num.setText("" + cartNum);
             //购物车为0  隐藏减少按钮和数量
             if (cartNum == 0) {
-                vh.iv_sub.setVisibility(View.INVISIBLE);
-                vh.tv_num.setVisibility(View.INVISIBLE);
+                vh.shopCart_sub.setVisibility(View.INVISIBLE);
+                vh.shopCart_num.setVisibility(View.INVISIBLE);
             } else if (cartNum > 0) {
-                vh.iv_sub.setVisibility(View.VISIBLE);
-                vh.tv_num.setVisibility(View.VISIBLE);
+                vh.shopCart_sub.setVisibility(View.VISIBLE);
+                vh.shopCart_num.setVisibility(View.VISIBLE);
             } else {
                 Toast.makeText(mContext, "格式不正确", Toast.LENGTH_SHORT).show();
             }
@@ -661,14 +663,14 @@ public class CateInfoActivity extends BaseTextActivity {
 
 
             //添加购物车
-            vh.iv_add.setOnClickListener(new View.OnClickListener() {
+            vh.shopCart_add.setOnClickListener(new View.OnClickListener() {
                 //int cartNum = detBeen.get(position).getCartnum();
 
                 @Override
                 public void onClick(View v) {
-                    String str_num = vh.tv_num.getText().toString();
+                    String str_num = vh.shopCart_num.getText().toString();
                     good_num = Integer.valueOf(str_num);
-                    vh.iv_add.setClickable(false);
+                    vh.shopCart_add.setClickable(false);
                     //添加购物车  请求接口 成功则添加 反之不添加
                     //添加购物车
                     RequestParams params = new RequestParams(
@@ -680,7 +682,7 @@ public class CateInfoActivity extends BaseTextActivity {
                                 @Override
                                 public void onSuccess(String result) {
 
-                                    vh.iv_add.setClickable(true);
+                                    vh.shopCart_add.setClickable(true);
                                     System.out.println("添加购物车" + result);
 
                                     ShopCartReturn shopCartReturn =
@@ -694,8 +696,8 @@ public class CateInfoActivity extends BaseTextActivity {
                                         if (addShopCart.isError() == false) {
                                             System.out.println("添加成功" + addShopCart.getMsg());
                                             if (good_num >= 0 && good_num < 100) {
-                                                vh.tv_num.setVisibility(View.VISIBLE);
-                                                vh.iv_sub.setVisibility(View.VISIBLE);
+                                                vh.shopCart_num.setVisibility(View.VISIBLE);
+                                                vh.shopCart_sub.setVisibility(View.VISIBLE);
                                                 good_num++;
 
                                                 totalPrice += d_cost;
@@ -720,7 +722,7 @@ public class CateInfoActivity extends BaseTextActivity {
                                                 Toast.makeText(mContext, "错误", Toast.LENGTH_SHORT).show();
                                             }
 
-                                            vh.tv_num.setText("" + good_num);
+                                            vh.shopCart_num.setText("" + good_num);
 
                                             tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
@@ -755,16 +757,16 @@ public class CateInfoActivity extends BaseTextActivity {
             });
 
             //减少购物车
-            vh.iv_sub.setOnClickListener(new View.OnClickListener() {
+            vh.shopCart_sub.setOnClickListener(new View.OnClickListener() {
                 int cartNum = goodslistBeanList.get(position).getCartnum();
                 //long lastClick;
 
                 @Override
                 public void onClick(View v) {
-                    vh.iv_sub.setClickable(false);
+                    vh.shopCart_sub.setClickable(false);
                     //减少购物车  请求接口 成功则减少 反之 不减少
 
-                    String str_num = vh.tv_num.getText().toString();
+                    String str_num = vh.shopCart_num.getText().toString();
                     good_num = Integer.valueOf(str_num);
 
                     if (good_num > 0) {
@@ -775,7 +777,7 @@ public class CateInfoActivity extends BaseTextActivity {
                                 new Callback.CommonCallback<String>() {
                                     @Override
                                     public void onSuccess(String result) {
-                                        vh.iv_sub.setClickable(true);
+                                        vh.shopCart_sub.setClickable(true);
                                         System.out.println("购物车操作" + result);
 
                                         ShopCartReturn shopCartReturn =
@@ -806,7 +808,7 @@ public class CateInfoActivity extends BaseTextActivity {
 
                                             tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
-                                            vh.tv_num.setText("" + good_num);
+                                            vh.shopCart_num.setText("" + good_num);
 
                                         } else if (shopCartReturn.getMsg().isResult() == false) {
                                             Toast.makeText(mContext, "减少失败，库存不足", Toast.LENGTH_SHORT).show();
@@ -832,7 +834,7 @@ public class CateInfoActivity extends BaseTextActivity {
 
 
                     } else if (good_num == 0) {
-                        vh.iv_sub.setClickable(true);
+                        vh.shopCart_sub.setClickable(true);
                     }
 
                 }
@@ -848,8 +850,8 @@ public class CateInfoActivity extends BaseTextActivity {
             private TextView shopCart_num;
             private ImageView shopCart_add, shopCart_sub;
 
-            private ImageView iv_img, iv_add, iv_sub;
-            private TextView tv_name, tv_cost, tv_num;
+//            private ImageView iv_img, iv_add, iv_sub;
+//            private TextView tv_name, tv_cost, tv_num;
 
         }
     }

@@ -1,8 +1,6 @@
-package com.bh.yibeitong.bean;
+package com.bh.yibeitong.lunbotu;
 
 /**
- * 用于轮播图
- *
  * 描述：广告信息</br>
  */
 public class ADInfo {

@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +23,10 @@ import com.bh.yibeitong.ui.express.ExpressActivity;
 import com.bh.yibeitong.ui.sendwater.SendWaterActivity;
 import com.bh.yibeitong.ui.village.SecondHandActivity;
 import com.bh.yibeitong.ui.village.VillageActivity;
+import com.bh.yibeitong.utils.BaseRecyclerViewHolder;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
+import com.bh.yibeitong.utils.RecyclerViewUtils;
 import com.bh.yibeitong.view.UserInfo;
 
 import org.xutils.common.Callback;
@@ -34,12 +35,11 @@ import org.xutils.x;
 
 import java.util.List;
 
-
 /**
  * Created by jingang on 2017/6/20.
  * 主页特色服务
  */
-public class SpecialActivity extends BaseTextActivity {
+public class SpecialActivity extends BaseTextActivity implements SwipeRefreshLayout.OnRefreshListener{
     /*接口地址*/
     private String PATH = "";
 
@@ -57,6 +57,7 @@ public class SpecialActivity extends BaseTextActivity {
 
     /*刷新控件*/
     private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayoutManager mLayoutManager;
 
 
     @Override
@@ -73,8 +74,6 @@ public class SpecialActivity extends BaseTextActivity {
         setTitleBack(true, 0);
         setTitleName("特色服务");
 
-        setListener();
-
     }
 
     /*组件初始化*/
@@ -87,9 +86,13 @@ public class SpecialActivity extends BaseTextActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mLayoutManager = new LinearLayoutManager(this);
+
+        recyclerView.setLayoutManager(mLayoutManager);
 
         swipeRefreshLayout=(SwipeRefreshLayout) findViewById(R.id.line_swipe_refresh) ;
+        swipeRefreshLayout.setOnRefreshListener(this);
+
         //调整SwipeRefreshLayout的位置
         swipeRefreshLayout.setProgressViewOffset(false,
                 0,
@@ -106,14 +109,12 @@ public class SpecialActivity extends BaseTextActivity {
         super.onClick(v);
     }
 
-    private void setListener(){
-        //swipeRefreshLayout刷新监听
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getLtmkList();
-            }
-        });
+    @Override
+    public void onRefresh() {
+        //
+        System.out.println("刷新");
+        getLtmkList();
+
     }
 
     /**
@@ -128,6 +129,7 @@ public class SpecialActivity extends BaseTextActivity {
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
+                        swipeRefreshLayout.setRefreshing(false);
                         System.out.println("特色服务" + result);
 
                         final Tese tese = GsonUtil.gsonIntance().gsonToBean(result, Tese.class);
@@ -143,7 +145,7 @@ public class SpecialActivity extends BaseTextActivity {
                                 String imgwidth = tese.getMsg().get(position).getImgwidth();
                                 if (imgwidth.equals("50")) {
                                     return 1;
-                                } else if (imgwidth.equals("100")) {
+                                    } else if (imgwidth.equals("100")) {
                                     return 2;
                                 }
                                 return 1;
@@ -156,9 +158,7 @@ public class SpecialActivity extends BaseTextActivity {
                         adapter.setOnItemClickListener(new OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-                                System.out.println("" + tese.getMsg().get(position).getName());
-
-                                String id = tese.getMsg().get(position).getOrderid();
+                                String id = tese.getMsg().get(position).getId();
                                 String action = tese.getMsg().get(position).getAction();
                                 if (action.equals("sssm")) {
                                     //送水上门
@@ -206,8 +206,24 @@ public class SpecialActivity extends BaseTextActivity {
 
                                 } else if (action.equals("#")) {
                                     toast("暂未开发");
-                                } else if (action.equals("tscar")) {
-                                    getTscar(action);
+                                    /*intent = new Intent(SpecialActivity.this, TeseCateInfoActivity.class);
+                                    intent.putExtra("title",tese.getMsg().get(position).getName());
+                                    intent.putExtra("action", action);
+                                    intent.putExtra("id", id);
+                                    intent.putExtra("shopid", shopid);*/
+                                    //startActivity(intent);
+
+                                } else if (action.equals("tesecate")) {
+                                    //定汽车
+                                    //getTscar(action);
+
+                                    intent = new Intent(SpecialActivity.this, TeseCateInfoActivity.class);
+                                    intent.putExtra("title",tese.getMsg().get(position).getName());
+                                    intent.putExtra("action", action);
+                                    intent.putExtra("id", id);
+                                    intent.putExtra("shopid", shopid);
+                                    startActivity(intent);
+
                                 } else {
                                     toast("  ");
                                 }
@@ -280,6 +296,8 @@ public class SpecialActivity extends BaseTextActivity {
      * 特色服务模块适配器
      */
     class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
+        static final int TYPE_ITEM = 0;
+        static final int TYPE_FOOTER = 1;
 
         private OnItemClickListener mOnItemClickListener;
         private OnItemLongClickListener mOnItemLongClickListener;
@@ -302,6 +320,7 @@ public class SpecialActivity extends BaseTextActivity {
 
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
             MyViewHolder vh = new MyViewHolder(LayoutInflater.from(
                     SpecialActivity.this).inflate(R.layout.item_tese, parent,
                     false));
@@ -348,7 +367,7 @@ public class SpecialActivity extends BaseTextActivity {
             return msgBeen.size();
         }
 
-        class MyViewHolder extends ViewHolder {
+        class MyViewHolder extends BaseRecyclerViewHolder {
 
             ImageView img;
 

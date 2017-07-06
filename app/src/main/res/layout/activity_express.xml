@@ -22,14 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.bh.yibeitong.refresh.PullToRefreshView
-            android:id="@+id/puToRefreshView_express"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dip"
-            android:layout_weight="1"
-            android:background="#00000000">
-
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent">
@@ -51,8 +43,6 @@
                 </LinearLayout>
 
             </ScrollView>
-
-        </com.bh.yibeitong.refresh.PullToRefreshView>
 
     </RelativeLayout>
 

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +56,7 @@ public class PayActivity extends BaseTextActivity {
     /*接收页面传值*/
     Intent intent;
     //订单名称 订单金额
-    String dno, shopcost;
+    String dno, shopcost, type;
 
     String wmrid;
     private String notfyUrl;
@@ -113,6 +114,8 @@ public class PayActivity extends BaseTextActivity {
         }
     };
 
+    private RelativeLayout rel_pay_yue;
+
     @Override
     protected void setRootView() {
         super.setRootView();
@@ -123,6 +126,13 @@ public class PayActivity extends BaseTextActivity {
         dno = intent.getStringExtra("dno");
         shopcost = intent.getStringExtra("shopcost");
         orderid = intent.getStringExtra("orderid");
+        type = intent.getStringExtra("type");
+
+        if (type.equals("acount")) {
+            rel_pay_yue.setVisibility(View.GONE);
+        } else {
+            rel_pay_yue.setVisibility(View.VISIBLE);
+        }
 
         oName.setText(dno);
         oMoney.setText("￥" + shopcost);
@@ -189,6 +199,9 @@ public class PayActivity extends BaseTextActivity {
 
         pay = (Button) findViewById(R.id.but_payment);
         pay.setOnClickListener(this);
+
+        rel_pay_yue = (RelativeLayout) findViewById(R.id.rel_pay_yue);
+
     }
 
     @Override
@@ -208,17 +221,17 @@ public class PayActivity extends BaseTextActivity {
                     //toast("微信支付暂未开通");
                     //获取支付宝pid  什么的
                     if (userInfo.getCode().equals("0")) {
-                        getPayDataZFB(uid, pwd, shopcost, orderid);
+                        getPayDataZFB(type, uid, pwd, shopcost, orderid);
                     } else {
-                        getPayDataZFB("phone", phone, shopcost, orderid);
+                        getPayDataZFB(type, "phone", phone, shopcost, orderid);
                     }
 
                 } else if (zhifubao.isChecked()) {
                     //获取支付宝pid  什么的
                     if (userInfo.getCode().equals("0")) {
-                        getPayDataZFB(uid, pwd, shopcost, orderid);
+                        getPayDataZFB(type, uid, pwd, shopcost, orderid);
                     } else {
-                        getPayDataZFB("phone", phone, shopcost, orderid);
+                        getPayDataZFB(type, "phone", phone, shopcost, orderid);
                     }
 
                 } else if (yue.isChecked()) {
@@ -484,14 +497,14 @@ public class PayActivity extends BaseTextActivity {
      * &orderid=22670
      * http://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&
      */
-    public void getPayDataZFB(String uid, String pwd, String cost, String orderid) {
+    public void getPayDataZFB(String type, String uid, String pwd, String cost, String orderid) {
         String PATH = null;
         if (userInfo.getCode().equals("0")) {
-            PATH = HttpPath.PATH + HttpPath.PAY_APPDATA +
-                    "uid=" + uid + "&pwd=" + pwd + "&cost=" + cost + "&orderid=" + orderid;
+            PATH = HttpPath.PATH + HttpPath.PAY_APPDATA + "type=" + type +
+                    "&uid=" + uid + "&pwd=" + pwd + "&cost=" + cost + "&orderid=" + orderid;
         } else {
-            PATH = HttpPath.PATH + HttpPath.PAY_APPDATA +
-                    "logintype=" + uid + "&loginphone=" + pwd + "&cost=" + cost + "&orderid=" + orderid;
+            PATH = HttpPath.PATH + HttpPath.PAY_APPDATA + "type=" + type +
+                    "&logintype=" + uid + "&loginphone=" + pwd + "&cost=" + cost + "&orderid=" + orderid;
         }
 
         System.out.println("" + PATH);

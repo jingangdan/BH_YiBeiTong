@@ -267,8 +267,6 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
                     startActivity(intent);
                 }
 
-                //startActivity(new Intent(CateFoodDetailsActivity.this, ShopCarActivity.class));
-
                 break;
 
             default:

@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:text="易贝通1.1.5" />
+            android:text="易贝通1.1.7" />
 
     </RelativeLayout>
 

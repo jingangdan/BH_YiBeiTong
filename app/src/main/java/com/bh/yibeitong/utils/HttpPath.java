@@ -118,7 +118,7 @@ public class HttpPath {
     public static String SHOPCART_DEL = "action=delcart&";
 
     //获取轮播图
-    public static String ADV = "action=getwxadv";
+    public static String ADV = "action=getadvbytype&";
 
     //新增/编辑收货地址
     /**
@@ -218,7 +218,7 @@ public class HttpPath {
      * http://www.ybt9.com/index.php?ctrl=app&source=1&datatype=json&
      * uid=13&pwd=aaaaaa&cost=43&orderid=22670
      */
-    public static String PAY_APPDATA = "action=apppaydata&type=order&";
+    public static String PAY_APPDATA = "action=apppaydata&";
 
     /**
      * 余额支付
@@ -573,6 +573,21 @@ public class HttpPath {
 
     /*特色服务模块*/
     public static String GETTESE = "action=gettese&";
+
+    /*充值列表
+    * 参数：登录验证*/
+    public static String MEMCARD = "action=memcard&";
+
+    /*余额明细
+    * 参数：登录验证*/
+    public static String PAY_LOG = "action=paylog&";
+
+    /*积分明细
+    * 参数：登录验证
+    * page:页数
+    * pageSize:每页个数
+    * */
+    public static String SCORELOG = "action=scorelog&";
 
 
     //完整接口 测试

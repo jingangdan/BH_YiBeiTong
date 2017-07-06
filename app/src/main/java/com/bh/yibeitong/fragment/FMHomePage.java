@@ -42,26 +42,24 @@ import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.GoodsIndex;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.bean.WxADV;
+import com.bh.yibeitong.bean.homepage.AdvByType;
 import com.bh.yibeitong.bean.homepage.GetSign;
 import com.bh.yibeitong.bean.shopbean.Recommed;
+import com.bh.yibeitong.lunbotu.ADInfo;
+import com.bh.yibeitong.lunbotu.CycleViewPager;
+import com.bh.yibeitong.lunbotu.ViewFactory;
 import com.bh.yibeitong.refresh.GridViewAdapter;
 import com.bh.yibeitong.refresh.MyGridView;
 import com.bh.yibeitong.refresh.PullToRefreshView;
 import com.bh.yibeitong.ui.CateFoodDetailsActivity;
 import com.bh.yibeitong.ui.CateInfoActivity;
-import com.bh.yibeitong.ui.DirectlyMarkActivity;
-import com.bh.yibeitong.ui.FoodOutActivity;
 import com.bh.yibeitong.ui.LocationActivity;
-import com.bh.yibeitong.ui.LoginRegisterActivity;
-import com.bh.yibeitong.ui.SelfSupportActivity;
 import com.bh.yibeitong.ui.ShopNewActivity;
 import com.bh.yibeitong.ui.WillOpenActivity;
-import com.bh.yibeitong.ui.express.ExpressActivity;
 import com.bh.yibeitong.ui.homepage.JoinActivity;
 import com.bh.yibeitong.ui.homepage.SpecialActivity;
+import com.bh.yibeitong.ui.percen.YuEActivity;
 import com.bh.yibeitong.ui.search.SearchActivity;
-import com.bh.yibeitong.ui.village.SecondHandActivity;
-import com.bh.yibeitong.ui.village.VillageActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.utils.MD5Util;
@@ -70,11 +68,14 @@ import com.bh.yibeitong.view.MarqueeView;
 import com.bh.yibeitong.view.MyScrollView;
 import com.bh.yibeitong.view.UserInfo;
 import com.bh.yibeitong.zxing.ZXingCaptureActivity;
-import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import org.xutils.BuildConfig;
 import org.xutils.common.Callback;
@@ -85,7 +86,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -132,8 +132,10 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
      * 页面之间的跳转传值
      */
     private Intent intent;
-    private String shopid, shopName, startTime, mapphone, address;
+    private String shopid, startTime, mapphone, address;
     private String latitude, longtitude;//经纬度
+
+    public static String shopName;
 
     /**
      * 垂直跑马灯
@@ -155,7 +157,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     //private String jingang;//还得召唤我的大名！！！
 
     /*轮播图*/
-    private SliderLayout sliderLayout;
+    //private SliderLayout sliderLayout;
 
     private ProgressDialog pd;
 
@@ -186,6 +188,19 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     private String PATH = "";
     private String uid, pwd, phone;
 
+    private List<ImageView> views = new ArrayList<ImageView>();
+    private List<ADInfo> infos = new ArrayList<ADInfo>();
+    private CycleViewPager cycleViewPager;
+
+//    private String[] imageUrls = {"http://img.taodiantong.cn/v55183/infoimg/2013-07/130720115322ky.jpg",
+//            "http://pic30.nipic.com/20130626/8174275_085522448172_2.jpg",
+//            "http://pic18.nipic.com/20111215/577405_080531548148_2.jpg",
+//            "http://pic15.nipic.com/20110722/2912365_092519919000_2.jpg",
+//            "http://pic.58pic.com/58pic/12/64/27/55U58PICrdX.jpg"};
+
+    private ImageView iv_adv001, iv_adv002;
+    private String linkurl;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -199,21 +214,28 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         if (!(userInfo.getUserInfo().equals(""))) {
             Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
             uid = register.getMsg().getUid();
+            phone = register.getMsg().getPhone();
             if (!(userInfo.getPwd().equals(""))) {
                 pwd = userInfo.getPwd();
+            }
 
-                if (userInfo.getCode().equals("0")) {
-                    //System.out.println("我的验证码"+userInfo.getCode());
-                    getSignToDay(uid, pwd);
-                } else {
-                    //System.out.println("我的手机号"+phone);
-                    getSignToDay("phone", phone);
-                }
-
+            if (userInfo.getCode().equals("0")) {
+                //System.out.println("我的验证码"+userInfo.getCode());
+                getSignToDay(uid, pwd);
+            } else {
+                //System.out.println("我的手机号"+phone);
+                getSignToDay("phone", phone);
             }
         } else {
             toast("未登录");
         }
+
+        configImageLoader();
+        initialize();
+
+        /*广告位*/
+        getAdvByType("weixinmid");
+        getAdvByTypes("weixinmid2");
 
         return view;
     }
@@ -326,7 +348,16 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         mgv_classifly = (MyGridView) view.findViewById(R.id.mgv_goods_classify);
 
         /*轮播图*/
-        sliderLayout = (SliderLayout) view.findViewById(R.id.sliderLayout);
+        //sliderLayout = (SliderLayout) view.findViewById(R.id.sliderLayout);
+
+        cycleViewPager = (CycleViewPager) getActivity().getFragmentManager().findFragmentById(R.id.fragment_cycle_viewpager_content);
+
+        /*广告位*/
+        iv_adv001 = (ImageView) view.findViewById(R.id.iv_adv001);
+        iv_adv002 = (ImageView) view.findViewById(R.id.iv_adv002);
+        iv_adv001.setOnClickListener(this);
+        iv_adv002.setOnClickListener(this);
+
 
         mPullToRefreshView.setOnHeaderRefreshListener(this);
         mPullToRefreshView.setOnFooterRefreshListener(this);
@@ -345,8 +376,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         str_marqueeView.add("业了！");
         str_marqueeView.add("了！");
         str_marqueeView.add("！");*/
-
-        //MyScrollView.notifyScrollChangedListeners();
 
         MyScrollView.setScanScrollChangedListener(this);
 
@@ -443,11 +472,55 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         broadcastManager.unregisterReceiver(mAdDownLoadReceiver);
     }
 
+
+
+    private void initialize() {
+
+    }
+
+    private CycleViewPager.ImageCycleViewListener mAdCycleViewListener = new CycleViewPager.ImageCycleViewListener() {
+
+        @Override
+        public void onImageClick(ADInfo info, int position, View imageView) {
+            if (cycleViewPager.isCycle()) {
+                position = position - 1;
+//                Toast.makeText(getActivity(),
+//                        "position-->" + info.getContent(), Toast.LENGTH_SHORT)
+//                        .show();
+            }
+
+        }
+
+    };
+
+    /**
+     * 配置ImageLoder
+     */
+    private void configImageLoader() {
+        // 初始化ImageLoader
+        @SuppressWarnings("deprecation")
+        DisplayImageOptions options = new DisplayImageOptions.Builder().showStubImage(R.mipmap.icon_stub) // 设置图片下载期间显示的图片
+                .showImageForEmptyUri(R.mipmap.icon_empty) // 设置图片Uri为空或是错误的时候显示的图片
+                .showImageOnFail(R.mipmap.icon_error) // 设置图片加载或解码过程中发生错误显示的图片
+                .cacheInMemory(true) // 设置下载的图片是否缓存在内存中
+                .cacheOnDisc(true) // 设置下载的图片是否缓存在SD卡中
+                // .displayer(new RoundedBitmapDisplayer(20)) // 设置成圆角图片
+                .build(); // 创建配置过得DisplayImageOption对象
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext()).defaultDisplayImageOptions(options)
+                .threadPriority(Thread.NORM_PRIORITY - 2).denyCacheImageMultipleSizesInMemory()
+                .discCacheFileNameGenerator(new Md5FileNameGenerator()).tasksProcessingOrder(QueueProcessingType.LIFO).build();
+        ImageLoader.getInstance().init(config);
+    }
+
+
+
     /**
      * 获取轮播图
      */
     public void getWxAdv() {
-        String PATH = HttpPath.PATH + HttpPath.ADV;
+        String PATH = HttpPath.PATH + HttpPath.ADV +
+                "type=weixinlb";
         RequestParams params = new RequestParams(PATH);
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
@@ -460,36 +533,74 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
                         userInfo.saveADV(new Gson().toJson(wxADV.getMsg()));
 
+
+                        for(int i = 0; i < wxADV.getMsg().size(); i ++){
+                            ADInfo info = new ADInfo();
+                            info.setUrl("http://www.ybt9.com/"+wxADV.getMsg().get(i).getImg());
+                            info.setContent("图片-->" + i );
+                            infos.add(info);
+                        }
+
+                        /*for(int i = 0; i < imageUrls.length; i ++){
+                            ADInfo info = new ADInfo();
+                            info.setUrl(imageUrls[i]);
+                            info.setContent("图片-->" + i );
+                            infos.add(info);
+                        }*/
+
+                        // 将最后一个ImageView添加进来
+                        views.add(ViewFactory.getImageView(getActivity(), infos.get(infos.size() - 1).getUrl()));
+                        for (int i = 0; i < infos.size(); i++) {
+                            views.add(ViewFactory.getImageView(getActivity(), infos.get(i).getUrl()));
+                        }
+                        // 将第一个ImageView添加进来
+                        views.add(ViewFactory.getImageView(getActivity(), infos.get(0).getUrl()));
+
+                        // 设置循环，在调用setData方法前调用
+                        cycleViewPager.setCycle(true);
+
+                        // 在加载数据前设置是否循环
+                        cycleViewPager.setData(views, infos, mAdCycleViewListener);
+                        //设置轮播
+                        cycleViewPager.setWheel(true);
+
+                        // 设置轮播时间，默认5000ms
+                        cycleViewPager.setTime(4000);
+                        //设置圆点指示图标组居中显示，默认靠右
+                        cycleViewPager.setIndicatorCenter();
+
+
+
+
+
                         /*轮播图*/
-
-
-                        HashMap<String, String> url_maps = new HashMap<String, String>();
-                        for (int i = 0; i < wxADV.getMsg().size(); i++) {
-                            //url_maps.put("易贝通开业了" + i, "http://www.ybt9.com/" + wxADV.getMsg().get(i).getImg());
-                            url_maps.put(wxADV.getMsg().get(i).getTitle(), "http://www.ybt9.com/" + wxADV.getMsg().get(i).getImg());
-                        }
-
-                        TextSliderView textSliderView;
-                        for (String name : url_maps.keySet()) {
-                            textSliderView = new TextSliderView(getActivity());
-                            // initialize a SliderLayout
-                            textSliderView
-                                    .description("")
-                                    .image(url_maps.get(name))
-                                    .setScaleType(BaseSliderView.ScaleType.Fit);
-                            // .setOnSliderClickListener(this);
-
-                            //add your extra information
-                            textSliderView.getBundle()
-                                    .putString("", name);
-
-                            sliderLayout.addSlider(textSliderView);
-                        }
-
-                        //sliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
-                        //sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-                        //sliderLayout.setCustomAnimation(new DescriptionAnimation());
-                        sliderLayout.setDuration(4000);
+//                        HashMap<String, String> url_maps = new HashMap<String, String>();
+//                        for (int i = 0; i < wxADV.getMsg().size(); i++) {
+//                            //url_maps.put("易贝通开业了" + i, "http://www.ybt9.com/" + wxADV.getMsg().get(i).getImg());
+//                            url_maps.put(wxADV.getMsg().get(i).getTitle(), "http://www.ybt9.com/" + wxADV.getMsg().get(i).getImg());
+//                        }
+//
+//                        TextSliderView textSliderView;
+//                        for (String name : url_maps.keySet()) {
+//                            textSliderView = new TextSliderView(getActivity());
+//                            // initialize a SliderLayout
+//                            textSliderView
+//                                    .description("")
+//                                    .image(url_maps.get(name))
+//                                    .setScaleType(BaseSliderView.ScaleType.Fit);
+//                            // .setOnSliderClickListener(this);
+//
+//                            //add your extra information
+//                            textSliderView.getBundle()
+//                                    .putString("", name);
+//
+//                            sliderLayout.addSlider(textSliderView);
+//                        }
+//
+//                        //sliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
+//                        //sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+//                        //sliderLayout.setCustomAnimation(new DescriptionAnimation());
+//                        sliderLayout.setDuration(4000);
 
 
                     }
@@ -511,6 +622,84 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                 });
 
     }
+
+    /**
+     * 广告位图片1
+     * @param type
+     */
+    public void getAdvByType(String type){
+        PATH = HttpPath.PATH+HttpPath.ADV+"type="+type;
+
+        RequestParams params = new RequestParams(PATH);
+        System.out.println("广告位一"+PATH);
+        x.http().get(params,
+                new Callback.CommonCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        System.out.println("广告位一"+result);
+                        AdvByType advByType = GsonUtil.gsonIntance().gsonToBean(result, AdvByType.class);
+
+                        x.image().bind(iv_adv002, "http://www.ybt9.com/" + advByType.getMsg().get(0).getImg());
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable ex, boolean isOnCallback) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException cex) {
+
+                    }
+
+                    @Override
+                    public void onFinished() {
+
+                    }
+                });
+    }
+
+    /**
+     * 广告位图片2
+     * @param type
+     */
+    public void getAdvByTypes(String type){
+        PATH = HttpPath.PATH+HttpPath.ADV+"type="+type;
+
+        RequestParams params = new RequestParams(PATH);
+        System.out.println("广告位二"+PATH);
+        x.http().get(params,
+                new Callback.CommonCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        System.out.println("广告位二"+result);
+                        AdvByType advByType = GsonUtil.gsonIntance().gsonToBean(result, AdvByType.class);
+
+                        linkurl = advByType.getMsg().get(0).getLinkurl();
+
+                        x.image().bind(iv_adv001, "http://www.ybt9.com/" + advByType.getMsg().get(0).getImg());
+
+                    }
+
+                    @Override
+                    public void onError(Throwable ex, boolean isOnCallback) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException cex) {
+
+                    }
+
+                    @Override
+                    public void onFinished() {
+
+                    }
+                });
+    }
+
 
     /**
      * 查询今天的签到状态
@@ -590,7 +779,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         } else {
                             //but_sign.setText("已签到");
                         }
-                        toast("签到成功" + error.getMsg().toString());
+                        toast("" + error.getMsg().toString());
 
                     }
 
@@ -691,7 +880,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         userInfo.saveShopDet(goodsIndex.getMsg().getShopdet().getLimitcost());
 
                         //et_address.setText(shopName);
-                        et_new_address.setText("送至：" + shopName);
+                        et_new_address.setText("" + shopName);
 
                         //tv_shopname.setText("(当前店铺：" + shopName + "）");
 
@@ -1380,27 +1569,29 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                     if (!(userInfo.getPwd().equals(""))) {
                         pwd = userInfo.getPwd();
 
-                        if (userInfo.getCode().equals("0")) {
-                            signToDay(uid, pwd);
-                        } else {
-                            signToDay("phone", phone);
-                        }
+                    }
 
+                    if (userInfo.getCode().equals("0")) {
+                        System.out.println("0000000");
+                        signToDay(uid, pwd);
+                    } else {
+                        System.out.println("1111111");
+                        signToDay("phone", phone);
                     }
                 } else {
                     toast("未登录");
                 }
 
-
-                lin_ruzhu.setClickable(false);
-
-
                 break;
 
             case R.id.lin_paotui:
                 //新版 跑腿服务
-                startActivity(new Intent(getActivity(), WillOpenActivity.class));
+                //startActivity(new Intent(getActivity(), WillOpenActivity.class));
                 //改为充值
+                intent = new Intent(getActivity(), YuEActivity.class);
+                intent.putExtra("yue","100.00");
+                startActivity(intent);
+
                 break;
 
 //            case R.id.but_sign:
@@ -1440,6 +1631,19 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 //                startActivity(intent);
 //
 //                break;
+
+            case R.id.iv_adv001:
+                //toast("iv_adv001");
+
+                intent = new Intent(getActivity(), JoinActivity.class);
+                intent.putExtra("title", "我要加盟");
+                intent.putExtra("url", "https://www.ybt9.com"+linkurl);
+                startActivity(intent);
+                break;
+
+            case R.id.iv_adv002:
+                //toast("iv_adv002");
+                break;
 
             default:
                 break;
@@ -1557,33 +1761,72 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                 if (wxAdvList.size() == 0) {
 
                 } else if (wxAdvList.size() > 0) {
-                    HashMap<String, String> url_maps = new HashMap<String, String>();
-                    for (int i = 0; i < wxAdvList.size(); i++) {
-                        //url_maps.put("易贝通开业了" + i, "http://www.ybt9.com/" + wxADV.getMsg().get(i).getImg());
-                        url_maps.put(wxAdvList.get(i).getTitle(), "http://www.ybt9.com/" + wxAdvList.get(i).getImg());
+
+                    for(int i = 0; i < wxAdvList.size(); i ++){
+                        ADInfo info = new ADInfo();
+                        info.setUrl("http://www.ybt9.com/"+wxAdvList.get(i).getImg());
+                        info.setContent("图片-->" + i );
+                        infos.add(info);
                     }
 
-                    TextSliderView textSliderView;
-                    for (String name : url_maps.keySet()) {
-                        textSliderView = new TextSliderView(getActivity());
-                        // initialize a SliderLayout
-                        textSliderView
-                                .description("")
-                                .image(url_maps.get(name))
-                                .setScaleType(BaseSliderView.ScaleType.Fit);
-                        // .setOnSliderClickListener(this);
+                        /*for(int i = 0; i < imageUrls.length; i ++){
+                            ADInfo info = new ADInfo();
+                            info.setUrl(imageUrls[i]);
+                            info.setContent("图片-->" + i );
+                            infos.add(info);
+                        }*/
 
-                        //add your extra information
-                        textSliderView.getBundle()
-                                .putString("", name);
-
-                        sliderLayout.addSlider(textSliderView);
+                    // 将最后一个ImageView添加进来
+                    views.add(ViewFactory.getImageView(getActivity(), infos.get(infos.size() - 1).getUrl()));
+                    for (int i = 0; i < infos.size(); i++) {
+                        views.add(ViewFactory.getImageView(getActivity(), infos.get(i).getUrl()));
                     }
+                    // 将第一个ImageView添加进来
+                    views.add(ViewFactory.getImageView(getActivity(), infos.get(0).getUrl()));
 
-                    //sliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
-                    //sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-                    //sliderLayout.setCustomAnimation(new DescriptionAnimation());
-                    sliderLayout.setDuration(4000);
+                    // 设置循环，在调用setData方法前调用
+                    cycleViewPager.setCycle(true);
+
+                    // 在加载数据前设置是否循环
+                    cycleViewPager.setData(views, infos, mAdCycleViewListener);
+                    //设置轮播
+                    cycleViewPager.setWheel(true);
+
+                    // 设置轮播时间，默认5000ms
+                    cycleViewPager.setTime(4000);
+                    //设置圆点指示图标组居中显示，默认靠右
+                    cycleViewPager.setIndicatorCenter();
+
+                    configImageLoader();
+
+
+//                    HashMap<String, String> url_maps = new HashMap<String, String>();
+//                    for (int i = 0; i < wxAdvList.size(); i++) {
+//                        //url_maps.put("易贝通开业了" + i, "http://www.ybt9.com/" + wxADV.getMsg().get(i).getImg());
+//                        url_maps.put(wxAdvList.get(i).getTitle(), "http://www.ybt9.com/" + wxAdvList.get(i).getImg());
+//                    }
+//
+//                    TextSliderView textSliderView;
+//                    for (String name : url_maps.keySet()) {
+//                        textSliderView = new TextSliderView(getActivity());
+//                        // initialize a SliderLayout
+//                        textSliderView
+//                                .description("")
+//                                .image(url_maps.get(name))
+//                                .setScaleType(BaseSliderView.ScaleType.Fit);
+//                        // .setOnSliderClickListener(this);
+//
+//                        //add your extra information
+//                        textSliderView.getBundle()
+//                                .putString("", name);
+//
+//                        sliderLayout.addSlider(textSliderView);
+//                    }
+//
+//                    //sliderLayout.setPresetTransformer(SliderLayout.Transformer.Accordion);
+//                    //sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+//                    //sliderLayout.setCustomAnimation(new DescriptionAnimation());
+//                    sliderLayout.setDuration(4000);
 
                 }
             }

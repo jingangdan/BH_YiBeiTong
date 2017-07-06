@@ -57,7 +57,6 @@ public class ExpressActivity extends BaseTextActivity {
     private ExpressAdapter expressAdapter;
 
     private MyGridView myGridView;
-    private PullToRefreshView pullToRefreshView;
 
     //购物车
     private double totalPrice = 0;
@@ -89,7 +88,6 @@ public class ExpressActivity extends BaseTextActivity {
 
 //        listView = (ListView) findViewById(R.id.lv_express);
 
-        pullToRefreshView = (PullToRefreshView) findViewById(R.id.puToRefreshView_express);
         myGridView = (MyGridView) findViewById(R.id.myGridView_express);
 
         df = new DecimalFormat("###.00");

@@ -42,6 +42,7 @@ public class JoinActivity extends BaseTextActivity {
         url = intent.getStringExtra("url");
         title = intent.getStringExtra("title");
 
+        System.out.println("aaaaaaa = "+url);
         webView = (WebView) findViewById(R.id.webView_join);
         webView.loadUrl(url);
 

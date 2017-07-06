@@ -25,12 +25,11 @@ import java.util.List;
  */
 
 public class ExChangeActivity extends BaseTextActivity {
-    private List<Gift.MsgBean> msgBeanList = new ArrayList<>();
-
-    private GiftAdapter giftAdapter;
 
     private TextView myJifen, notes;
 
+    /*兑换礼品列表UI*/
+    private GiftAdapter giftAdapter;
     private MyGridView myGridView;
 
     @Override
@@ -87,6 +86,7 @@ public class ExChangeActivity extends BaseTextActivity {
 
         RequestParams params = new RequestParams(PATH);
 
+        System.out.println("礼品列表" + PATH);
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
                     @Override
@@ -95,9 +95,7 @@ public class ExChangeActivity extends BaseTextActivity {
 
                         Gift gift = GsonUtil.gsonIntance().gsonToBean(result, Gift.class);
 
-                        msgBeanList = gift.getMsg();
-
-                        giftAdapter = new GiftAdapter(ExChangeActivity.this, msgBeanList);
+                        giftAdapter = new GiftAdapter(ExChangeActivity.this, gift.getMsg());
 
                         myGridView.setAdapter(giftAdapter);
 

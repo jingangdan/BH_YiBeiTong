@@ -44,7 +44,9 @@ import com.bh.yibeitong.ui.SettingActivity;
 import com.bh.yibeitong.ui.address.ManageAddressActivity;
 import com.bh.yibeitong.ui.percen.AboutUsActivity;
 import com.bh.yibeitong.ui.percen.ExChangeActivity;
+import com.bh.yibeitong.ui.percen.JiFenActivity;
 import com.bh.yibeitong.ui.percen.YouHuiQuanActivity;
+import com.bh.yibeitong.ui.percen.YuEActivity;
 import com.bh.yibeitong.updateversion.UpdateStatus;
 import com.bh.yibeitong.updateversion.UpdateVersionUtil;
 import com.bh.yibeitong.updateversion.VersionInfo;
@@ -359,9 +361,9 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
 
             case R.id.lin_collect_goods:
                 //账户余额
-//                intent = new Intent(getActivity(), YuEActivity.class);
-//                intent.putExtra("yue", s_yue);
-//                startActivity(intent);
+                intent = new Intent(getActivity(), YuEActivity.class);
+                intent.putExtra("yue", s_yue);
+                startActivity(intent);
 
                 break;
 
@@ -372,6 +374,8 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
 
             case R.id.lin_collect_shopcart:
                 //积分
+                startActivity(new Intent(getActivity(), JiFenActivity.class));
+
                 break;
 
             case R.id.lin_percen001:
@@ -400,17 +404,16 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
                 if (!(userInfo.getUserInfo().equals(""))) {
                     Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
                     uid = register.getMsg().getUid();
+                    phone = register.getMsg().getPhone();
                     if (!(userInfo.getPwd().equals(""))) {
                         pwd = userInfo.getPwd();
-
-                        if (userInfo.getCode().equals("0")) {
-                            //System.out.println("我的验证码"+userInfo.getCode());
-                            signToDay(uid, pwd);
-                        } else {
-                            //System.out.println("我的手机号"+phone);
-                            signToDay("phone", phone);
-                        }
-
+                    }
+                    if (userInfo.getCode().equals("0")) {
+                        //System.out.println("我的验证码"+userInfo.getCode());
+                        signToDay(uid, pwd);
+                    } else {
+                        //System.out.println("我的手机号"+phone);
+                        signToDay("phone", phone);
                     }
                 } else {
                     toast("未登录");

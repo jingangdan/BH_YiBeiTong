@@ -103,7 +103,7 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
         limitcost = Double.parseDouble(userInfo.getShopDet());
 
-        Bundle bundle = getArguments();
+        /*Bundle bundle = getArguments();
         //从activity传过来的Bundle
         if (bundle != null) {
             login = bundle.getString("login");
@@ -114,10 +114,10 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                 dialog();
             }
 
-        }
+        }*/
 
         jingang = userInfo.getLogin();
-        if (jingang.equals("")) {
+        /*if (jingang.equals("")) {
             //没有登录
             //System.out.println("购物车 空" + jingang + "未登录");
             //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
@@ -128,8 +128,9 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
         } else if (jingang.equals("1")) {
             //已登录
             //System.out.println("购物车" + jingang + "已登录");
-            getShopCart(shopid);
-        }
+
+        }*/
+        getShopCart(shopid);
 
         puToRefreshView.setOnHeaderRefreshListener(this);
         puToRefreshView.setOnFooterRefreshListener(this);
@@ -188,7 +189,7 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
             //店铺起送价格
             limitcost = Double.parseDouble(userInfo.getShopDet());
 
-            Bundle bundle = getArguments();
+            /*Bundle bundle = getArguments();
             //从activity传过来的Bundle
             if (bundle != null) {
                 login = bundle.getString("login");
@@ -198,9 +199,9 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                     Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
                 }
 
-            }
+            }*/
 
-            jingang = userInfo.getLogin();
+            /*jingang = userInfo.getLogin();
             if (jingang.equals("")) {
                 //没有登录
                 //System.out.println("购物车 空" + jingang + "未登录");
@@ -214,8 +215,9 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
             } else if (jingang.equals("1")) {
                 //已登录
                 //System.out.println("购物车" + jingang + "已登录");
-                getShopCart(shopid);
-            }
+
+            }*/
+            getShopCart(shopid);
 
             puToRefreshView.setOnHeaderRefreshListener(this);
             puToRefreshView.setOnFooterRefreshListener(this);
@@ -330,7 +332,7 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
         }
         String Path = HttpPath.PATH + HttpPath.GETCART + "shopid=" + shopid;
 
-        System.out.println("PATH = " + Path);
+        System.out.println("购物车 = " + Path);
 
         RequestParams params = new RequestParams(Path);
         x.http().get(params,
@@ -340,7 +342,10 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                         System.out.println("购物车 = " + result);
                         totalPrice = 0;
                         /**/
+                        System.out.println("222222222");
                         ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
+
+                        System.out.println("11111111111111");
 
                         totalPrice = shopCart.getMsg().getSurecost();
 

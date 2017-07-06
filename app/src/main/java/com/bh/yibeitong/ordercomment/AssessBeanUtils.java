@@ -8,7 +8,6 @@ package com.bh.yibeitong.ordercomment;
  */
 public class AssessBeanUtils {
 
-
     private int outIndex;
     private int inIndex;
 

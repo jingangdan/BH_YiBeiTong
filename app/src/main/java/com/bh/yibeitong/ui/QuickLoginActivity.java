@@ -6,7 +6,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.bh.yibeitong.BuildConfig;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.actitvity.ActivityCollector;
 import com.bh.yibeitong.actitvity.MainActivity;
@@ -42,7 +41,6 @@ public class QuickLoginActivity extends BaseTextActivity {
 
     UserInfo userInfo;
 
-
     @Override
     protected void setRootView() {
         super.setRootView();
@@ -54,10 +52,6 @@ public class QuickLoginActivity extends BaseTextActivity {
         super.initWidght();
         setTitleName("快速登录");
         setTitleBack(true, 0);
-
-
-        x.Ext.init(getApplication());
-        x.Ext.setDebug(BuildConfig.DEBUG);
 
         initData();
         /*but_ql_code = (Button) findViewById(R.id.but_ql_code);
@@ -285,6 +279,5 @@ public class QuickLoginActivity extends BaseTextActivity {
         };
         thread.start();
     }
-
 
 }

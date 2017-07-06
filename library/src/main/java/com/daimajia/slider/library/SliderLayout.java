@@ -187,7 +187,7 @@ public class SliderLayout extends RelativeLayout {
         mViewPager = (InfiniteViewPager) findViewById(R.id.daimajia_slider_viewpager);
         mViewPager.setAdapter(wrappedAdapter);
 
-        mViewPager.setOnTouchListener(new OnTouchListener() {
+       /* mViewPager.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
@@ -209,7 +209,7 @@ public class SliderLayout extends RelativeLayout {
                 }
                 return false;
             }
-        });
+        });*/
 
         attributes.recycle();
         setPresetIndicator(PresetIndicators.Center_Bottom);

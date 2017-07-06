@@ -365,6 +365,11 @@
         <!--账号余额-->
         <activity android:name=".ui.percen.YuEActivity"></activity>
 
+        <!--余额明细-->
+        <activity android:name=".ui.percen.PayLogActivity"></activity>
+
+        <!--我要充值（付款方式）-->
+
         <!--优惠券列表-->
         <activity android:name=".ui.percen.YouHuiQuanActivity"></activity>
 
@@ -440,6 +445,12 @@
 
         <!--特色服务（主页）-->
         <activity android:name=".ui.homepage.SpecialActivity"></activity>
+
+        <!--特色服务下的分类-->
+        <activity android:name=".ui.homepage.TeseCateInfoActivity"></activity>
+
+        <!--积分中心-->
+        <activity android:name=".ui.percen.JiFenActivity"></activity>
 
         <!--<provider
             android:name="android.support.v4.content.FileProvider"

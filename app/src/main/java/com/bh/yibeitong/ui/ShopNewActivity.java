@@ -661,12 +661,12 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                 vh.shopCart_sub = (ImageView) convertView.findViewById(R.id.iv_shopnew_sub);
 
                 /*改版样式*/
-                vh.iv_img = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_img);
-                vh.iv_sub = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_sub);
-                vh.iv_add = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_add);
-                vh.tv_good_name = (TextView) convertView.findViewById(R.id.tv_item_shopnew_name);
-                vh.tv_good_cost = (TextView) convertView.findViewById(R.id.tv_item_shopnew_cost);
-                vh.tv_good_num = (TextView) convertView.findViewById(R.id.tv_item_shopnew_num);
+//                vh.iv_img = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_img);
+//                vh.iv_sub = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_sub);
+//                vh.iv_add = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_add);
+//                vh.tv_good_name = (TextView) convertView.findViewById(R.id.tv_item_shopnew_name);
+//                vh.tv_good_cost = (TextView) convertView.findViewById(R.id.tv_item_shopnew_cost);
+//                vh.tv_good_num = (TextView) convertView.findViewById(R.id.tv_item_shopnew_num);
 
                 convertView.setTag(vh);
             } else {
@@ -681,31 +681,31 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
             final String shopid = detBeen.get(position).getShopid();
             if (imgPath.equals("")) {
-                vh.iv_img.setImageResource(R.mipmap.yibeitong001);
+                vh.imager.setImageResource(R.mipmap.yibeitong001);
 
             } else {
                 BitmapUtils bitmapUtils = new BitmapUtils(mContext);
 
                 bitmapUtils.configDiskCacheEnabled(true);
                 bitmapUtils.configMemoryCacheEnabled(false);
-                bitmapUtils.display(vh.iv_img, imgPath);
+                bitmapUtils.display(vh.imager, imgPath);
             }
             final int cartNum = detBeen.get(position).getCartnum();
 
-            vh.tv_good_name.setText(name);
+            vh.name.setText(name);
             vh.sellcount.setText("月售  " + sellcount);
-            vh.tv_good_cost.setText("￥" + cost);
+            vh.cost.setText("￥" + cost);
 
             //vh.shopCart_num.setText(point);
 
-            vh.tv_good_num.setText("" + cartNum);
+            vh.shopCart_num.setText("" + cartNum);
             //购物车为0  隐藏减少按钮和数量
             if (cartNum == 0) {
-                vh.iv_sub.setVisibility(View.INVISIBLE);
-                vh.tv_good_num.setVisibility(View.INVISIBLE);
+                vh.shopCart_sub.setVisibility(View.INVISIBLE);
+                vh.shopCart_num.setVisibility(View.INVISIBLE);
             } else if (cartNum > 0) {
-                vh.iv_sub.setVisibility(View.VISIBLE);
-                vh.tv_good_num.setVisibility(View.VISIBLE);
+                vh.shopCart_sub.setVisibility(View.VISIBLE);
+                vh.shopCart_num.setVisibility(View.VISIBLE);
             } else {
                 Toast.makeText(mContext, "格式不正确", Toast.LENGTH_SHORT).show();
             }
@@ -714,13 +714,13 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
 
             //添加购物车
-            vh.iv_add.setOnClickListener(new View.OnClickListener() {
+            vh.shopCart_add.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    String str_num = vh.tv_good_num.getText().toString();
+                    String str_num = vh.shopCart_num.getText().toString();
                     good_num = Integer.valueOf(str_num);
-                    vh.iv_add.setClickable(false);
+                    vh.shopCart_add.setClickable(false);
                     //添加购物车  请求接口 成功则添加 反之不添加
                     //添加购物车
                     RequestParams params = new RequestParams(
@@ -732,7 +732,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                                 @Override
                                 public void onSuccess(String result) {
 
-                                    vh.iv_add.setClickable(true);
+                                    vh.shopCart_add.setClickable(true);
 
                                     ShopCartReturn shopCartReturn =
                                             GsonUtil.gsonIntance().gsonToBean(result, ShopCartReturn.class);
@@ -745,8 +745,8 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                                         if (addShopCart.isError() == false) {
                                             System.out.println("添加成功" + addShopCart.getMsg());
                                             if (good_num >= 0 && good_num < 100) {
-                                                vh.tv_good_num.setVisibility(View.VISIBLE);
-                                                vh.iv_sub.setVisibility(View.VISIBLE);
+                                                vh.shopCart_num.setVisibility(View.VISIBLE);
+                                                vh.shopCart_sub.setVisibility(View.VISIBLE);
                                                 good_num++;
 
                                                 totalPrice += d_cost;
@@ -771,7 +771,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                                                 Toast.makeText(ShopNewActivity.this, "错误", Toast.LENGTH_SHORT).show();
                                             }
 
-                                            vh.tv_good_num.setText("" + good_num);
+                                            vh.shopCart_num.setText("" + good_num);
 
                                             tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
@@ -806,16 +806,16 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
             });
 
             //减少购物车
-            vh.iv_sub.setOnClickListener(new View.OnClickListener() {
+            vh.shopCart_sub.setOnClickListener(new View.OnClickListener() {
                 int cartNum = detBeen.get(position).getCartnum();
                 //long lastClick;
 
                 @Override
                 public void onClick(View v) {
-                    vh.iv_sub.setClickable(false);
+                    vh.shopCart_sub.setClickable(false);
                     //减少购物车  请求接口 成功则减少 反之 不减少
 
-                    String str_num = vh.tv_good_num.getText().toString();
+                    String str_num = vh.shopCart_num.getText().toString();
                     good_num = Integer.valueOf(str_num);
 
                     if (good_num > 0) {
@@ -825,7 +825,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                                 new Callback.CommonCallback<String>() {
                                     @Override
                                     public void onSuccess(String result) {
-                                        vh.iv_sub.setClickable(true);
+                                        vh.shopCart_sub.setClickable(true);
                                         System.out.println("购物车操作" + result);
 
                                         ShopCartReturn shopCartReturn =
@@ -858,7 +858,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                                             tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
 
-                                            vh.tv_good_num.setText("" + good_num);
+                                            vh.shopCart_num.setText("" + good_num);
 
                                         } else if (shopCartReturn.getMsg().isResult() == false) {
                                             Toast.makeText(ShopNewActivity.this, "减少失败，库存不足", Toast.LENGTH_SHORT).show();
@@ -884,7 +884,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
 
                     } else if (good_num == 0) {
-                        vh.iv_sub.setClickable(true);
+                        vh.shopCart_sub.setClickable(true);
                     }
 
                 }
@@ -901,8 +901,8 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
             private ImageView shopCart_add, shopCart_sub;
 
             //改版样式
-            private ImageView iv_img, iv_sub, iv_add;
-            private TextView tv_good_name, tv_good_cost, tv_good_num;
+//            private ImageView iv_img, iv_sub, iv_add;
+//            private TextView tv_good_name, tv_good_cost, tv_good_num;
 
         }
 

@@ -149,6 +149,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rel_pay_yue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"

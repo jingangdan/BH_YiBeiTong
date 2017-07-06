@@ -61,7 +61,8 @@
                 android:background="@null"
                 android:text="进入商家"
                 android:textColor="#a2cb34"
-                android:textSize="12dp" />
+                android:textSize="12dp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

@@ -227,6 +227,7 @@
                 android:padding="10dp">
 
                 <TextView
+                    android:id="@+id/tv_order_shopname"
                     style="@style/setting_text"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"

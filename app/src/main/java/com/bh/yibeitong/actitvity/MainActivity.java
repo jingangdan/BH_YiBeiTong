@@ -223,7 +223,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     public void logMsg(String string) {
         getShopAndGoods(str_latitude, str_longtitude);
-
     }
 
 
@@ -870,6 +869,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         return true;
     }
-
 
 }

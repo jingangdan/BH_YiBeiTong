@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EEEEEE"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#fff"
     android:orientation="vertical">
 
     <include layout="@layout/activity_base"></include>
@@ -24,72 +25,48 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="余额：" />
+                android:text="余额：￥" />
 
             <TextView
                 android:id="@+id/tv_yue_yue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="￥0.00"
+                android:text="0.00"
                 android:textSize="32dp" />
 
         </LinearLayout>
 
 
         <TextView
+            android:id="@+id/tv_yue_manage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="余额明细" />
+            android:text="余额明细"
+            android:padding="3dp"/>
 
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"></View>
+        android:layout_height="10dp"
+        android:background="#F0F0F0" />
 
-    <RelativeLayout
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tl_yue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        app:tabIndicatorColor="#ff9d07"
+        app:tabSelectedTextColor="#ff9d07" >
 
-        <EditText
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#fff"
-            android:hint="手动输入充值金额" />
+        <!--tabIndicatorColor="#a2cb34"
+        tabSelectedTextColor="#a2cb34"-->
 
-    </RelativeLayout>
+    </android.support.design.widget.TabLayout>
 
-    <LinearLayout
+    <com.bh.yibeitong.view.NoScrollViewPager
+        android:id="@+id/vp_yue"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.bh.yibeitong.refresh.MyGridView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </com.bh.yibeitong.refresh.MyGridView>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-
-        <Button
-            android:id="@+id/but_recharge"
-            style="@style/button_style"
-            android:text="立即充值" />
-
-    </RelativeLayout>
+        android:layout_height="wrap_content"></com.bh.yibeitong.view.NoScrollViewPager>
 
 </LinearLayout>

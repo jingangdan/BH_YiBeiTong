@@ -37,7 +37,7 @@
                     <LinearLayout
                         android:id="@+id/lin_yes_network"
                         android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical">
 
                         <include layout="@layout/include_home_page"></include>
@@ -46,18 +46,20 @@
                             android:id="@+id/myGridView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:numColumns="2">
+                            android:numColumns="2"
+                            android:padding="5dp"
+                            android:background="#E1E1E1">
 
                         </com.bh.yibeitong.refresh.MyGridView>
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/lin_no_network"
-                    android:layout_width="match_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                    android:gravity="center"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
+                        android:gravity="center"
                         android:orientation="vertical"
                         android:visibility="gone">
 
@@ -87,8 +89,8 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="top">
 
         <include layout="@layout/include_homa_page_header"></include>

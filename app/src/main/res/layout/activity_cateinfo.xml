@@ -32,24 +32,6 @@
         android:padding="5dp"
         android:background="#E1E1E1">
 
-        <LinearLayout
-            android:id="@+id/lin_cateinfo_all"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@drawable/kuang_black"
-            android:gravity="center"
-            android:padding="5dp"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/tv_cateinfo_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="全部" />
-
-        </LinearLayout>
-
         <com.bh.yibeitong.view.HorizontalListView
             android:id="@+id/hlv_cateinfo"
             android:layout_width="match_parent"
@@ -60,69 +42,45 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/rel_cateinfo_foot"
+        android:layout_height="fill_parent"
         android:layout_below="@+id/lin_cateinfo_bady"
         android:orientation="vertical"
-        android:padding="5dp">
-
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#E6E6E6"
-            android:padding="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="商品分类" />
-
-        </LinearLayout>-->
+        android:layout_above="@+id/rel_cateinfo_foot">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!--主要内容-->
-            <!--<com.bh.yibeitong.refresh.PullToRefreshView
-                android:id="@+id/puToRefreshView_cateinfo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="4dip"
-                android:layout_weight="1"
-                android:background="#00000000">-->
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <com.bh.yibeitong.refresh.MyGridView
+                    <GridView
+                        android:id="@+id/gv_cateinfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#E1E1E1"
+                        android:padding="5dp"
+                        android:numColumns="2" >
+                    </GridView>
+
+                    <!--<com.bh.yibeitong.refresh.MyGridView
                         android:id="@+id/mgv_cateinfo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="#E1E1E1"
-                        android:numColumns="1"
-                        android:verticalSpacing="0.8dp" />
-
+                        android:padding="5dp"
+                        android:numColumns="2" />-->
 
                 </LinearLayout>
 
-            </ScrollView>
-
-            <!--</com.bh.yibeitong.refresh.PullToRefreshView>
--->
 
         </RelativeLayout>
 
     </LinearLayout>
 
+    <!--购物车-->
     <RelativeLayout
         android:id="@+id/rel_cateinfo_foot"
         android:layout_width="match_parent"

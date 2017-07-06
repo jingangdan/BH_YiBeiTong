@@ -2,13 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="2.5dp">
 
     <LinearLayout
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/goodshape"
@@ -34,18 +32,22 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textSize="12dp"
                 android:id="@+id/tv_item_shopnew_ss_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="商品名称 规格" />
+                android:text="商品名称 规格"
+                android:textColor="#000" />
 
         </LinearLayout>
 
         <!---->
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -111,6 +113,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

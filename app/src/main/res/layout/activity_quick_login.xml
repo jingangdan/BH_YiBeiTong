@@ -6,7 +6,7 @@
 
     <include layout="@layout/activity_base"></include>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/lin_login_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,8 +51,9 @@
                 android:cursorVisible="true"
                 android:textCursorDrawable="@drawable/test_cursor"></EditText>
 
-
             <Button
+                android:textSize="14dp"
+                style="@style/button_style"
                 android:id="@+id/but_ql_code"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

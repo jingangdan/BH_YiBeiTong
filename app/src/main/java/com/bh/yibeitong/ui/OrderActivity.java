@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bh.yibeitong.R;
+import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.base.BaseTextActivity;
 import com.bh.yibeitong.bean.Address;
 import com.bh.yibeitong.bean.Error;
@@ -28,7 +29,9 @@ import com.bh.yibeitong.bean.OrderReturn;
 import com.bh.yibeitong.bean.PSCost;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.bean.ShopCart;
+import com.bh.yibeitong.bean.ShopInfo;
 import com.bh.yibeitong.bean.YHQuan;
+import com.bh.yibeitong.fragment.FMHomePage;
 import com.bh.yibeitong.refresh.MyListView;
 import com.bh.yibeitong.ui.address.AddAddressActivity;
 import com.bh.yibeitong.ui.address.ManageAddressActivity;
@@ -108,7 +111,7 @@ public class OrderActivity extends BaseTextActivity {
     String idscount = "";
     //生成订单参数
     String shopid, lat, lng, ids, pids, pnum, payline, uid, pwd,
-            mobile, address, contactname, ordertype, pstime, beizhu, yhjid;
+            mobile, address = "", contactname = "", ordertype, pstime, beizhu, yhjid;
 
     //拼接字符串
     String string = "";//商品id
@@ -147,6 +150,9 @@ public class OrderActivity extends BaseTextActivity {
     /*取货方式 到店自取 商家配送*/
     private Button but_seller, but_oneself;
     private int pstype = 1;//2为到店自取  其他不知道
+
+    private TextView tv_shopname;
+    String shopname = "";
 
 
     @Override
@@ -309,6 +315,8 @@ public class OrderActivity extends BaseTextActivity {
         but_seller.setOnClickListener(this);
         but_oneself.setOnClickListener(this);
 
+        tv_shopname = (TextView) findViewById(R.id.tv_order_shopname);
+        tv_shopname.setText(""+ FMHomePage.shopName);
 
     }
 
@@ -416,19 +424,26 @@ public class OrderActivity extends BaseTextActivity {
                         //联系手机 联系地址 联系人
                         //address = "";联系人地址
                         String UTF_address = null;
-                        try {
-                            UTF_address = URLEncoder.encode(address, "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                        if(!("").equals(address)){
+                            try {
+                                UTF_address = URLEncoder.encode(address, "UTF-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }else{
                         }
+
 
                         String UTF_contactname = null;
 
-                        try {
-                            UTF_contactname = URLEncoder.encode(contactname, "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                        if(!("").equals(contactname)){
+                            try {
+                                UTF_contactname = URLEncoder.encode(contactname, "UTF-8");
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
                         }
+
 
                         ordertype = "";
                         //配送时间
@@ -986,6 +1001,7 @@ public class OrderActivity extends BaseTextActivity {
                                 }
                                 //intent.putExtra("shopcost", String.valueOf(df.format(totalPrice)));
                                 intent.putExtra("orderid", orderid);
+                                intent.putExtra("type", "order");
 
                                 startActivity(intent);
 

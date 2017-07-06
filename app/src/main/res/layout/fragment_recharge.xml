@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F0F0"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:id="@+id/rel_recharge_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/et_recharge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:hint="手动输入充值金额"
+            android:inputType="number"
+            android:padding="10dp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/lin_item_recharge_gv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rel_recharge_top"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <GridView
+            android:id="@+id/gv_recharge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:listSelector="#F0F0F0"
+            android:numColumns="3"
+            android:scrollbars="none">
+
+        </GridView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/lin_recharge_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lin_item_recharge_gv"
+        android:background="#FCFBE3"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_item_recharge_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#FF9D07" />
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rel_recharge_buttom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/but_recharge"
+            style="@style/button_style"
+            android:layout_height="35dp"
+            android:text="立即充值"
+            android:textSize="12dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

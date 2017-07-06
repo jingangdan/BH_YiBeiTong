@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/lin_tesecateinfo_inc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <include layout="@layout/activity_base" />
+
+    </LinearLayout>
+
+
+    <ScrollView
+        android:id="@+id/sv_tese_cateinfo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lin_tesecateinfo_shopcar"
+        android:layout_below="@+id/lin_tesecateinfo_inc"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#E1E1E1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_tese_cate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.bh.yibeitong.view.HorizontalListView
+                android:id="@+id/hlv_tese_cateinfo"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#fff"
+                android:gravity="center" />
+
+            <com.bh.yibeitong.refresh.MyGridView
+                android:id="@+id/mgv_tese_cateinfo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="2" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/lin_tesecateinfo_shopcar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <include layout="@layout/include_shopcar" />
+
+    </LinearLayout>
+
+</RelativeLayout>
