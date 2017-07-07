@@ -1,6 +1,7 @@
 package com.bh.yibeitong.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.bean.Gift;
+import com.bh.yibeitong.ui.percen.ExChangeActivity;
+import com.bh.yibeitong.ui.percen.ExChangeAddressActivity;
 import com.lidroid.xutils.BitmapUtils;
 
 import java.util.ArrayList;
@@ -81,9 +84,20 @@ public class GiftAdapter extends BaseAdapter {
 
         String title = msgBeen.get(position).getTitle();
         String score = msgBeen.get(position).getScore();
+        final String id = msgBeen.get(position).getId();
 
         vh.title.setText(""+title);
         vh.jifen.setText(""+score+"积分");
+
+        /*兑换*/
+        vh.exchange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, ExChangeAddressActivity.class);
+                intent.putExtra("giftid",id);
+                mContext.startActivity(intent);
+            }
+        });
 
         return convertView;
     }

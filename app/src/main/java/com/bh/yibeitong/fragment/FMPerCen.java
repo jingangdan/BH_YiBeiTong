@@ -374,7 +374,9 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
 
             case R.id.lin_collect_shopcart:
                 //积分
-                startActivity(new Intent(getActivity(), JiFenActivity.class));
+                intent = new Intent(getActivity(), JiFenActivity.class);
+                intent.putExtra("jifen", s_jifen);
+                startActivity(intent);
 
                 break;
 
@@ -390,7 +392,7 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
             case R.id.lin_percen003:
                 //兑换礼品
                 intent = new Intent(getActivity(), ExChangeActivity.class);
-                intent.putExtra("", "");//传值 积分
+                intent.putExtra("jifen", s_jifen);//传值 积分
                 startActivity(intent);
                 break;
 

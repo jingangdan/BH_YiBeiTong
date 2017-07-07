@@ -22,13 +22,17 @@
                 android:layout_height="100dp"
                 android:background="#fff"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="我的积分：" />
 
                 <TextView
                     android:id="@+id/tv_jifen_jifen"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="我的积分:100.00" />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -70,8 +74,11 @@
 
                 </LinearLayout>
 
-
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <!--积分明细-->
             <LinearLayout
@@ -80,7 +87,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="10dp"
+                android:background="#fff"
                 android:visibility="visible">
+
 
                 <com.bh.yibeitong.refresh.MyListView
                     android:id="@+id/mlv_jifen"
@@ -97,15 +106,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                android:background="#fff"
                 android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_jifen_rule"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="积分规则积分规则积分规则积分规则积分规则" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

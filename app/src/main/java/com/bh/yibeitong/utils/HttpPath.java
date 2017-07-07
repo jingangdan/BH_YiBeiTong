@@ -250,6 +250,12 @@ public class HttpPath {
      */
     public static String GIFT_LIST = "action=giftlist&";
 
+    /*
+    * 礼品详情
+    * 参数：id
+    * */
+    public static String GIFT_INFO = "action=giftinfo&";
+
     /**
      * 礼品操作
      * <p>
@@ -272,7 +278,7 @@ public class HttpPath {
      * phone	是	string	手机号
      */
 
-    public static String GIFT_EXCHANGE = "action=exchange";
+    public static String GIFT_EXCHANGE = "action=exchange&shuliang=1&";
 
     /**
      * 兑换记录

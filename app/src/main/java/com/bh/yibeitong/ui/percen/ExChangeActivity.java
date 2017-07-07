@@ -2,6 +2,7 @@ package com.bh.yibeitong.ui.percen;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.bh.yibeitong.R;
@@ -16,14 +17,10 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by jingang on 2016/12/7.
  * 兑换礼品
  */
-
 public class ExChangeActivity extends BaseTextActivity {
 
     private TextView myJifen, notes;
@@ -31,6 +28,10 @@ public class ExChangeActivity extends BaseTextActivity {
     /*兑换礼品列表UI*/
     private GiftAdapter giftAdapter;
     private MyGridView myGridView;
+
+    /*接收页面传值*/
+    private Intent intent;
+    private String s_jifen;
 
     @Override
     protected void setRootView() {
@@ -53,13 +54,17 @@ public class ExChangeActivity extends BaseTextActivity {
      * 组件 初始化
      */
     public void initData() {
+        intent = getIntent();
+        s_jifen = intent.getStringExtra("jifen");
 
-        myJifen = (TextView) findViewById(R.id.tv_gift_jifen);
+        myJifen = (TextView) findViewById(R.id.tv_my_jifen);
         notes = (TextView) findViewById(R.id.tv_exchange_notes);
 
         notes.setOnClickListener(this);
 
         myGridView = (MyGridView) findViewById(R.id.mgv_exchange);
+
+        myJifen.setText(""+s_jifen);
 
     }
 
@@ -68,8 +73,8 @@ public class ExChangeActivity extends BaseTextActivity {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_exchange_notes:
-                //点击产看记录
-                Intent intent = new Intent(ExChangeActivity.this, ExChangeNoteActivity.class);
+                //兑换记录
+                Intent intent = new Intent(ExChangeActivity.this, ExGiftLogActivity.class);
 
                 startActivity(intent);
                 break;
@@ -93,11 +98,23 @@ public class ExChangeActivity extends BaseTextActivity {
                     public void onSuccess(String result) {
                         System.out.println("礼品列表" + result);
 
-                        Gift gift = GsonUtil.gsonIntance().gsonToBean(result, Gift.class);
+                        final Gift gift = GsonUtil.gsonIntance().gsonToBean(result, Gift.class);
 
                         giftAdapter = new GiftAdapter(ExChangeActivity.this, gift.getMsg());
 
                         myGridView.setAdapter(giftAdapter);
+                        /**/
+                        myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                String id = gift.getMsg().get(i).getId();
+                                intent = new Intent(ExChangeActivity.this, GiftInfoActivity.class);
+                                intent.putExtra("giftid", id);
+                                intent.putExtra("jifen", s_jifen);
+                                startActivity(intent);
+                                //toast(""+i);
+                            }
+                        });
 
 
                     }

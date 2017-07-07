@@ -629,7 +629,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     final TextView tvUpdateMsgSize = (TextView) view.findViewById(R.id.tv_update_msg_size);
 
                     //tvContent.setText(versionInfo.getVersionDesc());
-                    //tvUpdateTile.setText("当前版本：" + versionInfo.getVersionName());
+                    tvContent.setText("");//更新内容
+                    tvUpdateTile.setText("当前版本：" + v);
 
                     if (file.exists() && file.getName().equals("ybt.apk")) {
                         //tvUpdateMsgSize.setText("新版本已经下载，是否安装？");

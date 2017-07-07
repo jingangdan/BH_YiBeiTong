@@ -356,11 +356,17 @@
         <!--兑换礼品-->
         <activity android:name=".ui.percen.ExChangeActivity"></activity>
 
+        <!--礼品详情-->
+        <activity android:name=".ui.percen.GiftInfoActivity"/>
+
+        <!--添加用户信息（积分兑换）-->
+        <activity android:name=".ui.percen.ExChangeAddressActivity"></activity>
+
         <!--关于我们-->
         <activity android:name=".ui.percen.AboutUsActivity"></activity>
 
         <!--兑换记录-->
-        <activity android:name=".ui.percen.ExChangeNoteActivity"></activity>
+        <activity android:name=".ui.percen.ExGiftLogActivity"></activity>
 
         <!--账号余额-->
         <activity android:name=".ui.percen.YuEActivity"></activity>

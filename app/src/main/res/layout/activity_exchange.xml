@@ -18,7 +18,7 @@
             style="@style/setting_text"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="我的积分" />
+            android:text="我的积分:" />
 
         <TextView
             android:id="@+id/tv_my_jifen"

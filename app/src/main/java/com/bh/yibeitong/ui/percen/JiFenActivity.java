@@ -1,8 +1,12 @@
 package com.bh.yibeitong.ui.percen;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -11,6 +15,7 @@ import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseTextActivity;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.bean.percen.ScoreLog;
+import com.bh.yibeitong.refresh.MyListView;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.UserInfo;
@@ -18,6 +23,8 @@ import com.bh.yibeitong.view.UserInfo;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
+import java.util.List;
 
 /**
  * Created by jingang on 2017/7/6.
@@ -29,13 +36,19 @@ public class JiFenActivity extends BaseTextActivity {
     private Button but_detailed, but_rule, but_go;
     private LinearLayout lin_detailed, lin_rule;
 
+    /*接收页面传值*/
     private Intent intent;
+    private String s_jifen;
 
     /*接口地址*/
     private String PATH = "";
 
     private UserInfo userInfo;
     private String uid, pwd, phone, jingang;
+
+    /*积分明细显示UI*/
+    private MyListView myListView;
+    private JiFenAdapter jiFenAdapter;
 
     @Override
     protected void setRootView() {
@@ -57,6 +70,9 @@ public class JiFenActivity extends BaseTextActivity {
         userInfo = new UserInfo(getApplication());
         jingang = userInfo.getCode();
 
+        intent = getIntent();
+        s_jifen = intent.getStringExtra("jifen");
+
         tv_jifen = (TextView) findViewById(R.id.tv_jifen_jifen);
         but_detailed = (Button) findViewById(R.id.but_jifen_detailed);
         but_rule = (Button) findViewById(R.id.but_jifen_rule);
@@ -70,6 +86,10 @@ public class JiFenActivity extends BaseTextActivity {
         lin_rule = (LinearLayout) findViewById(R.id.lin_jifen_rule);
 
         tv_rule = (TextView) findViewById(R.id.tv_jifen_rule);
+
+        myListView = (MyListView) findViewById(R.id.mlv_jifen);
+
+        tv_jifen.setText("" + s_jifen);
 
         tv_rule.setText("1、积分是指成功购物即可累计金额获得的积分。消费1元积1分。\n" +
                 "2、成功购物是指：活动期间内在外卖人创建并完成交易——即买家已确认收货、安付通交易状态为“交易成功”的交易。\n" +
@@ -115,7 +135,7 @@ public class JiFenActivity extends BaseTextActivity {
             case R.id.but_jifen_go:
                 //积分兑换
                 intent = new Intent(JiFenActivity.this, ExChangeActivity.class);
-                intent.putExtra("", "");//传值 积分
+                intent.putExtra("jifen", s_jifen);//传值 积分
                 startActivity(intent);
                 break;
         }
@@ -166,6 +186,8 @@ public class JiFenActivity extends BaseTextActivity {
                     public void onSuccess(String result) {
                         System.out.println("积分明细" + result);
                         ScoreLog scoreLog = GsonUtil.gsonIntance().gsonToBean(result, ScoreLog.class);
+                        jiFenAdapter = new JiFenAdapter(JiFenActivity.this, scoreLog.getMsg());
+                        myListView.setAdapter(jiFenAdapter);
 
                     }
 
@@ -185,6 +207,76 @@ public class JiFenActivity extends BaseTextActivity {
                     }
                 });
 
+    }
+
+    /**/
+    public class JiFenAdapter extends BaseAdapter {
+        private Context mContext;
+        private List<ScoreLog.MsgBean> msgBeen;
+
+        public JiFenAdapter(Context mContext, List<ScoreLog.MsgBean> msgBeen) {
+            this.mContext = mContext;
+            this.msgBeen = msgBeen;
+        }
+
+        @Override
+        public int getCount() {
+            return msgBeen.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return msgBeen.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            ViewHolder vh;
+            if (view == null) {
+                vh = new ViewHolder();
+                view = LayoutInflater.from(mContext).inflate(R.layout.item_paylog, null);
+
+                vh.tv_title = (TextView) view.findViewById(R.id.tv_item_paylog_title);
+                vh.tv_addtime = (TextView) view.findViewById(R.id.tv_item_paylog_addtime);
+                vh.tv_result = (TextView) view.findViewById(R.id.tv_item_paylog_result);
+
+                view.setTag(vh);
+
+            } else {
+                vh = (ViewHolder) view.getTag();
+            }
+
+            String title = msgBeen.get(i).getTitle();
+            String addtime = msgBeen.get(i).getAddtime();
+            String result = msgBeen.get(i).getResult();
+            String addtype = msgBeen.get(i).getAddtype();
+
+            if (addtype.equals("1")) {
+                //增加
+                vh.tv_result.setText("+" + result);
+                vh.tv_result.setTextColor(Color.rgb(192, 220, 114));
+
+            } else if (addtype.equals("2")) {
+                //减少
+                vh.tv_result.setText("-" + result);
+                vh.tv_result.setTextColor(Color.rgb(216, 217, 217));
+            }
+
+            vh.tv_title.setText("" + title);
+            vh.tv_addtime.setText("" + addtime);
+
+
+            return view;
+        }
+
+        public class ViewHolder {
+            TextView tv_title, tv_addtime, tv_result;
+        }
     }
 
 }
