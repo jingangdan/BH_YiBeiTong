@@ -1,8 +1,13 @@
 package com.bh.yibeitong.ui.percen;
 
+import android.content.Context;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bh.yibeitong.R;
@@ -12,10 +17,14 @@ import com.bh.yibeitong.bean.Gift;
 import com.bh.yibeitong.refresh.MyGridView;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
+import com.lidroid.xutils.BitmapUtils;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jingang on 2016/12/7.
@@ -32,6 +41,8 @@ public class ExChangeActivity extends BaseTextActivity {
     /*接收页面传值*/
     private Intent intent;
     private String s_jifen;
+
+    private String gift_jifen = "";
 
     @Override
     protected void setRootView() {
@@ -135,4 +146,113 @@ public class ExChangeActivity extends BaseTextActivity {
                     }
                 });
     }
+
+
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==30) {
+            if(resultCode==31) {
+                String paytype=data.getStringExtra("jifen");
+                String giftscore = data.getStringExtra("giftscore");
+
+                //textView.setText(result);
+                if(paytype.equals("1")){
+                    //当前积分 - 礼品积分
+                }
+                (int) Double.parseDouble(s_jifen) -
+                //System.out.println("111111111111111111111"+result);
+            }
+        }
+    }*/
+
+    /*礼品列表适配器*/
+    public class GiftAdapter extends BaseAdapter {
+
+        private List<Gift.MsgBean> msgBeen = new ArrayList<>();
+        private Context mContext;
+
+        public GiftAdapter(Context mContext, List<Gift.MsgBean> msgBeen){
+            this.mContext = mContext;
+            this.msgBeen = msgBeen;
+        }
+
+
+        @Override
+        public int getCount() {
+            return msgBeen.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return msgBeen.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ViewHolder vh;
+            if(convertView == null){
+                vh = new ViewHolder();
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_gift_list, null);
+
+                vh.img = (ImageView) convertView.findViewById(R.id.iv_item_gift);
+                vh.title = (TextView) convertView.findViewById(R.id.tv_item_gift_name);
+                vh.jifen = (TextView) convertView.findViewById(R.id.tv_gift_jifen);
+                vh.exchange = (TextView) convertView.findViewById(R.id.tv_gift_exchange);
+
+                convertView.setTag(vh);
+            }else{
+                vh = (ViewHolder) convertView.getTag();
+            }
+
+            String imgPath = msgBeen.get(position).getImg();
+
+            if (imgPath.equals("")) {
+                vh.img.setImageResource(R.mipmap.yibeitong001);
+
+            } else {
+                BitmapUtils bitmapUtils = new BitmapUtils(mContext);
+
+                bitmapUtils.configDiskCacheEnabled(true);
+                bitmapUtils.configMemoryCacheEnabled(false);
+
+                bitmapUtils.display(vh.img, imgPath);
+
+            }
+
+
+            String title = msgBeen.get(position).getTitle();
+            String score = msgBeen.get(position).getScore();
+            final String id = msgBeen.get(position).getId();
+
+            vh.title.setText(""+title);
+            vh.jifen.setText(""+score+"积分");
+
+        /*兑换*/
+            vh.exchange.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, ExChangeAddressActivity.class);
+                    intent.putExtra("giftid",id);
+                    intent.putExtra("giftscore", msgBeen.get(position).getScore());
+                    startActivityForResult(intent, 30);
+                    //mContext.startActivity(intent);
+                }
+            });
+
+            return convertView;
+        }
+
+        public class ViewHolder{
+            ImageView img;
+            TextView title, jifen, exchange;
+        }
+    }
+
 }

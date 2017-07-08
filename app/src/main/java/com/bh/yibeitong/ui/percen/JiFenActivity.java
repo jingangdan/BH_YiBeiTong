@@ -102,6 +102,10 @@ public class JiFenActivity extends BaseTextActivity {
 
         isLoginOrLogintype();
 
+//        intent = new Intent();
+//        intent.putExtra("jingang","jingang");
+//        setResult(31, intent);
+
     }
 
 
@@ -172,10 +176,12 @@ public class JiFenActivity extends BaseTextActivity {
     public void getScoreLog(String uid, String pwd, int page, int pagesize) {
         if (jingang.equals("0")) {
             PATH = HttpPath.PATH + HttpPath.SCORELOG +
-                    "uid=" + uid + "&pwd=" + pwd + "&page=" + page + "&pagesize=" + pagesize;
+                    "uid=" + uid + "&pwd=" + pwd;
+            //+ "&page=" + page + "&pagesize=" + pagesize;
         } else {
             PATH = HttpPath.PATH + HttpPath.SCORELOG +
-                    "logintype=" + uid + "&loginphone=" + pwd + "&page=" + page + "&pagesize=" + pagesize;
+                    "logintype=" + uid + "&loginphone=" + pwd;
+                    //+ "&page=" + page + "&pagesize=" + pagesize;
         }
         System.out.println("积分明细" + PATH);
         RequestParams params = new RequestParams(PATH);
@@ -186,6 +192,7 @@ public class JiFenActivity extends BaseTextActivity {
                     public void onSuccess(String result) {
                         System.out.println("积分明细" + result);
                         ScoreLog scoreLog = GsonUtil.gsonIntance().gsonToBean(result, ScoreLog.class);
+
                         jiFenAdapter = new JiFenAdapter(JiFenActivity.this, scoreLog.getMsg());
                         myListView.setAdapter(jiFenAdapter);
 

@@ -70,7 +70,13 @@ public class GiftInfoActivity extends BaseTextActivity {
             case R.id.tv_giftinfo_ex:
                 if ((int) Double.parseDouble(s_jifen) >= Integer.parseInt(score)) {
                     //当前积分大于或等于兑换积分时  进行兑换
-                    toast("兑换");
+                    //toast("兑换");
+
+                    Intent intent = new Intent(GiftInfoActivity.this, ExChangeAddressActivity.class);
+                    intent.putExtra("giftid",giftid);
+                    startActivity(intent);
+
+                    GiftInfoActivity.this.finish();
                 }
                 break;
 

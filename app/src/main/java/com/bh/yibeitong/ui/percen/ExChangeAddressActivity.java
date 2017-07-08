@@ -36,7 +36,7 @@ public class ExChangeAddressActivity extends BaseTextActivity {
 
     /*接收页面传值*/
     private Intent intent;
-    private String giftid;
+    private String giftid, giftscore;
 
     /*本地轻量缓存*/
     private UserInfo userInfo;
@@ -63,6 +63,7 @@ public class ExChangeAddressActivity extends BaseTextActivity {
 
         intent = getIntent();
         giftid = intent.getStringExtra("giftid");
+        giftscore = intent.getStringExtra("giftscore");
 
         et_contactname = (EditText) findViewById(R.id.et_exchangeaddress_contactname);
         et_phone = (EditText) findViewById(R.id.et_exchangeaddress_phone);
@@ -171,6 +172,11 @@ public class ExChangeAddressActivity extends BaseTextActivity {
                         Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
                         if(error.isError() == false){
                             toast(error.getMsg().toString());
+
+                            intent = new Intent();
+                            intent.putExtra("jifen", "1");
+                            intent.putExtra("giftscore",giftscore);
+                            setResult(31, intent);
                             ExChangeAddressActivity.this.finish();
                         }
 

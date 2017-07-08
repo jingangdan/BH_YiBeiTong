@@ -51,7 +51,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="Android:icon, android:theme">
+        tools:replace="Android:icon, android:theme"
+        android:name=".application.CatchExcep">
 
         <service
             android:name="com.baidu.location.f"
@@ -457,6 +458,8 @@
 
         <!--积分中心-->
         <activity android:name=".ui.percen.JiFenActivity"></activity>
+
+
 
         <!--<provider
             android:name="android.support.v4.content.FileProvider"

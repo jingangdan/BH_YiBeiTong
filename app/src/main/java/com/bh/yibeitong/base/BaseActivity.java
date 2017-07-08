@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.bh.yibeitong.actitvity.ActivityCollector;
+import com.bh.yibeitong.application.CatchExcep;
 
 /**
  * Created by jingang on 2016/10/18.
@@ -15,10 +16,16 @@ import com.bh.yibeitong.actitvity.ActivityCollector;
 public class BaseActivity extends FragmentActivity {
     private Toast mToast;
 
+    private CatchExcep application;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityCollector.addActivity(this);
+
+        application = (CatchExcep)getApplication();
+        application.init();
+        application.addActivity(this);
 
     }
 

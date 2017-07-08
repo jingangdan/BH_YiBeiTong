@@ -2,56 +2,69 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="horizontal"
-    android:padding="10dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_item_exgiftlog_title"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:gravity="center"
-        android:text="兑换礼品" />
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+
+        <TextView
+            android:id="@+id/tv_item_exgiftlog_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="兑换礼品" />
+
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="fill_parent"
+            android:background="#ccc" />
+
+        <TextView
+            android:id="@+id/tv_item_exgiftlog_addtime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="兑换日期" />
+
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="fill_parent"
+            android:background="#ccc" />
+
+        <TextView
+            android:id="@+id/tv_item_exgiftlog_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="兑换积分" />
+
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="fill_parent"
+            android:background="#ccc" />
+
+        <TextView
+            android:id="@+id/tv_item_exgiftlog_status"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="兑换状态"
+            android:textColor="#a2cb34" />
+
+    </LinearLayout>
 
     <View
-        android:layout_width="0.8dp"
-        android:layout_height="fill_parent"
-        android:background="#ccc" />
-
-    <TextView
-        android:id="@+id/tv_item_exgiftlog_addtime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="兑换日期" />
-
-    <View
-        android:layout_width="0.8dp"
-        android:layout_height="fill_parent"
-        android:background="#ccc" />
-
-    <TextView
-        android:id="@+id/tv_item_exgiftlog_score"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="兑换积分" />
-
-    <View
-        android:layout_width="0.8dp"
-        android:layout_height="fill_parent"
-        android:background="#ccc" />
-
-    <TextView
-        android:id="@+id/tv_item_exgiftlog_status"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="兑换状态"
-        android:textColor="#a2cb34"/>
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="#F0F0F0"/>
 
 </LinearLayout>

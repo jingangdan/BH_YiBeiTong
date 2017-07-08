@@ -31,7 +31,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bh.yibeitong.R;
+import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.actitvity.PerCenActivity;
+import com.bh.yibeitong.appupdate.ApkUpdateUtils;
 import com.bh.yibeitong.base.BaseFragment;
 import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.Register;
@@ -47,6 +49,7 @@ import com.bh.yibeitong.ui.percen.ExChangeActivity;
 import com.bh.yibeitong.ui.percen.JiFenActivity;
 import com.bh.yibeitong.ui.percen.YouHuiQuanActivity;
 import com.bh.yibeitong.ui.percen.YuEActivity;
+import com.bh.yibeitong.updateversion.SDCardUtils;
 import com.bh.yibeitong.updateversion.UpdateStatus;
 import com.bh.yibeitong.updateversion.UpdateVersionUtil;
 import com.bh.yibeitong.updateversion.VersionInfo;
@@ -255,6 +258,8 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
             System.out.println("离开FMPerCen");
         } else {
             System.out.println("刷新FMPerCen");
+
+            getAppMem(uid, pwd);
         }
     }
 
@@ -376,6 +381,7 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
                 //积分
                 intent = new Intent(getActivity(), JiFenActivity.class);
                 intent.putExtra("jifen", s_jifen);
+                //startActivityForResult(intent, 30);
                 startActivity(intent);
 
                 break;
@@ -526,6 +532,8 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
                         System.out.println("" + getSign.isError());
                         if (getSign.isError() == true) {
                             tv_sign.setText("已签到");
+                        }else{
+                            tv_sign.setText("未签到");
                         }
 
                     }
@@ -838,60 +846,123 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
 
                 if (error == false) {
                     System.out.println("最新" + verCode.getMsg());
-                    toast("已是最新版本！");
                     //notNewVersionDlgShow(verCode.getMsg().getUrl(),verCode.getMsg().getMsg());
                 } else if (error == true) {
                     System.out.println("旧的" + verCode.getMsg());
-                    //doNewVersionUpdates(verCode.getMsg().getUrl(), verCode.getMsg().getMsg());
-                    //downFile("http://www.ybt9.com/app/ybt.apk");
-                    //doNewVersionUpdate();
+                    //doNewVersionUpdate(verCode.getMsg().getUrl(), verCode.getMsg().getMsg());
 
-                    if (!canDownloadState()) {
-                        Toast.makeText(getActivity(), "下载服务不用,请您启用", Toast.LENGTH_SHORT).show();
-                        showDownloadSetting();
-                        return;
-                    }
-                    /*String url;
-                    if (TextUtils.isEmpty(editText.getText().toString())) {
-                        url = "http://www.ybt9.com/app/ybt.apk";
+
+                    final Dialog dialog = new AlertDialog.Builder(getActivity()).create();
+                    final File file = new File(SDCardUtils.getRootDirectory() + "/ybt_updateVersion/ybt.apk");
+                    dialog.setCancelable(true);// 可以用“返回键”取消
+                    dialog.setCanceledOnTouchOutside(false);//
+                    dialog.show();
+                    View view = LayoutInflater.from(getActivity()).inflate(R.layout.version_update_dialog, null);
+                    dialog.setContentView(view);
+
+                    final Button btnOk = (Button) view.findViewById(R.id.btn_update_id_ok);
+                    Button btnCancel = (Button) view.findViewById(R.id.btn_update_id_cancel);
+                    TextView tvContent = (TextView) view.findViewById(R.id.tv_update_content);
+                    TextView tvUpdateTile = (TextView) view.findViewById(R.id.tv_update_title);
+                    final TextView tvUpdateMsgSize = (TextView) view.findViewById(R.id.tv_update_msg_size);
+
+                    //tvContent.setText(versionInfo.getVersionDesc());
+                    tvContent.setText("");//更新内容
+                    tvUpdateTile.setText("当前版本：" + v);
+                    tvUpdateMsgSize.setText("新版本："+verCode.getMsg().getVersion());
+
+                    if (file.exists() && file.getName().equals("ybt.apk")) {
+                        //tvUpdateMsgSize.setText("新版本已经下载，是否安装？");
                     } else {
-                        url = editText.getText().toString();
-                    }*/
-                    /*ApkUpdateUtils.download(getActivity(), "http://www.ybt9.com/app/ybt.apk",
-                            getResources().getString(R.string.app_name));*/
+                        //tvUpdateMsgSize.setText("新版本大小：" + versionInfo.getVersionSize());
+                    }
 
+                    btnOk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                            if (v.getId() == R.id.btn_update_id_ok) {
 
-                    UpdateVersionUtil.localCheckedVersion(getActivity(),
-                            new UpdateVersionUtil.UpdateListener() {
-                                @Override
-                                public void onUpdateReturned(int updateStatus, VersionInfo versionInfo) {
-                                    //判断回调过来的版本检测状态
-                                    switch (updateStatus) {
-                                        case UpdateStatus.YES:
-                                            //弹出更新提示
-                                            UpdateVersionUtil.showDialog(getActivity(), versionInfo, v);
-                                            break;
-                                        case UpdateStatus.NO:
-                                            //没有新版本
-                                            toast("已经是最新版本了!");
-                                            break;
-                                        case UpdateStatus.NOWIFI:
-                                            //当前是非wifi网络
-                                            toast("只有在wifi下更新！");
-                                            break;
-                                        case UpdateStatus.ERROR:
-                                            //检测失败
-                                            toast("检测失败，请稍后重试！");
-                                            break;
-                                        case UpdateStatus.TIMEOUT:
-                                            //链接超时
-                                            toast("链接超时，请检查网络设置!");
-                                            break;
-                                    }
-                                }
-                            }, v);
+                                ApkUpdateUtils.download(getActivity(), "http://www.ybt9.com/app/ybt.apk", getResources().getString(R.string.app_name));
 
+//新版本已经下载
+//                                if (file.exists() && file.getName().equals("ybt.apk")) {
+//                                    Intent intent = ApkUtils.getInstallIntent(file);
+//                                    startActivity(intent);
+//                                } else {
+//                                    //没有下载，则开启服务下载新版本
+//                                    Intent intent = new Intent(MainActivity.this, UpdateVersionService.class);
+//                                    intent.putExtra("downloadUrl", "http://www.ybt9.com/app/ybt.apk");
+//                                    startService(intent);
+//                                }
+                            }
+                        }
+                    });
+
+                    btnCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
                 }
+
+//                if (error == false) {
+//                    System.out.println("最新" + verCode.getMsg());
+//                    toast("已是最新版本！");s
+//                    //notNewVersionDlgShow(verCode.getMsg().getUrl(),verCode.getMsg().getMsg());
+//                } else if (error == true) {
+//                    System.out.println("旧的" + verCode.getMsg());
+//                    //doNewVersionUpdates(verCode.getMsg().getUrl(), verCode.getMsg().getMsg());
+//                    //downFile("http://www.ybt9.com/app/ybt.apk");
+//                    //doNewVersionUpdate();
+//
+//                    if (!canDownloadState()) {
+//                        Toast.makeText(getActivity(), "下载服务不用,请您启用", Toast.LENGTH_SHORT).show();
+//                        showDownloadSetting();
+//                        return;
+//                    }
+//                    /*String url;
+//                    if (TextUtils.isEmpty(editText.getText().toString())) {
+//                        url = "http://www.ybt9.com/app/ybt.apk";
+//                    } else {
+//                        url = editText.getText().toString();
+//                    }*/
+//                    /*ApkUpdateUtils.download(getActivity(), "http://www.ybt9.com/app/ybt.apk",
+//                            getResources().getString(R.string.app_name));*/
+//
+//
+//                    UpdateVersionUtil.localCheckedVersion(getActivity(),
+//                            new UpdateVersionUtil.UpdateListener() {
+//                                @Override
+//                                public void onUpdateReturned(int updateStatus, VersionInfo versionInfo) {
+//                                    //判断回调过来的版本检测状态
+//                                    switch (updateStatus) {
+//                                        case UpdateStatus.YES:
+//                                            //弹出更新提示
+//                                            UpdateVersionUtil.showDialog(getActivity(), versionInfo, v);
+//                                            break;
+//                                        case UpdateStatus.NO:
+//                                            //没有新版本
+//                                            toast("已经是最新版本了!");
+//                                            break;
+//                                        case UpdateStatus.NOWIFI:
+//                                            //当前是非wifi网络
+//                                            toast("只有在wifi下更新！");
+//                                            break;
+//                                        case UpdateStatus.ERROR:
+//                                            //检测失败
+//                                            toast("检测失败，请稍后重试！");
+//                                            break;
+//                                        case UpdateStatus.TIMEOUT:
+//                                            //链接超时
+//                                            toast("链接超时，请检查网络设置!");
+//                                            break;
+//                                    }
+//                                }
+//                            }, v);
+//
+//                }
             }
 
             @Override
@@ -1078,4 +1149,9 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
 }

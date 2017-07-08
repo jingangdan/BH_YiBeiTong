@@ -631,6 +631,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     //tvContent.setText(versionInfo.getVersionDesc());
                     tvContent.setText("");//更新内容
                     tvUpdateTile.setText("当前版本：" + v);
+                    tvUpdateMsgSize.setText("新版本："+verCode.getMsg().getVersion());
 
                     if (file.exists() && file.getName().equals("ybt.apk")) {
                         //tvUpdateMsgSize.setText("新版本已经下载，是否安装？");

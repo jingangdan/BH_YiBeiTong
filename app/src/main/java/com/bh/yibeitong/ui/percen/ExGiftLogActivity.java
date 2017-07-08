@@ -17,6 +17,7 @@ import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.UserInfo;
 
+import org.xutils.BuildConfig;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -44,6 +45,8 @@ public class ExGiftLogActivity extends BaseTextActivity {
     @Override
     protected void setRootView() {
         super.setRootView();
+        x.Ext.init(getApplication());
+        x.Ext.setDebug(BuildConfig.DEBUG);
         setContentView(R.layout.activity_exgiftlog);
     }
 
@@ -104,18 +107,24 @@ public class ExGiftLogActivity extends BaseTextActivity {
     public void getExGiftLog(String uid, String pwd, int page) {
         if (jingang.equals("0")) {
             PATH = HttpPath.PATH + HttpPath.GIFT_EXLOG +
-                    "uid=" + uid + "&pwd=" + "&page=" + page;
+                    "uid=" + uid + "&pwd=" + pwd + "&page=" + page;
         } else {
             PATH = HttpPath.PATH + HttpPath.GIFT_EXLOG +
-                    "logintype=" + uid + "&loginphone=" + "&page=" + page;
+                    "logintype=" + uid + "&loginphone=" + pwd + "&page=" + page;
         }
-
+        System.out.println("礼品兑换记录" + PATH);
         RequestParams params = new RequestParams(PATH);
+
+//        RequestParams params = new RequestParams(
+//                "http://www.ybt9.com/index.php?ctrl=app&source=1&datatype=json&action=exgiftlog&uid=13&pwd=aaaaaa");
+
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
                         System.out.println("礼品兑换记录" + result);
+                        //toast("" + result);
+
                         ExGiftLog exGiftLog = GsonUtil.gsonIntance().gsonToBean(result, ExGiftLog.class);
 
                         exGiftLogAdapter = new ExGiftLogAdapter(ExGiftLogActivity.this, exGiftLog.getMsg());

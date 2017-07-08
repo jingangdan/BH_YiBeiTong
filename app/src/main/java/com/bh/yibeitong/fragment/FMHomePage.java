@@ -55,7 +55,6 @@ import com.bh.yibeitong.ui.CateFoodDetailsActivity;
 import com.bh.yibeitong.ui.CateInfoActivity;
 import com.bh.yibeitong.ui.LocationActivity;
 import com.bh.yibeitong.ui.ShopNewActivity;
-import com.bh.yibeitong.ui.WillOpenActivity;
 import com.bh.yibeitong.ui.homepage.JoinActivity;
 import com.bh.yibeitong.ui.homepage.SpecialActivity;
 import com.bh.yibeitong.ui.percen.YuEActivity;
@@ -189,7 +188,9 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     private String uid, pwd, phone;
 
     private List<ImageView> views = new ArrayList<ImageView>();
-    private List<ADInfo> infos = new ArrayList<ADInfo>();
+    private List<ADInfo> infos;
+    private ADInfo info;
+    //= new ArrayList<ADInfo>();
     private CycleViewPager cycleViewPager;
 
 //    private String[] imageUrls = {"http://img.taodiantong.cn/v55183/infoimg/2013-07/130720115322ky.jpg",
@@ -230,8 +231,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
             toast("未登录");
         }
 
-        configImageLoader();
-        initialize();
 
         /*广告位*/
         getAdvByType("weixinmid");
@@ -370,6 +369,9 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         /*判断网络连接状态*/
         isNetworkUtil();
 
+        configImageLoader();
+        getWxAdv();
+
         /*str_marqueeView.add("贝通开业了！");
         str_marqueeView.add("通开业了！");
         str_marqueeView.add("开业了！");
@@ -473,11 +475,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     }
 
 
-
-    private void initialize() {
-
-    }
-
     private CycleViewPager.ImageCycleViewListener mAdCycleViewListener = new CycleViewPager.ImageCycleViewListener() {
 
         @Override
@@ -534,8 +531,10 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         userInfo.saveADV(new Gson().toJson(wxADV.getMsg()));
 
 
+                        infos = new ArrayList<>();
+
                         for(int i = 0; i < wxADV.getMsg().size(); i ++){
-                            ADInfo info = new ADInfo();
+                            info = new ADInfo();
                             info.setUrl("http://www.ybt9.com/"+wxADV.getMsg().get(i).getImg());
                             info.setContent("图片-->" + i );
                             infos.add(info);
@@ -565,10 +564,9 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         cycleViewPager.setWheel(true);
 
                         // 设置轮播时间，默认5000ms
-                        cycleViewPager.setTime(4000);
+                        cycleViewPager.setTime(3000);
                         //设置圆点指示图标组居中显示，默认靠右
                         cycleViewPager.setIndicatorCenter();
-
 
 
 
@@ -833,6 +831,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                 netWorkType = 0;
                 exit = false;
                 ceFoodList.clear();
+
                 //getShopGoods(latitude, longtitude, 1);
 
                 isNetworkUtil();
@@ -840,6 +839,20 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
             }
 
         }, 1000);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            System.out.println("离开FMShopCart");
+
+        } else {
+            System.out.println("刷新FMShopCart");
+
+            ceFoodList.clear();
+            getShopGoods(latitude, longtitude, 1);
+        }
     }
 
     /**
@@ -1568,18 +1581,16 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                     uid = register.getMsg().getUid();
                     if (!(userInfo.getPwd().equals(""))) {
                         pwd = userInfo.getPwd();
-
                     }
 
                     if (userInfo.getCode().equals("0")) {
-                        System.out.println("0000000");
                         signToDay(uid, pwd);
                     } else {
                         System.out.println("1111111");
                         signToDay("phone", phone);
                     }
                 } else {
-                    toast("未登录");
+                    System.out.println("未登录");
                 }
 
                 break;
@@ -1678,14 +1689,16 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
             if (NetworkUtils.getCurrentNetType(getActivity()) != null) {
                 //有网络连接 判断网络的连接类型是否符合标准
                 //可以根据规定进行数据的刷新
+                configImageLoader();
 
                 getLocation();
 
                 //轮播图
-                getWxAdv();
+                //getWxAdv();
 
             }
         } else {
+            configImageLoader();
             //无网络连接  显示缓存数 据
             //toast("无网络连接");
             //et_address.setText("定位失败");
@@ -1704,7 +1717,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
             /*首页商品展示*/
             String cateFoodList = userInfo.getMeetings();
-            System.out.println("缓存" + userInfo.getMeetings());
 
             if (cateFoodList.equals("")) {
                 //没有缓存数据
@@ -1762,8 +1774,9 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
                 } else if (wxAdvList.size() > 0) {
 
+                    infos = new ArrayList<>();
                     for(int i = 0; i < wxAdvList.size(); i ++){
-                        ADInfo info = new ADInfo();
+                        info = new ADInfo();
                         info.setUrl("http://www.ybt9.com/"+wxAdvList.get(i).getImg());
                         info.setContent("图片-->" + i );
                         infos.add(info);
@@ -1793,11 +1806,10 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                     cycleViewPager.setWheel(true);
 
                     // 设置轮播时间，默认5000ms
-                    cycleViewPager.setTime(4000);
+                    cycleViewPager.setTime(3000);
                     //设置圆点指示图标组居中显示，默认靠右
                     cycleViewPager.setIndicatorCenter();
 
-                    configImageLoader();
 
 
 //                    HashMap<String, String> url_maps = new HashMap<String, String>();
