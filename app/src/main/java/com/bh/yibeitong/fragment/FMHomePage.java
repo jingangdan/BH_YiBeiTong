@@ -228,7 +228,8 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                 getSignToDay("phone", phone);
             }
         } else {
-            toast("未登录");
+            //toast("未登录");
+            System.out.println("未登录");
         }
 
 
@@ -370,6 +371,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         isNetworkUtil();
 
         configImageLoader();
+
         getWxAdv();
 
         /*str_marqueeView.add("贝通开业了！");
@@ -474,13 +476,32 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         broadcastManager.unregisterReceiver(mAdDownLoadReceiver);
     }
 
+    private List<WxADV.MsgBean> advList = new ArrayList<>();
 
-    private CycleViewPager.ImageCycleViewListener mAdCycleViewListener = new CycleViewPager.ImageCycleViewListener() {
+    /*轮播图点击事件*/
+    private CycleViewPager.ImageCycleViewListener mAdCycleViewListener =
+            new CycleViewPager.ImageCycleViewListener() {
 
         @Override
         public void onImageClick(ADInfo info, int position, View imageView) {
             if (cycleViewPager.isCycle()) {
-                position = position - 1;
+                //toast("positon = "+position);
+                //此处position是从1开始 故需要 - 1 操作
+
+                if (NetworkUtils.isNotWorkAvilable(getActivity())) {
+                    if (NetworkUtils.getCurrentNetType(getActivity()) != null) {
+
+                        intent = new Intent(getActivity(), JoinActivity.class);
+                        intent.putExtra("title", advList.get(position - 1).getTitle());
+                        intent.putExtra("url", "http://www.ybt9.com/" + advList.get(position - 1).getLinkurl());
+                        startActivity(intent);
+                    }
+                }else{
+                    toast("无网络连接");
+                }
+
+
+//                position = position - 1;
 //                Toast.makeText(getActivity(),
 //                        "position-->" + info.getContent(), Toast.LENGTH_SHORT)
 //                        .show();
@@ -528,6 +549,8 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         System.out.println("获取轮播图" + result);
                         WxADV wxADV = GsonUtil.gsonIntance().gsonToBean(result, WxADV.class);
 
+                        advList = wxADV.getMsg();
+
                         userInfo.saveADV(new Gson().toJson(wxADV.getMsg()));
 
 
@@ -536,7 +559,8 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         for(int i = 0; i < wxADV.getMsg().size(); i ++){
                             info = new ADInfo();
                             info.setUrl("http://www.ybt9.com/"+wxADV.getMsg().get(i).getImg());
-                            info.setContent("图片-->" + i );
+                            info.setContent("" + wxADV.getMsg().get(i).getTitle());
+                            info.setImg("http://www.ybt9.com/" + wxADV.getMsg().get(i).getLinkurl());
                             infos.add(info);
                         }
 
@@ -567,8 +591,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         cycleViewPager.setTime(3000);
                         //设置圆点指示图标组居中显示，默认靠右
                         cycleViewPager.setIndicatorCenter();
-
-
 
 
                         /*轮播图*/
@@ -860,10 +882,14 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
      *
      * @param latitude
      * @param longtitude
+     * 118.351852   35.111124
      */
     public void getShopGoods(String latitude, String longtitude, final int page) {
         String Path = HttpPath.PATH + HttpPath.GOODSINDEX +
                 "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + page;
+
+//        String Path = HttpPath.PATH + HttpPath.GOODSINDEX +
+//                "lat=" + "116.2317" + "&lng=" + "39.5427" + "" + "&page=" + page; 背景天安门坐标
 
         System.out.println("" + Path);
 

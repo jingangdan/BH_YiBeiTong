@@ -87,6 +87,9 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
     DecimalFormat df;
 
+    /*接口地址*/
+    private String PATH = "";
+
 
     @Nullable
     @Override
@@ -233,7 +236,7 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
         CustomDialog.Builder builder = new CustomDialog.Builder(getActivity());
         builder.setMessage("还未登录，确定要登录吗？");
         //builder.setTitle("还未登录");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("登录/注册", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 //设置你的操作事项
@@ -345,6 +348,8 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                         System.out.println("222222222");
                         ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
 
+                        listBean = shopCart.getMsg().getList();
+
                         System.out.println("11111111111111");
 
                         totalPrice = shopCart.getMsg().getSurecost();
@@ -356,7 +361,7 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                         /*判断快递情况*/
                         if (shopCart.getMsg().isOnlynewtype() == true) {
                             System.out.println("只有快递");
-                            listBean = shopCart.getMsg().getList();
+
 
                             //判断总计小于1的情况
                             if (totalPrice < 1) {
@@ -380,7 +385,7 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                             } else if (shopCart.getMsg().getList().size() > 0) {
 
                                 but_pay.setVisibility(View.VISIBLE);
-                                listBean = shopCart.getMsg().getList();
+                                //listBean = shopCart.getMsg().getList();
 
                                 //
                                 if (limitcost == 0) {
@@ -416,7 +421,9 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
-                        System.out.println("错误");
+                        System.out.println("错误"+ex);
+
+                        System.out.println("错误"+isOnCallback);
 
                         tv_shopcart_num.setText("" + 0);
                         tv_all_pay.setText("购物车为空");
@@ -426,11 +433,13 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
                     @Override
                     public void onCancelled(CancelledException cex) {
+                        System.out.println("onCancelled"+cex);
 
                     }
 
                     @Override
                     public void onFinished() {
+                        System.out.println("onFinished");
 
                     }
                 });

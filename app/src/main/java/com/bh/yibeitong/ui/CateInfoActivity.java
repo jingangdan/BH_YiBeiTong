@@ -223,7 +223,7 @@ public class CateInfoActivity extends BaseTextActivity {
         CustomDialog.Builder builder = new CustomDialog.Builder(this);
         builder.setMessage("还未登录，确定要登录吗？");
         builder.setTitle("还未登录");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("登录/注册", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 //设置你的操作事项

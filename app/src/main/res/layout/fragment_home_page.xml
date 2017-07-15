@@ -48,7 +48,8 @@
                             android:layout_height="wrap_content"
                             android:numColumns="2"
                             android:padding="5dp"
-                            android:background="#E1E1E1">
+                            android:background="#E1E1E1"
+                            >
 
                         </com.bh.yibeitong.refresh.MyGridView>
                     </LinearLayout>

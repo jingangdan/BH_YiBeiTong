@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +25,13 @@ import com.bh.yibeitong.refresh.MyGridView;
 import com.bh.yibeitong.view.SlideMenuView;
 import com.bh.yibeitong.view.UserInfo;
 import com.tencent.android.tpush.XGIOperateCallback;
+import com.tencent.android.tpush.XGPushActivity;
 import com.tencent.android.tpush.XGPushClickedResult;
+import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,6 +87,7 @@ public class SellerActivity extends Activity implements View.OnClickListener {
 
     /*本地缓存*/
     private UserInfo userInfo;
+    private String str_userAccount = "";
 
     /*接收页面传值*/
     private Intent intent;
@@ -89,13 +97,56 @@ public class SellerActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 判断是否从推送通知栏打开的
+        XGPushClickedResult click = XGPushManager.onActivityStarted(this);
+        if (click != null) {
+            //从推送通知栏打开-Service打开Activity会重新执行Laucher流程
+            //查看是不是全新打开的面板
+            if (isTaskRoot()) {
+                return;
+            }
+            //如果有面板存在则关闭当前的面板
+            finish();
+        }
+
         setContentView(R.layout.activity_seller);
+        userInfo = new UserInfo(getApplication());
+
+        str_userAccount = userInfo.getSellerUserAccount();
+
 
         intent = getIntent();
         userAccount = intent.getStringExtra("UserAccount");
         shopid = intent.getStringExtra("shopid");
 
-        if (!(userAccount == null)) {
+        XGPushManager.registerPush(this);
+
+        if(!str_userAccount.equals("")){
+            XGPushManager.registerPush(this, str_userAccount);
+
+            XGPushManager.registerPush(this, str_userAccount,
+                    new XGIOperateCallback() {
+                        @Override
+                        public void onSuccess(Object data, int flag) {
+                            //Log.d("TPush", "注册成功，设备token为：" + data);
+                            System.out.println("绑定账号 成功 = " + str_userAccount);
+                            System.out.println("绑定账号注册成功，设备token为：" + data);
+                        }
+
+                        @Override
+                        public void onFail(Object data, int errCode, String msg) {
+                            Toast.makeText(SellerActivity.this,"账号注册失败，请重新启动！",Toast.LENGTH_SHORT).show();
+                            System.out.println("绑定账号 失败 = " + str_userAccount);
+                            //Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
+                            System.out.println("绑定账号注册失败，错误码：" + errCode + ",错误信息：" + msg);
+                        }
+                    });
+        }else{
+            System.out.println("账号注册失败！！！！！！！！！");
+        }
+
+        /*if (!(userAccount == null)) {
             XGPushManager.registerPush(this, userAccount);
 
             XGPushManager.registerPush(this, userAccount,
@@ -115,12 +166,29 @@ public class SellerActivity extends Activity implements View.OnClickListener {
                         }
                     });
         } else {
+            XGPushManager.registerPush(this, new XGIOperateCallback() {
+                @Override
+                public void onSuccess(Object data, int flag) {
+                    Log.d("TPush", "注册成功，设备token为：" + data);
+                    //str_data = String.valueOf(data);
+                }
 
-        }
+                @Override
+                public void onFail(Object data, int errCode, String msg) {
+                    Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
+                }
+            });
+        }*/
+
+        /*Context context = getApplicationContext();
+        Intent service = new Intent(context, XGPushActivity.class);
+        context.startService(service);*/
+
 
         initData();
 
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -131,52 +199,67 @@ public class SellerActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        XGPushClickedResult click = XGPushManager.onActivityStarted(this);
-        if (click != null) {
-            // 判断是否来自信鸽的打开方式
-            Toast.makeText(this, "通知被点击了 :" + click.toString(),
-                    Toast.LENGTH_SHORT).show();
+//        XGPushClickedResult click = XGPushManager.onActivityStarted(this);
+//
+//        System.out.println("aaaaaaaaaaaaaaa = " + click);
+//        if (click != null) {
+//            // 判断是否来自信鸽的打开方式
+//            // 根据实际情况处理...
+//            // 如获取自定义key-value
+//            System.out.println("aaaaaaaaaaaaa");
+//        } else {
+//            System.out.println("bbbbbbbbbbbb");
+//        }
 
-            //通知被点击 跳转到订单页
-            /*startActivity(new Intent(SellerActivity.this, SOrderManageActivity.class));
 
-            slideMenuView.closeMenu();*/
+        super.onResume();
+        // 如果由信鸽通知调起的 Activity（发送推送的时候，如果要走这个逻辑必须是指定启动界面为：com.cjwsc.activity. HomeActivity ）
+        XGPushClickedResult result = XGPushManager.onActivityStarted(this);
+        if (result != null) {
+            String content = result.getCustomContent();
+            try {
+                JSONObject json = new JSONObject(content);
+                String type = json.getString("type");
+                //DebugLog.d(DebugLog.TAG, "主界面接收到推送信息跳转申请" + "type:" + type);
+                Intent intent = new Intent();
+                switch (Integer.parseInt(type)) {
+                    case 1:// URL
+                        String url = json.getString("url");
+                        intent = intent.setClass(this, SellerActivity.class);
+                        intent.putExtra("WEB_URL", url);
+                        startActivity(intent);
+                        break;
 
+                    case 0:// 商品详情
+                        String pid = json.getString("pid");
+                        String shopid = json.getString("shopid");
+                        intent = intent.setClass(this, SOrderManageActivity.class);
+                        intent.putExtra("productId", pid);
+                        if (shopid != null) {
+                            intent.putExtra("shopid", shopid);
+                        }
+                        startActivity(intent);
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }else{
+            System.out.println("aaaaaaaaaa"+result);
         }
+
+
+
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (SellerActivity.class == null) {
-            System.out.println("跳转");
-
-            startActivity(new Intent(SellerActivity.this, SOrderManageActivity.class));
-
-        }
-    }
-
+    //同理，XGPushManager.onActivityStoped(this)由onStop()改为onPause()内调用，即：
 
     @Override
     protected void onPause() {
         super.onPause();
         XGPushManager.onActivityStoped(this);
-        System.out.println("通知被点击了");
-
-        XGPushClickedResult click = XGPushManager.onActivityStarted(this);
-        if (click != null) {
-            // 判断是否来自信鸽的打开方式
-            Toast.makeText(this, "通知被点击了 :" + click.toString(),
-                    Toast.LENGTH_SHORT).show();
-
-            //通知被点击 跳转到订单页
-            /*startActivity(new Intent(SellerActivity.this, SOrderManageActivity.class));
-
-            slideMenuView.closeMenu();*/
-
-
-        }
     }
+
 
     /**
      * 初始化商品信息
@@ -196,7 +279,7 @@ public class SellerActivity extends Activity implements View.OnClickListener {
     /*组件 初始化*/
     public void initData() {
 
-        userInfo = new UserInfo(getApplication());
+
 
         slideMenuView = (SlideMenuView) findViewById(R.id.slideMenuView);
         imageView = (ImageView) findViewById(R.id.title_bar_menu_btn);
@@ -245,7 +328,7 @@ public class SellerActivity extends Activity implements View.OnClickListener {
                     //货物采购
                     startActivity(new Intent(SellerActivity.this, GoodsProActivity.class));
 
-                }else if(i == 11){
+                } else if (i == 11) {
                     //库存查询
                     intent = new Intent(SellerActivity.this, RepertoryActivity.class);
                     intent.putExtra("shopid", shopid);
@@ -309,7 +392,11 @@ public class SellerActivity extends Activity implements View.OnClickListener {
             case R.id.tv_sm_without:
                 userInfo.saveLogin("0");//退出登录保存数字0
 
-                XGPushManager.unregisterPush(this);
+                userInfo.saveSellerUserAccoun("");
+
+                XGPushManager.unregisterPush(this);//设备解绑
+
+                XGPushManager.registerPush(SellerActivity.this, "*");//账号解绑
 
                 Intent intent = new Intent(SellerActivity.this, MainActivity.class);
                 intent.putExtra("islogin", false);

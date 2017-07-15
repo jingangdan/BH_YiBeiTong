@@ -536,7 +536,6 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
                         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                                 //
                                 Intent intent = new Intent(getActivity(), OrderDetaileActivity.class);
                                 intent.putExtra("orderid", msgBeanList.get(position).getId());

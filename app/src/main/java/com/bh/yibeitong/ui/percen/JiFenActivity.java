@@ -140,6 +140,7 @@ public class JiFenActivity extends BaseTextActivity {
                 //积分兑换
                 intent = new Intent(JiFenActivity.this, ExChangeActivity.class);
                 intent.putExtra("jifen", s_jifen);//传值 积分
+                startActivityForResult(intent, 31);
                 startActivity(intent);
                 break;
         }
@@ -214,6 +215,21 @@ public class JiFenActivity extends BaseTextActivity {
                     }
                 });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 31){
+            if(resultCode == 33){
+                //刷新页面
+                String paytype = data.getStringExtra("jifen");//支付是否成功 1 = 成功 0 = 失败
+                String giftscore = data.getStringExtra("giftsc ore");//兑换成功消耗的积分
+
+                System.out.println("JiFenActivity jifen = " + paytype);
+                System.out.println("JiFenActivity giftscore = " + giftscore);
+            }
+        }
     }
 
     /**/

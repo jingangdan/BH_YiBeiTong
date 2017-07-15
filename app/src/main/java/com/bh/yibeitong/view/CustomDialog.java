@@ -168,7 +168,7 @@ public class CustomDialog extends Dialog {
                         View.GONE);
             }
             // set the content message
-            if (message != null) {
+            /*if (message != null) {
                 ((TextView) layout.findViewById(R.id.message)).setText(message);
             } else if (contentView != null) {
                 // if no message set
@@ -177,7 +177,7 @@ public class CustomDialog extends Dialog {
                         .removeAllViews();
                 ((LinearLayout) layout.findViewById(R.id.content))
                         .addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-            }
+            }*/
             dialog.setContentView(layout);
             return dialog;
         }

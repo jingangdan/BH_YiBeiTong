@@ -1,11 +1,13 @@
 package com.bh.yibeitong.seller.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -16,6 +18,7 @@ import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseFragment;
 import com.bh.yibeitong.bean.seller.SellerLogin;
 import com.bh.yibeitong.bean.seller.SellerOrder;
+import com.bh.yibeitong.seller.activity.SellerAppOneActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.UserInfo;
@@ -123,7 +126,7 @@ public class FMSellerSend extends BaseFragment {
      * @param searchday 查询日期
      * @param gettype   订单类型 wait waitsend is_send
      */
-    public void waitsendSellerOrder(String uid, String pwd, String searchday, String gettype) {
+    public void waitsendSellerOrder(final String uid, final String pwd, String searchday, String gettype) {
         PATH = HttpPath.path + HttpPath.APP_ORDER +
                 "uid=" + uid + "&pwd=" + pwd + "&searchday=" + searchday + "&gettype=" + gettype;
 
@@ -135,11 +138,23 @@ public class FMSellerSend extends BaseFragment {
                     @Override
                     public void onSuccess(String result) {
                         System.out.println("商家订单 待发货 = " + result);
-                        SellerOrder sellerOrder = GsonUtil.gsonIntance().gsonToBean(result, SellerOrder.class);
+                        final SellerOrder sellerOrder = GsonUtil.gsonIntance().gsonToBean(result, SellerOrder.class);
                         msgBeen = sellerOrder.getMsg();
 
                         sellerOrderAdapter = new SellerOrderAdapter(getActivity(), msgBeen);
                         listView.setAdapter(sellerOrderAdapter);
+                        /*点击*/
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                Intent intent = new Intent(getActivity(), SellerAppOneActivity.class);
+                                intent.putExtra("uid", uid);
+                                intent.putExtra("pwd", pwd);
+                                intent.putExtra("orderid", sellerOrder.getMsg().get(i).getId());
+                                startActivity(intent);
+                            }
+                        });
+
 
 
                     }

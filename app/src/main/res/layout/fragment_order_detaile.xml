@@ -2,20 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EEEEEE">
+    android:background="#EEEEEE"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/lin_order_include"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/activity_base" />
+
+    </LinearLayout>
+
 
     <RelativeLayout
         android:id="@+id/rel_shopcart_bady"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.bh.yibeitong.refresh.PullToRefreshView
-            android:id="@+id/ptrv_order_detaile"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dip"
-            android:layout_weight="1"
-            android:background="#00000000">
+        <!--<com.bh.yibeitong.refresh.PullToRefreshView-->
+        <!--android:id="@+id/ptrv_order_detaile"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginTop="4dip"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="#00000000">-->
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -41,9 +53,9 @@
                             android:layout_marginRight="3dp"/>
 
                         <TextView
+                            android:id="@+id/tv_order_detailed_shopname"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="易贝通曹王庄店" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <View
@@ -277,7 +289,7 @@
 
             </ScrollView>
 
-        </com.bh.yibeitong.refresh.PullToRefreshView>
+        <!--</com.bh.yibeitong.refresh.PullToRefreshView>-->
 
     </RelativeLayout>
 

@@ -296,8 +296,6 @@ public class SpecialActivity extends BaseTextActivity implements SwipeRefreshLay
      * 特色服务模块适配器
      */
     class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
-        static final int TYPE_ITEM = 0;
-        static final int TYPE_FOOTER = 1;
 
         private OnItemClickListener mOnItemClickListener;
         private OnItemLongClickListener mOnItemLongClickListener;

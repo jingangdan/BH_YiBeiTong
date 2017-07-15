@@ -1,6 +1,7 @@
 package com.bh.yibeitong.seller.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseFragment;
 import com.bh.yibeitong.bean.seller.SellerLogin;
 import com.bh.yibeitong.bean.seller.SellerOrder;
+import com.bh.yibeitong.seller.activity.SellerAppOneActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.UserInfo;
@@ -131,7 +133,7 @@ public class FMSellerOK extends BaseFragment {
      * searchday	否	string	查询日期
      * gettype	否	string	订单类型 wait waitsend is_send
      */
-    public void getSellerOrder(String uid, String pwd, String searchday, String gettype) {
+    public void getSellerOrder(final String uid, final String pwd, String searchday, String gettype) {
         PATH = HttpPath.PATH + HttpPath.APP_ORDER +
                 "uid=" + uid + "&pwd=" + pwd + "&searchday=" + searchday + "&gettype=" + gettype;
 
@@ -142,17 +144,29 @@ public class FMSellerOK extends BaseFragment {
             @Override
             public void onSuccess(String result) {
                 System.out.println("商家端订单 待确认" + result);
-                SellerOrder sellerOrder = GsonUtil.gsonIntance().gsonToBean(result, SellerOrder.class);
+                final SellerOrder sellerOrder = GsonUtil.gsonIntance().gsonToBean(result, SellerOrder.class);
 
                 msgBeen = sellerOrder.getMsg();
                 sellerOrderAdapter = new SellerOrderAdapter(getActivity(), msgBeen);
                 listView.setAdapter(sellerOrderAdapter);
 
+                /*点击*/
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        Intent intent = new Intent(getActivity(), SellerAppOneActivity.class);
+                        intent.putExtra("uid", uid);
+                        intent.putExtra("pwd", pwd);
+                        intent.putExtra("orderid", sellerOrder.getMsg().get(i).getId());
+                        startActivity(intent);
+                    }
+                });
+
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                toast("网络请求错误，错误原因：" + ex);
+                //toast("网络请求错误，错误原因：" + ex);
 
             }
 

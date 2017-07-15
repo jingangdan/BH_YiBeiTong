@@ -39,7 +39,6 @@ import java.util.List;
  * Created by jingang on 2016/12/21.
  * 首页搜索界面 热门搜索 历史记录
  */
-
 public class SearchActivity extends BaseActivity implements View.OnClickListener {
     /*销毁当层*/
     private ImageView iv_back;
@@ -176,6 +175,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     intent.putExtra("searchvalue", searchvalue);
                     intent.putExtra("lat", latitude);
                     intent.putExtra("lng", longtitude);
+                    intent.putExtra("shopid", shopid);
                     startActivity(intent);
                     this.finish();
 
@@ -332,6 +332,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     intent.putExtra("searchvalue", name);
                     intent.putExtra("lat", latitude);
                     intent.putExtra("lng", longtitude);
+                    intent.putExtra("shopid", shopid);
+
 
                     boolean hasData = hasData(name.toString().trim());
 

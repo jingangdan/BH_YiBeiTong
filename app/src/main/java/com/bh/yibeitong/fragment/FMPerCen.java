@@ -5,19 +5,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bh.yibeitong.R;
-import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.actitvity.PerCenActivity;
 import com.bh.yibeitong.appupdate.ApkUpdateUtils;
 import com.bh.yibeitong.base.BaseFragment;
@@ -50,9 +44,6 @@ import com.bh.yibeitong.ui.percen.JiFenActivity;
 import com.bh.yibeitong.ui.percen.YouHuiQuanActivity;
 import com.bh.yibeitong.ui.percen.YuEActivity;
 import com.bh.yibeitong.updateversion.SDCardUtils;
-import com.bh.yibeitong.updateversion.UpdateStatus;
-import com.bh.yibeitong.updateversion.UpdateVersionUtil;
-import com.bh.yibeitong.updateversion.VersionInfo;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.utils.UpdataUtils;
@@ -60,24 +51,11 @@ import com.bh.yibeitong.utils.ZXingUtils;
 import com.bh.yibeitong.view.RoundImageView;
 import com.bh.yibeitong.view.UserInfo;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -381,7 +359,7 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
                 //积分
                 intent = new Intent(getActivity(), JiFenActivity.class);
                 intent.putExtra("jifen", s_jifen);
-                //startActivityForResult(intent, 30);
+                startActivityForResult(intent, 30);
                 startActivity(intent);
 
                 break;
@@ -628,200 +606,200 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
         m_appNameStr = "ybt.apk";
     }
 
-    class checkNewestVersionAsyncTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            if (postCheckNewestVersionCommand2Server()) {
-                int vercode = UpdataUtils.getVerCode(getActivity().getApplicationContext()); // 用到前面第一节写的方法
-                if (m_newVerCode > vercode) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {//如果有最新版本
-                doNewVersionUpdate(); // 更新新版本
-            } else {
-                notNewVersionDlgShow(); // 提示当前为最新版本
-            }
-            super.onPostExecute(result);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-    }
+//    class checkNewestVersionAsyncTask extends AsyncTask<Void, Void, Boolean> {
+//
+//        @Override
+//        protected Boolean doInBackground(Void... params) {
+//            if (postCheckNewestVersionCommand2Server()) {
+//                int vercode = UpdataUtils.getVerCode(getActivity().getApplicationContext()); // 用到前面第一节写的方法
+//                if (m_newVerCode > vercode) {
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
+//            return false;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Boolean result) {
+//            if (result) {//如果有最新版本
+//                doNewVersionUpdate(); // 更新新版本
+//            } else {
+//                notNewVersionDlgShow(); // 提示当前为最新版本
+//            }
+//            super.onPostExecute(result);
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//        }
+//    }
 
     /**
      * 从服务器获取当前最新版本号，如果成功返回TURE，如果失败，返回FALSE
      *
      * @return
      */
-    private Boolean postCheckNewestVersionCommand2Server() {
-        StringBuilder builder = new StringBuilder();
-        JSONArray jsonArray = null;
-        try {
-            // 构造POST方法的{name:value} 参数对
-            List<NameValuePair> vps = new ArrayList<NameValuePair>();
-            // 将参数传入post方法中
-            vps.add(new BasicNameValuePair("action", "checkNewestVersion"));
-            builder = UpdataUtils.post_to_server(vps);
-            Log.e("msg", builder.toString());
-            jsonArray = new JSONArray(builder.toString());
-            if (jsonArray.length() > 0) {
-                if (jsonArray.getJSONObject(0).getInt("id") == 1) {
-                    m_newVerName = jsonArray.getJSONObject(0).getString("verName");
-                    m_newVerCode = jsonArray.getJSONObject(0).getLong("verCode");
-
-                    return true;
-                }
-            }
-
-            return false;
-        } catch (Exception e) {
-            //Log.e("msg",e.getMessage());
-            m_newVerName = "";
-            m_newVerCode = -1;
-            return false;
-        }
-    }
+//    private Boolean postCheckNewestVersionCommand2Server() {
+//        StringBuilder builder = new StringBuilder();
+//        JSONArray jsonArray = null;
+//        try {
+//            // 构造POST方法的{name:value} 参数对
+//            List<NameValuePair> vps = new ArrayList<NameValuePair>();
+//            // 将参数传入post方法中
+//            vps.add(new BasicNameValuePair("action", "checkNewestVersion"));
+//            builder = UpdataUtils.post_to_server(vps);
+//            Log.e("msg", builder.toString());
+//            jsonArray = new JSONArray(builder.toString());
+//            if (jsonArray.length() > 0) {
+//                if (jsonArray.getJSONObject(0).getInt("id") == 1) {
+//                    m_newVerName = jsonArray.getJSONObject(0).getString("verName");
+//                    m_newVerCode = jsonArray.getJSONObject(0).getLong("verCode");
+//
+//                    return true;
+//                }
+//            }
+//
+//            return false;
+//        } catch (Exception e) {
+//            //Log.e("msg",e.getMessage());
+//            m_newVerName = "";
+//            m_newVerCode = -1;
+//            return false;
+//        }
+//    }
 
     /**
      * 提示更新新版本
      */
-    private void doNewVersionUpdate() {
-        int verCode = UpdataUtils.getVerCode(getActivity().getApplicationContext());
-        String verName = UpdataUtils.getVerName(getActivity().getApplicationContext());
-
-        String str = "当前版本：" + verName + " Code:" + verCode + " ,发现新版本：" + m_newVerName +
-                " Code:" + m_newVerCode + " ,是否更新？";
-        Dialog dialog = new AlertDialog.Builder(getActivity()).setTitle("软件更新").setMessage(str)
-                // 设置内容
-                .setPositiveButton("更新",// 设置确定按钮
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                m_progressDlg.setTitle("正在下载");
-                                m_progressDlg.setMessage("请稍候...");
-                                downFile("http://www.ybt9.com/app/ybt.apk");  //开始下载
-                            }
-                        })
-                .setNegativeButton("暂不更新",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                // 点击"取消"按钮之后退出程序
-                                //finish();
-                                dialog.dismiss();
-                            }
-                        }).create();// 创建
-        // 显示对话框
-        dialog.show();
-    }
+//    private void doNewVersionUpdate() {
+//        int verCode = UpdataUtils.getVerCode(getActivity().getApplicationContext());
+//        String verName = UpdataUtils.getVerName(getActivity().getApplicationContext());
+//
+//        String str = "当前版本：" + verName + " Code:" + verCode + " ,发现新版本：" + m_newVerName +
+//                " Code:" + m_newVerCode + " ,是否更新？";
+//        Dialog dialog = new AlertDialog.Builder(getActivity()).setTitle("软件更新").setMessage(str)
+//                // 设置内容
+//                .setPositiveButton("更新",// 设置确定按钮
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog,
+//                                                int which) {
+//                                m_progressDlg.setTitle("正在下载");
+//                                m_progressDlg.setMessage("请稍候...");
+//                                downFile("http://www.ybt9.com/app/ybt.apk");  //开始下载
+//                            }
+//                        })
+//                .setNegativeButton("暂不更新",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog,
+//                                                int whichButton) {
+//                                // 点击"取消"按钮之后退出程序
+//                                //finish();
+//                                dialog.dismiss();
+//                            }
+//                        }).create();// 创建
+//        // 显示对话框
+//        dialog.show();
+//    }
 
     /**
      * 提示当前为最新版本
      */
-    private void notNewVersionDlgShow() {
-        int verCode = UpdataUtils.getVerCode(getActivity());
-        String verName = UpdataUtils.getVerName(getActivity());
-        String str = "当前版本:" + verName + " Code:" + verCode + ",\n已是最新版,无需更新!";
-        Dialog dialog = new AlertDialog.Builder(getActivity()).setTitle("软件更新")
-                .setMessage(str)// 设置内容
-                .setPositiveButton("确定",// 设置确定按钮
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                dialog.dismiss();
-                                //finish();
-                            }
-                        }).create();// 创建
-        // 显示对话框
-        dialog.show();
-    }
+//    private void notNewVersionDlgShow() {
+//        int verCode = UpdataUtils.getVerCode(getActivity());
+//        String verName = UpdataUtils.getVerName(getActivity());
+//        String str = "当前版本:" + verName + " Code:" + verCode + ",\n已是最新版,无需更新!";
+//        Dialog dialog = new AlertDialog.Builder(getActivity()).setTitle("软件更新")
+//                .setMessage(str)// 设置内容
+//                .setPositiveButton("确定",// 设置确定按钮
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog,
+//                                                int which) {
+//                                dialog.dismiss();
+//                                //finish();
+//                            }
+//                        }).create();// 创建
+//        // 显示对话框
+//        dialog.show();
+//    }
 
     /**
      * 下载更新
      *
      * @param url
      */
-    private void downFile(final String url) {
-        m_progressDlg.show();
-        new Thread() {
-            public void run() {
-                HttpClient client = new DefaultHttpClient();
-                HttpGet get = new HttpGet(url);
-                HttpResponse response;
-                try {
-                    response = client.execute(get);
-                    HttpEntity entity = response.getEntity();
-                    long length = entity.getContentLength();
-
-                    m_progressDlg.setMax((int) length);//设置进度条的最大值
-
-                    InputStream is = entity.getContent();
-                    FileOutputStream fileOutputStream = null;
-                    if (is != null) {
-                        File file = new File(
-                                Environment.getExternalStorageDirectory(),
-                                m_appNameStr);
-                        fileOutputStream = new FileOutputStream(file);
-                        byte[] buf = new byte[1024];
-                        int ch = -1;
-                        int count = 0;
-                        while ((ch = is.read(buf)) != -1) {
-                            fileOutputStream.write(buf, 0, ch);
-                            count += ch;
-                            if (length > 0) {
-                                m_progressDlg.setProgress(count);
-                            }
-                        }
-                    }
-                    fileOutputStream.flush();
-                    if (fileOutputStream != null) {
-                        fileOutputStream.close();
-                    }
-                    down();  //告诉HANDER已经下载完成了，可以安装了
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-    }
+//    private void downFile(final String url) {
+//        m_progressDlg.show();
+//        new Thread() {
+//            public void run() {
+//                HttpClient client = new DefaultHttpClient();
+//                HttpGet get = new HttpGet(url);
+//                HttpResponse response;
+//                try {
+//                    response = client.execute(get);
+//                    HttpEntity entity = response.getEntity();
+//                    long length = entity.getContentLength();
+//
+//                    m_progressDlg.setMax((int) length);//设置进度条的最大值
+//
+//                    InputStream is = entity.getContent();
+//                    FileOutputStream fileOutputStream = null;
+//                    if (is != null) {
+//                        File file = new File(
+//                                Environment.getExternalStorageDirectory(),
+//                                m_appNameStr);
+//                        fileOutputStream = new FileOutputStream(file);
+//                        byte[] buf = new byte[1024];
+//                        int ch = -1;
+//                        int count = 0;
+//                        while ((ch = is.read(buf)) != -1) {
+//                            fileOutputStream.write(buf, 0, ch);
+//                            count += ch;
+//                            if (length > 0) {
+//                                m_progressDlg.setProgress(count);
+//                            }
+//                        }
+//                    }
+//                    fileOutputStream.flush();
+//                    if (fileOutputStream != null) {
+//                        fileOutputStream.close();
+//                    }
+//                    down();  //告诉HANDER已经下载完成了，可以安装了
+//                } catch (ClientProtocolException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }.start();
+//    }
 
     /**
      * 告诉HANDER已经下载完成了，可以安装了
      */
-    private void down() {
-        m_mainHandler.post(new Runnable() {
-            public void run() {
-                m_progressDlg.cancel();
-                update();
-            }
-        });
-    }
+//    private void down() {
+//        m_mainHandler.post(new Runnable() {
+//            public void run() {
+//                m_progressDlg.cancel();
+//                update();
+//            }
+//        });
+//    }
 
     /**
      * 安装程序
      */
-    void update() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(new File(Environment
-                        .getExternalStorageDirectory(), m_appNameStr)),
-                "application/vnd.android.package-archive");
-        startActivity(intent);
-    }
+//    void update() {
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setDataAndType(Uri.fromFile(new File(Environment
+//                        .getExternalStorageDirectory(), m_appNameStr)),
+//                "application/vnd.android.package-archive");
+//        startActivity(intent);
+//    }
 
 
     /**
@@ -846,6 +824,7 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
 
                 if (error == false) {
                     System.out.println("最新" + verCode.getMsg());
+                    toast(verCode.getMsg().getMsg().toString());
                     //notNewVersionDlgShow(verCode.getMsg().getUrl(),verCode.getMsg().getMsg());
                 } else if (error == true) {
                     System.out.println("旧的" + verCode.getMsg());
@@ -1040,118 +1019,129 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
     /**
      * 提示更新新版本
      */
-    private void doNewVersionUpdates(final String str_url, String str_msg) {
-
-        Dialog dialog = new AlertDialog.
-                Builder(getActivity()).
-                setTitle("软件更新").
-                setMessage(str_msg)
-                // 设置内容
-                .setPositiveButton("更新",
-                        // 设置确定按钮
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                downFiles(str_url);
-                            }
-                        })
-                .setNegativeButton("暂不更新",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                // 点击"取消"按钮之后退出程序
-                                //finish();
-                                dialog.dismiss();
-                            }
-                        }).create();// 创建
-        // 显示对话框
-        dialog.show();
-    }
+//    private void doNewVersionUpdates(final String str_url, String str_msg) {
+//
+//        Dialog dialog = new AlertDialog.
+//                Builder(getActivity()).
+//                setTitle("软件更新").
+//                setMessage(str_msg)
+//                // 设置内容
+//                .setPositiveButton("更新",
+//                        // 设置确定按钮
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog,
+//                                                int which) {
+//                                downFiles(str_url);
+//                            }
+//                        })
+//                .setNegativeButton("暂不更新",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog,
+//                                                int whichButton) {
+//                                // 点击"取消"按钮之后退出程序
+//                                //finish();
+//                                dialog.dismiss();
+//                            }
+//                        }).create();// 创建
+//        // 显示对话框
+//        dialog.show();
+//    }
 
     /**
      * 下载更新
      *
      * @param url
      */
-    private void downFiles(final String url) {
-        System.out.println("url=" + url);
-        m_progressDlg.setMessage("正在下载，请稍候。。。");
-        m_progressDlg.show();
-
-        new Thread() {
-            public void run() {
-                HttpClient client = new DefaultHttpClient();
-                HttpGet get = new HttpGet(url);
-                HttpResponse response;
-                try {
-
-                    response = client.execute(get);
-                    HttpEntity entity = response.getEntity();
-                    long length = entity.getContentLength();
-
-                    m_progressDlg.setMax((int) length);//设置进度条的最大值
-
-                    InputStream is = entity.getContent();
-                    FileOutputStream fileOutputStream = null;
-                    if (is != null) {
-                        File file = new File(
-                                Environment.getExternalStorageDirectory(),
-                                "ybt");
-                        fileOutputStream = new FileOutputStream(file);
-                        byte[] buf = new byte[1024];
-                        int ch = -1;
-                        int count = 0;
-                        while ((ch = is.read(buf)) != -1) {
-                            fileOutputStream.write(buf, 0, ch);
-                            count += ch;
-                            if (length > 0) {
-                                m_progressDlg.setProgress(count);
-                            }
-                        }
-                    }
-                    fileOutputStream.flush();
-                    if (fileOutputStream != null) {
-                        fileOutputStream.close();
-                    }
-                    downs();  //告诉HANDER已经下载完成了，可以安装了
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println(e.toString());
-                }
-            }
-        }.start();
-    }
+//    private void downFiles(final String url) {
+//        System.out.println("url=" + url);
+//        m_progressDlg.setMessage("正在下载，请稍候。。。");
+//        m_progressDlg.show();
+//
+//        new Thread() {
+//            public void run() {
+//                HttpClient client = new DefaultHttpClient();
+//                HttpGet get = new HttpGet(url);
+//                HttpResponse response;
+//                try {
+//
+//                    response = client.execute(get);
+//                    HttpEntity entity = response.getEntity();
+//                    long length = entity.getContentLength();
+//
+//                    m_progressDlg.setMax((int) length);//设置进度条的最大值
+//
+//                    InputStream is = entity.getContent();
+//                    FileOutputStream fileOutputStream = null;
+//                    if (is != null) {
+//                        File file = new File(
+//                                Environment.getExternalStorageDirectory(),
+//                                "ybt");
+//                        fileOutputStream = new FileOutputStream(file);
+//                        byte[] buf = new byte[1024];
+//                        int ch = -1;
+//                        int count = 0;
+//                        while ((ch = is.read(buf)) != -1) {
+//                            fileOutputStream.write(buf, 0, ch);
+//                            count += ch;
+//                            if (length > 0) {
+//                                m_progressDlg.setProgress(count);
+//                            }
+//                        }
+//                    }
+//                    fileOutputStream.flush();
+//                    if (fileOutputStream != null) {
+//                        fileOutputStream.close();
+//                    }
+//                    downs();  //告诉HANDER已经下载完成了，可以安装了
+//                } catch (ClientProtocolException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    System.out.println(e.toString());
+//                }
+//            }
+//        }.start();
+//    }
 
     /**
      * 告诉HANDER已经下载完成了，可以安装了
      */
-    private void downs() {
-        m_mainHandler.post(new Runnable() {
-            public void run() {
-                m_progressDlg.cancel();
-                updates();
-            }
-        });
-    }
+//    private void downs() {
+//        m_mainHandler.post(new Runnable() {
+//            public void run() {
+//                m_progressDlg.cancel();
+//                updates();
+//            }
+//        });
+//    }
 
     /**
      * 安装程序
      */
-    void updates() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(new File(Environment
-                        .getExternalStorageDirectory(), "ybt")),
-                "application/vnd.android.package-archive");
-        startActivity(intent);
-    }
+//    void updates() {
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setDataAndType(Uri.fromFile(new File(Environment
+//                        .getExternalStorageDirectory(), "ybt")),
+//                "application/vnd.android.package-archive");
+//        startActivity(intent);
+//    }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 30) {
+            if (resultCode == 33) {
+                String paytype = data.getStringExtra("jifen");//支付是否成功 1 = 成功 0 = 失败
+                String giftscore = data.getStringExtra("giftscore");//兑换成功消耗的积分
+
+                System.out.println("FMPerCen jifen = " + paytype);
+                System.out.println("FMPerCen giftscore = " + giftscore);
+
+
+            }
+        }
 
     }
 }

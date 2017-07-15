@@ -43,6 +43,7 @@ public class ExChangeActivity extends BaseTextActivity {
     private String s_jifen;
 
     private String gift_jifen = "";
+    private int i_jifen;
 
     @Override
     protected void setRootView() {
@@ -148,24 +149,26 @@ public class ExChangeActivity extends BaseTextActivity {
     }
 
 
-    /*@Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==30) {
-            if(resultCode==31) {
+        if(requestCode==32) {
+            if(resultCode==33) {
                 String paytype=data.getStringExtra("jifen");
                 String giftscore = data.getStringExtra("giftscore");
 
                 //textView.setText(result);
                 if(paytype.equals("1")){
-                    //当前积分 - 礼品积分
+                    //当前积分 - 礼品积分  //此处刷新页面
+                    i_jifen =  (int) Double.parseDouble(s_jifen) - (int) Double.parseDouble(giftscore);
+                    //System.out.println("111111111111111111111"+result);
+                    myJifen.setText(""+i_jifen);
                 }
-                (int) Double.parseDouble(s_jifen) -
-                //System.out.println("111111111111111111111"+result);
+
             }
         }
-    }*/
+    }
 
     /*礼品列表适配器*/
     public class GiftAdapter extends BaseAdapter {
@@ -241,7 +244,7 @@ public class ExChangeActivity extends BaseTextActivity {
                     Intent intent = new Intent(mContext, ExChangeAddressActivity.class);
                     intent.putExtra("giftid",id);
                     intent.putExtra("giftscore", msgBeen.get(position).getScore());
-                    startActivityForResult(intent, 30);
+                    startActivityForResult(intent, 32);
                     //mContext.startActivity(intent);
                 }
             });

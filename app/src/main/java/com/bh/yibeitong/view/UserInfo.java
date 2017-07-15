@@ -197,5 +197,18 @@ public class UserInfo {
         return sp.edit().putString("adv", info).commit();
     }
 
+    /**/
+    public String getSellerUserAccount(){
+        //取
+        SharedPreferences sp = app.getSharedPreferences("ualist", 0);
+
+        return sp.getString("ua", "");
+    }
+
+    public boolean saveSellerUserAccoun(String info){
+        //存
+        SharedPreferences sp = app.getSharedPreferences("ualist", 0);
+        return sp.edit().putString("ua", info).commit();
+    }
 
 }

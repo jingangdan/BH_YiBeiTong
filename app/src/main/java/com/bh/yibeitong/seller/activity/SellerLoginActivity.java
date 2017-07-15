@@ -16,11 +16,13 @@ import android.widget.LinearLayout;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.actitvity.ActivityCollector;
 import com.bh.yibeitong.base.BaseTextActivity;
+import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.seller.SellerLogin;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.UserInfo;
 import com.tencent.android.tpush.XGIOperateCallback;
+import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
 
 import org.xutils.BuildConfig;
@@ -60,7 +62,7 @@ public class SellerLoginActivity extends BaseTextActivity {
     UserInfo userInfo;
 
     //信鸽通知获取的token
-    private String str_data;
+    private String str_data = "";
 
     @Override
     protected void setRootView() {
@@ -77,6 +79,8 @@ public class SellerLoginActivity extends BaseTextActivity {
 
         x.Ext.init(getApplication());
         x.Ext.setDebug(BuildConfig.DEBUG);
+
+        XGPushConfig.enableDebug(this, true);
 
         //绑定设备注册
         XGPushManager.registerPush(this);
@@ -174,13 +178,48 @@ public class SellerLoginActivity extends BaseTextActivity {
                 break;
 
             case R.id.but_sl_login:
+
+                //绑定设备注册
+                XGPushManager.registerPush(this);
+
+                XGPushManager.registerPush(this, new XGIOperateCallback() {
+                    @Override
+                    public void onSuccess(Object data, int flag) {
+                        Log.d("TPush", "注册成功，设备token为：" + data);
+                        str_data = String.valueOf(data);
+                    }
+
+                    @Override
+                    public void onFail(Object data, int errCode, String msg) {
+                        Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
+                    }
+                });
+
                 //登录
                 user = et_username.getText().toString();
                 pass = et_password.getText().toString();
 
                 if (!user.equals("")) {
                     if (!pass.equals("")) {
-                        login(user, pass, "", str_data, "");//登录
+                        //login(user, pass, "", str_data, "");//登录
+                        if (!str_data.equals("")) {
+                            login(user, pass, "", str_data, "");//登录
+                        } else {
+                            toast("token申请不成功，请重新登录" + str_data);
+                            XGPushManager.registerPush(this, new XGIOperateCallback() {
+                                @Override
+                                public void onSuccess(Object data, int flag) {
+                                    Log.d("TPush", "注册成功，设备token为：" + data);
+                                    str_data = String.valueOf(data);
+                                }
+
+                                @Override
+                                public void onFail(Object data, int errCode, String msg) {
+                                    Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
+                                }
+                            });
+                        }
+
                     } else {
                         toast("密码不可为空！");
                     }
@@ -198,6 +237,41 @@ public class SellerLoginActivity extends BaseTextActivity {
         }
 
     }
+
+    private void getToken() {
+
+    }
+
+    //daf4d24fc6b4da1d4d90be6360542e9085770fe0
+
+//    class MyThread implements Runnable {
+//        private boolean flag = true;
+//
+//        @Override
+//        public void run() {
+//            while (flag) {
+//                if (str_data.equals("")) {
+//                    System.out.println("11");
+//                    XGPushManager.registerPush(SellerLoginActivity.this, new XGIOperateCallback() {
+//                        @Override
+//                        public void onSuccess(Object data, int flag) {
+//                            Log.d("TPush", "注册成功，设备token为：" + data);
+//                            str_data = String.valueOf(data);
+//                        }
+//
+//                        @Override
+//                        public void onFail(Object data, int errCode, String msg) {
+//                            Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
+//                        }
+//                    });
+//                } else {
+//                    flag = false;
+//                    System.out.println("2222");
+//                }
+//            }
+//        }
+//    }
+
 
     //注册TextWatcher类型的用户名和密码
     private TextWatcher username_watcher, password_watcher;
@@ -240,6 +314,8 @@ public class SellerLoginActivity extends BaseTextActivity {
         };
     }
 
+    /**/
+    private String str_result = "";
 
     /**
      * 商家登录
@@ -262,6 +338,7 @@ public class SellerLoginActivity extends BaseTextActivity {
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
+                        str_result = result;
                         System.out.println("商家登录成功" + result);
                         SellerLogin sellerLogin = GsonUtil.gsonIntance().gsonToBean(result, SellerLogin.class);
 
@@ -275,6 +352,8 @@ public class SellerLoginActivity extends BaseTextActivity {
                             userInfo.saveCoder("0");//登录类型 0 密码登录 否则 手机号快速登录
                             userInfo.savePwd(pwd);
                             userInfo.saveUserInfo(result);
+
+                            userInfo.saveSellerUserAccoun(""+username+uid);
 
                             Intent intent = new Intent(SellerLoginActivity.this, SellerActivity.class);
                             intent.putExtra("UserAccount", username + uid);
@@ -293,7 +372,11 @@ public class SellerLoginActivity extends BaseTextActivity {
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
-                        System.out.println("商家登录失败");
+                        //System.out.println("商家登录失败");
+
+                        Error error = GsonUtil.gsonIntance().gsonToBean(str_result, Error.class);
+
+                        toast(error.getMsg().toString());
                     }
 
                     @Override

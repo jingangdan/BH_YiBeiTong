@@ -86,12 +86,11 @@
             android:id="@+id/et_new_address"
             style="@style/edit_style"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:drawableRight="@mipmap/new_drop_down"
             android:editable="false"
-            android:text="定位中。。。" />
+            android:text="定位中。。。"/>
 
         <ImageView
             android:id="@+id/iv_new_search"

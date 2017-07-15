@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,12 +34,11 @@ import java.util.Date;
  * 订单详情
  */
 
-public class FMOrderDetaile extends Fragment implements
-        PullToRefreshView.OnHeaderRefreshListener, View.OnClickListener, PullToRefreshView.OnFooterRefreshListener {
+public class FMOrderDetaile extends Fragment implements View.OnClickListener {
     private View view;
 
     //内容滑动
-    private PullToRefreshView pullToRefreshView;
+    //private PullToRefreshView pullToRefreshView;
     private MyListView myListView;
     private OrderDetaileAdapter odAdapter;
 
@@ -52,12 +52,15 @@ public class FMOrderDetaile extends Fragment implements
 
     /*一下数据的显示控件*/
     private TextView order_number, order_time, order_payment,
-            order_contactname, order_phone, order_address, tv_order_distribution;
+            order_contactname, order_phone, order_address, tv_order_distribution,
+    tv_shopname;
 
     /*再来一单*/
     private Button but_more_one;
 
     UserInfo userInfo;
+
+    private LinearLayout linearLayout;
 
 
     @Nullable
@@ -75,9 +78,9 @@ public class FMOrderDetaile extends Fragment implements
 
         getOrderDetaile(orderid, phone);
 
-        pullToRefreshView.setOnHeaderRefreshListener(this);
-        pullToRefreshView.setOnFooterRefreshListener(this);
-        pullToRefreshView.setLastUpdated(new Date().toLocaleString());
+        //pullToRefreshView.setOnHeaderRefreshListener(this);
+        //pullToRefreshView.setOnFooterRefreshListener(this);
+        //pullToRefreshView.setLastUpdated(new Date().toLocaleString());
 
         return view;
     }
@@ -96,7 +99,7 @@ public class FMOrderDetaile extends Fragment implements
     public void initData() {
 
         userInfo = new UserInfo(getActivity().getApplication());
-        pullToRefreshView = (PullToRefreshView) view.findViewById(R.id.ptrv_order_detaile);
+        //pullToRefreshView = (PullToRefreshView) view.findViewById(R.id.ptrv_order_detaile);
         myListView = (MyListView) view.findViewById(R.id.mlv_order_detaile);
 
         order_number = (TextView) view.findViewById(R.id.tv_order_number);
@@ -106,6 +109,11 @@ public class FMOrderDetaile extends Fragment implements
         order_phone = (TextView) view.findViewById(R.id.tv_order_phone);
         order_address = (TextView) view.findViewById(R.id.tv_order_address);
         tv_order_distribution = (TextView) view.findViewById(R.id.tv_order_distribution);
+
+        tv_shopname = (TextView) view.findViewById(R.id.tv_order_detailed_shopname);
+
+        linearLayout = (LinearLayout) view.findViewById(R.id.lin_order_include);
+        linearLayout.setVisibility(View.GONE);
 
         but_more_one = (Button) view.findViewById(R.id.but_more_one);
         but_more_one.setOnClickListener(this);
@@ -143,12 +151,16 @@ public class FMOrderDetaile extends Fragment implements
                         String buyerphone = orderDetaile.getMsg().getBuyerphone();
                         String buyeraddress = orderDetaile.getMsg().getBuyeraddress();
 
+                        String shopname = orderDetaile.getMsg().getShopname();
+
                         order_number.setText(dno);
                         order_time.setText(addtime);
                         order_payment.setText(paystatusintro);
                         order_contactname.setText(buyername);
                         order_phone.setText(buyerphone);
                         order_address.setText(buyeraddress);
+
+                        tv_shopname.setText(""+shopname);
 
                         orderDetaile.getMsg().getGdlist();
 
@@ -175,28 +187,28 @@ public class FMOrderDetaile extends Fragment implements
                 });
     }
 
-    @Override
-    public void onHeaderRefresh(PullToRefreshView view) {
-        pullToRefreshView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullToRefreshView.onHeaderRefreshComplete("更新于："
-                        + Calendar.getInstance().getTime().toLocaleString());
-                pullToRefreshView.onHeaderRefreshComplete();
-
-                if (userInfo.getCode().equals("0")) {
-                    getOrderDetaile(orderid, "");
-                } else {
-                    getOrderDetaile(orderid, phone);
-                }
-
-
-                //更新
-                Toast.makeText(getActivity(), "刷新成功!", Toast.LENGTH_SHORT).show();
-            }
-
-        }, 3000);
-    }
+//    @Override
+//    public void onHeaderRefresh(PullToRefreshView view) {
+//        pullToRefreshView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                pullToRefreshView.onHeaderRefreshComplete("更新于："
+//                        + Calendar.getInstance().getTime().toLocaleString());
+//                pullToRefreshView.onHeaderRefreshComplete();
+//
+//                if (userInfo.getCode().equals("0")) {
+//                    getOrderDetaile(orderid, "");
+//                } else {
+//                    getOrderDetaile(orderid, phone);
+//                }
+//
+//
+//                //更新
+//                Toast.makeText(getActivity(), "刷新成功!", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }, 3000);
+//    }
 
     @Override
     public void onClick(View v) {
@@ -211,15 +223,15 @@ public class FMOrderDetaile extends Fragment implements
         }
     }
 
-    @Override
-    public void onFooterRefresh(PullToRefreshView view) {
-        pullToRefreshView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullToRefreshView.onFooterRefreshComplete();
-                //Toast.makeText(getActivity(), "加载更多数据", Toast.LENGTH_SHORT).show();
-            }
-
-        }, 1000);
-    }
+//    @Override
+//    public void onFooterRefresh(PullToRefreshView view) {
+//        pullToRefreshView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                pullToRefreshView.onFooterRefreshComplete();
+//                //Toast.makeText(getActivity(), "加载更多数据", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }, 1000);
+//    }
 }

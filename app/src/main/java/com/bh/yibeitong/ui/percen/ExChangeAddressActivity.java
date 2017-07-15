@@ -176,7 +176,7 @@ public class ExChangeAddressActivity extends BaseTextActivity {
                             intent = new Intent();
                             intent.putExtra("jifen", "1");
                             intent.putExtra("giftscore",giftscore);
-                            setResult(31, intent);
+                            setResult(33, intent);
                             ExChangeAddressActivity.this.finish();
                         }
 
