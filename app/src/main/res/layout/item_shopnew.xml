@@ -66,16 +66,17 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/text_cost"
                 android:id="@+id/tv_item_shopnew_ss_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="￥100.00/包"
-                android:textColor="#F92621" />
+                android:text="￥100.00/包" />
 
         </LinearLayout>
 
         <!---->
         <RelativeLayout
+            android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

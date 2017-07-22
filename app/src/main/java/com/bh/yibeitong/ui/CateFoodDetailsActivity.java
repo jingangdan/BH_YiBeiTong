@@ -30,6 +30,8 @@ import com.bh.yibeitong.view.CustomDialog;
 import com.bh.yibeitong.view.UserInfo;
 import com.lidroid.xutils.BitmapUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.BuildConfig;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -513,34 +515,51 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
                     public void onSuccess(String result) {
                         System.out.println("获取购物车" + result);
                         totalPrice = 0;
-                        ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
 
-                        totalPrice = shopCart.getMsg().getSurecost();
-                        sumCount = shopCart.getMsg().getSumcount();
+                        JSONObject response = null;
+                        try {
+                            response = new JSONObject(result);
 
-                        listBean = shopCart.getMsg().getList();
+                            if(response.get("msg").toString().equals("[]")){
+                                System.out.println("没有数据");
+                            }else{
+                                ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
 
-                        if (limitcost == 0) {
-                            but_catefood_pay.setText("去支付");
-                            but_catefood_pay.setTextColor(Color.RED);
+                                totalPrice = shopCart.getMsg().getSurecost();
+                                sumCount = shopCart.getMsg().getSumcount();
 
-                        } else if (totalPrice >= limitcost) {
-                            but_catefood_pay.setText("去支付");
-                            but_catefood_pay.setTextColor(Color.RED);
-                        } else if (totalPrice > 0 && totalPrice < limitcost) {
-                            double add = limitcost - totalPrice;
-                            but_catefood_pay.setText("还差" + df.format(add) + "元");
-                            but_catefood_pay.setTextColor(Color.GRAY);
-                        } else if (totalPrice == 0) {
-                            but_catefood_pay.setText("购物车为空");
-                            but_catefood_pay.setTextColor(Color.GRAY);
-                        } else {
-                            toast("错误");
+                                listBean = shopCart.getMsg().getList();
+
+                                if (limitcost == 0) {
+                                    but_catefood_pay.setText("去支付");
+                                    but_catefood_pay.setTextColor(Color.RED);
+
+                                } else if (totalPrice >= limitcost) {
+                                    but_catefood_pay.setText("去支付");
+                                    but_catefood_pay.setTextColor(Color.RED);
+                                } else if (totalPrice > 0 && totalPrice < limitcost) {
+                                    double add = limitcost - totalPrice;
+                                    but_catefood_pay.setText("还差" + df.format(add) + "元");
+                                    but_catefood_pay.setTextColor(Color.GRAY);
+                                } else if (totalPrice == 0) {
+                                    but_catefood_pay.setText("购物车为空");
+                                    but_catefood_pay.setTextColor(Color.GRAY);
+                                } else {
+                                    toast("错误");
+                                }
+
+
+                                tv_catefood_all_num.setText("" + sumCount);
+                                tv_catefood_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
 
 
-                        tv_catefood_all_num.setText("" + sumCount);
-                        tv_catefood_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+
 
                     }
 

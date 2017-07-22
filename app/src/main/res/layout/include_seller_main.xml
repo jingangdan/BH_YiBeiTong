@@ -41,34 +41,34 @@
         </LinearLayout>
 
         <LinearLayout
-            android:background="#a2cb34"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#a2cb34"
+            android:orientation="horizontal"
             android:padding="10dp">
 
             <LinearLayout
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:orientation="vertical"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:padding="10dp">
 
                 <TextView
                     android:id="@+id/tv_seller_turnover"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="32dp"
-                    style="@style/title_text_witht"/>
-
-                <TextView
-                    android:textSize="16dp"
                     style="@style/title_text_witht"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="营业额"/>
+                    android:text="0"
+                    android:textSize="32dp" />
+
+                <TextView
+                    style="@style/title_text_witht"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="营业额"
+                    android:textSize="16dp" />
 
             </LinearLayout>
 
@@ -78,27 +78,27 @@
                 android:background="#fff"></View>
 
             <LinearLayout
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:orientation="vertical"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:padding="10dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="32dp"
-                    style="@style/title_text_witht"/>
-
-                <TextView
                     android:id="@+id/tv_seller_order_num"
-                    android:textSize="16dp"
                     style="@style/title_text_witht"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="订单数"/>
+                    android:text="0"
+                    android:textSize="32dp" />
+
+                <TextView
+                    style="@style/title_text_witht"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="订单数"
+                    android:textSize="16dp" />
 
             </LinearLayout>
 
@@ -118,23 +118,23 @@
 
             <TextView
                 android:id="@+id/tv_seller_balance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="账户余额\n￥0.00"
-                android:gravity="center"
-                android:layout_alignParentLeft="true"
                 style="@style/title_text_witht"
-                android:textSize="16dp"
-                android:layout_centerVertical="true"/>
-
-            <Button
-                android:id="@+id/but_seller_pay"
-                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="立即结算"
-                style="@style/button_style_seller"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="账户余额\n￥0.00"
+                android:textSize="16dp" />
+
+            <!--<Button-->
+                <!--android:id="@+id/but_seller_pay"-->
+                <!--style="@style/button_style_seller"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:text="立即结算" />-->
 
         </RelativeLayout>
 

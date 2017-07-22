@@ -46,6 +46,9 @@ public class JoinActivity extends BaseTextActivity {
         webView = (WebView) findViewById(R.id.webView_join);
         webView.loadUrl(url);
 
+        webView.setHorizontalScrollBarEnabled(false);//水平不显示
+        webView.setVerticalScrollBarEnabled(false); //垂直不显示
+
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
     }

@@ -2,27 +2,25 @@ package com.bh.yibeitong.fragment;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,7 +30,7 @@ import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.location.Poi;
+import com.bh.yibeitong.Interface.OnItemLongClickListener;
 import com.bh.yibeitong.LocationService;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.actitvity.MainActivity;
@@ -45,24 +43,30 @@ import com.bh.yibeitong.bean.WxADV;
 import com.bh.yibeitong.bean.homepage.AdvByType;
 import com.bh.yibeitong.bean.homepage.GetSign;
 import com.bh.yibeitong.bean.shopbean.Recommed;
+import com.bh.yibeitong.dialog.CustomProgress;
 import com.bh.yibeitong.lunbotu.ADInfo;
 import com.bh.yibeitong.lunbotu.CycleViewPager;
 import com.bh.yibeitong.lunbotu.ViewFactory;
 import com.bh.yibeitong.refresh.GridViewAdapter;
 import com.bh.yibeitong.refresh.MyGridView;
 import com.bh.yibeitong.refresh.PullToRefreshView;
+import com.bh.yibeitong.refresh.recyclerview.BaseRecyclerViewAdapter;
+import com.bh.yibeitong.refresh.recyclerview.BaseRecyclerViewHolder;
 import com.bh.yibeitong.ui.CateFoodDetailsActivity;
 import com.bh.yibeitong.ui.CateInfoActivity;
 import com.bh.yibeitong.ui.LocationActivity;
+import com.bh.yibeitong.ui.LoginRegisterActivity;
 import com.bh.yibeitong.ui.ShopNewActivity;
 import com.bh.yibeitong.ui.homepage.JoinActivity;
 import com.bh.yibeitong.ui.homepage.SpecialActivity;
+import com.bh.yibeitong.ui.percen.JiFenActivity;
 import com.bh.yibeitong.ui.percen.YuEActivity;
 import com.bh.yibeitong.ui.search.SearchActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.utils.MD5Util;
 import com.bh.yibeitong.utils.NetworkUtils;
+import com.bh.yibeitong.view.CustomDialog;
 import com.bh.yibeitong.view.MarqueeView;
 import com.bh.yibeitong.view.MyScrollView;
 import com.bh.yibeitong.view.UserInfo;
@@ -70,6 +74,7 @@ import com.bh.yibeitong.zxing.ZXingCaptureActivity;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lidroid.xutils.BitmapUtils;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -99,24 +104,24 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
     private View view;
 
-    /**
-     * 自营专区  直营便利店 二手交易 小区信息
-     */
-    //private LinearLayout lin_self_support, lin_directly_mark, lin_second_hand, lin_village_manage;
-
-    /**
-     * 预约服务 美食外卖 收发快递 更多
-     */
-    //private LinearLayout lin_appointment, lin_food_out, lin_express, lin_more;
-
-    //积分专区 抢购专区 商家入驻 跑腿服务
-    //private ImageView iv_integral, iv_scare_buying, iv_business, iv_run;
-
-    /**
-     * 地址
-     */
-    //public EditText et_address;
-    //private TextView tv_shopname;
+//    /**
+//     * 自营专区  直营便利店 二手交易 小区信息
+//     */
+//    private LinearLayout lin_self_support, lin_directly_mark, lin_second_hand, lin_village_manage;
+//
+//    /**
+//     * 预约服务 美食外卖 收发快递 更多
+//     */
+//    private LinearLayout lin_appointment, lin_food_out, lin_express, lin_more;
+//
+//    //积分专区 抢购专区 商家入驻 跑腿服务
+//    private ImageView iv_integral, iv_scare_buying, iv_business, iv_run;
+//
+//    /**
+//     * 地址
+//     */
+//    public EditText et_address;
+//    private TextView tv_shopname;
 
     private TextView tv_gointo_shop;//进入店铺
 
@@ -127,11 +132,13 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     private List<GoodsIndex.MsgBean.CatefoodslistBean> ceFoodList = new ArrayList<>();
     private List<GoodsIndex.MsgBean.CatefoodslistBean> ceFood = new ArrayList<>();
 
+    private GoodsIndex.MsgBean.CatefoodslistBean ceFoods;
+
     /**
      * 页面之间的跳转传值
      */
     private Intent intent;
-    private String shopid, startTime, mapphone, address;
+    private String shopid = "", startTime, mapphone, address;
     private String latitude, longtitude;//经纬度
 
     public static String shopName;
@@ -145,7 +152,8 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     // 自定义的GridView的上下拉动刷新
     private PullToRefreshView mPullToRefreshView;
 
-    private MyGridView myGridView, mgv_classifly;
+    private MyGridView myGridView;
+    //mgv_classifly;
     private GridViewAdapter gridViewAdapter;
 
     /*页面*/
@@ -153,10 +161,10 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
     /*查看本地存储*/
     UserInfo userInfo;
-    //private String jingang;//还得召唤我的大名！！！
+    private String jingang = "";//是否登录  “空”未登录  0未登录  1登录
 
-    /*轮播图*/
-    //private SliderLayout sliderLayout;
+//    /*轮播图*/
+//    //private SliderLayout sliderLayout;
 
     private ProgressDialog pd;
 
@@ -164,13 +172,10 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     //private EditText et_search;
 
     //没有网络显示
-    private LinearLayout lin_no_network;
-    private Button but_load_again;//重新加载
-
-    private LinearLayout lin_yes_network;
-
-    //顶部
-    //private RelativeLayout rel_jingang;
+//    private LinearLayout lin_no_network;
+//    private Button but_load_again;//重新加载
+//
+//    private LinearLayout lin_yes_network;
 
     /*界面修改*/
     private RelativeLayout rel_new_header;//背景
@@ -180,8 +185,8 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     /*积分抢购 抢购专区 商家入驻 跑腿服务*/
     private LinearLayout lin_jifen, lin_qianggou, lin_ruzhu, lin_paotui;
 
-    /*签到 充值 联系电话*/
-    //private Button but_sign, but_recharge, but_phone;
+//    /*签到 充值 联系电话*/
+//    //private Button but_sign, but_recharge, but_phone;
 
     /*接口地址*/
     private String PATH = "";
@@ -190,7 +195,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     private List<ImageView> views = new ArrayList<ImageView>();
     private List<ADInfo> infos;
     private ADInfo info;
-    //= new ArrayList<ADInfo>();
     private CycleViewPager cycleViewPager;
 
 //    private String[] imageUrls = {"http://img.taodiantong.cn/v55183/infoimg/2013-07/130720115322ky.jpg",
@@ -202,6 +206,19 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     private ImageView iv_adv001, iv_adv002;
     private String linkurl;
 
+    /*首页数据*/
+//    private SwipeRefreshLayout swipeRefreshLayout;
+//    private RecyclerView recyclerView;
+//    private RecyclerViewAdapter recyclerViewAdapter;
+
+    private RecyclerView recyclerView;
+    private HomeAdapter homeAdapter;
+
+    private CustomProgress progressDialog = null;
+
+    /*是否加载数据成功*/
+    private boolean isLoading = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -209,6 +226,10 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         view = inflater.inflate(R.layout.fragment_home_page, null);
         x.Ext.init(getActivity().getApplication());
         x.Ext.setDebug(BuildConfig.DEBUG);
+
+        locationService = new LocationService(getActivity());
+
+        startProgressDialog();
 
         initData();
 
@@ -233,11 +254,27 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         }
 
 
-        /*广告位*/
-        getAdvByType("weixinmid");
-        getAdvByTypes("weixinmid2");
+//        /*广告位*/
+//        getAdvByType("weixinmid");
+//        getAdvByTypes("weixinmid2");
 
         return view;
+    }
+
+    private void startProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = CustomProgress.createDialog(getActivity());
+            progressDialog.setMessage("请稍候...");
+        }
+
+        progressDialog.show();
+    }
+
+    private void stopProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 
     /**
@@ -245,7 +282,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
      */
     private void initData() {
         userInfo = new UserInfo(getActivity().getApplication());
-        //jingang = userInfo.getLogin();
+        jingang = userInfo.getLogin();
 
 //        lin_self_support = (LinearLayout) view.findViewById(R.id.lin_self_support);
 //        lin_directly_mark = (LinearLayout) view.findViewById(R.id.lin_directly_mark);
@@ -286,6 +323,9 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 //        tv_shopname.setOnClickListener(this);
 
         //进入店铺
+
+        gridViewAdapter = new GridViewAdapter();
+
         tv_gointo_shop = (TextView) view.findViewById(R.id.tv_gointo_shop);
         tv_gointo_shop.setOnClickListener(this);
 
@@ -305,12 +345,12 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 //        et_search.setOnClickListener(this);
 
         //没有网络或加载数据失败的情况
-        lin_no_network = (LinearLayout) view.findViewById(R.id.lin_no_network);
-        but_load_again = (Button) view.findViewById(R.id.but_load_again);
-        but_load_again.setOnClickListener(this);
-
-        //有网链接
-        lin_yes_network = (LinearLayout) view.findViewById(R.id.lin_yes_network);
+//        lin_no_network = (LinearLayout) view.findViewById(R.id.lin_no_network);
+//        but_load_again = (Button) view.findViewById(R.id.but_load_again);
+//        but_load_again.setOnClickListener(this);
+//
+//        //有网链接
+//        lin_yes_network = (LinearLayout) view.findViewById(R.id.lin_yes_network);
 
         //
         //rel_jingang = (RelativeLayout) view.findViewById(R.id.rel_jingang);
@@ -345,10 +385,13 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 //        but_phone.setOnClickListener(this);
 
         //新版商品分类
-        mgv_classifly = (MyGridView) view.findViewById(R.id.mgv_goods_classify);
+        //mgv_classifly = (MyGridView) view.findViewById(R.id.mgv_goods_classify);
 
         /*轮播图*/
         //sliderLayout = (SliderLayout) view.findViewById(R.id.sliderLayout);
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.rv_goods_classify);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         cycleViewPager = (CycleViewPager) getActivity().getFragmentManager().findFragmentById(R.id.fragment_cycle_viewpager_content);
 
@@ -363,6 +406,26 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         mPullToRefreshView.setOnFooterRefreshListener(this);
         mPullToRefreshView.setLastUpdated(new Date().toLocaleString());
 
+
+        /*首页UI*/
+//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.sr_home_page);
+//        recyclerView = (RecyclerView) view.findViewById(R.id.rv_home_page);
+//
+//        swipeRefreshLayout.setOnRefreshListener(this);
+//
+//        swipeRefreshLayout.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                swipeRefreshLayout.setRefreshing(true);
+//            }
+//        });
+//
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//
+//        RecyclerViewUtils.OnScrollListener(getActivity(), recyclerView);
+        //这个方法是判断recyclerView是否滑动到了底部，里面有一个自动加载的接口
+
+
         str_marqueeView.add("易贝通便利店欢迎您！");
 
         marqueeView.startWithList(str_marqueeView);
@@ -372,14 +435,14 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
         configImageLoader();
 
-        getWxAdv();
+        //getWxAdv();
 
-        /*str_marqueeView.add("贝通开业了！");
-        str_marqueeView.add("通开业了！");
-        str_marqueeView.add("开业了！");
-        str_marqueeView.add("业了！");
-        str_marqueeView.add("了！");
-        str_marqueeView.add("！");*/
+//        str_marqueeView.add("贝通开业了！");
+//        str_marqueeView.add("通开业了！");
+//        str_marqueeView.add("开业了！");
+//        str_marqueeView.add("业了！");
+//        str_marqueeView.add("了！");
+//        str_marqueeView.add("！");
 
         MyScrollView.setScanScrollChangedListener(this);
 
@@ -390,7 +453,25 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     @Override
     public void onScrolledToBottom(boolean isToButtom) {
         //isToBrttom = ture到达底部
+        if (isToButtom) {
+            if(isToTops){
+                System.out.println("----------------------" + isToButtom);
+//            //到达底部
+                page++;
+                getLoadingShopGood(latitude, longtitude, page);
+                System.out.println("到达底部 加载数据");
+
+                isToTops = false;
+            }
+
+        } else {
+
+        }
+
     }
+
+    public boolean isToTops = false;
+
 
     @Override
     public void onScrolledToTop(boolean isToTop) {
@@ -426,36 +507,36 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
     LocalBroadcastManager broadcastManager;
 
-    /**
-     * 注册广播接收器
-     */
-    private void registerReceiver() {
-        broadcastManager = LocalBroadcastManager.getInstance(getActivity());
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("jerry");
-        broadcastManager.registerReceiver(mAdDownLoadReceiver, intentFilter);
-    }
+//    /**
+//     * 注册广播接收器
+//     */
+//    private void registerReceiver() {
+//        broadcastManager = LocalBroadcastManager.getInstance(getActivity());
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction("jerry");
+//        broadcastManager.registerReceiver(mAdDownLoadReceiver, intentFilter);
+//    }
 
-    private BroadcastReceiver mAdDownLoadReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String change = intent.getStringExtra("change");
-            if ("yes".equals(change)) {
-                // 这地方只能在主线程中刷新UI,子线程中无效，因此用Handler来实现
-                new Handler().post(new Runnable() {
-                    public void run() {
-                        //在这里来写你需要刷新的地方
-                        //例如：testView.setText("恭喜你成功了");
-                        System.out.println("刷新！！！！！！！");
-
-                        ceFoodList.clear();
-                        getShopGoods(latitude, longtitude, 1);
-
-                    }
-                });
-            }
-        }
-    };
+//    private BroadcastReceiver mAdDownLoadReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String change = intent.getStringExtra("change");
+//            if ("yes".equals(change)) {
+//                // 这地方只能在主线程中刷新UI,子线程中无效，因此用Handler来实现
+//                new Handler().post(new Runnable() {
+//                    public void run() {
+//                        //在这里来写你需要刷新的地方
+//                        //例如：testView.setText("恭喜你成功了");
+//                        System.out.println("刷新！！！！！！！");
+//
+//                        ceFoodList.clear();
+//                        getShopGoods(latitude, longtitude, 1);
+//
+//                    }
+//                });
+//            }
+//        }
+//    };
 
     MainActivity mActivity;
 
@@ -464,17 +545,17 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         super.onCreate(savedInstanceState);
         mActivity = (MainActivity) getActivity();
         //注册广播
-        registerReceiver();
+        //registerReceiver();
     }
 
-    /**
-     * 注销广播
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        broadcastManager.unregisterReceiver(mAdDownLoadReceiver);
-    }
+//    /**
+//     * 注销广播
+//     */
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        broadcastManager.unregisterReceiver(mAdDownLoadReceiver);
+//    }
 
     private List<WxADV.MsgBean> advList = new ArrayList<>();
 
@@ -482,34 +563,26 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     private CycleViewPager.ImageCycleViewListener mAdCycleViewListener =
             new CycleViewPager.ImageCycleViewListener() {
 
-        @Override
-        public void onImageClick(ADInfo info, int position, View imageView) {
-            if (cycleViewPager.isCycle()) {
-                //toast("positon = "+position);
-                //此处position是从1开始 故需要 - 1 操作
+                @Override
+                public void onImageClick(ADInfo info, int position, View imageView) {
+                    if (cycleViewPager.isCycle()) {
+                        //toast("positon = "+position);
+                        //此处position是从1开始 故需要 - 1 操作
 
-                if (NetworkUtils.isNotWorkAvilable(getActivity())) {
-                    if (NetworkUtils.getCurrentNetType(getActivity()) != null) {
+                        if (isNetworkUtils()) {
+                            intent = new Intent(getActivity(), JoinActivity.class);
+                            intent.putExtra("title", advList.get(position - 1).getTitle());
+                            intent.putExtra("url", "http://www.ybt9.com/" + advList.get(position - 1).getLinkurl());
+                            startActivity(intent);
+                        } else {
+                            toast("无网络连接");
+                        }
 
-                        intent = new Intent(getActivity(), JoinActivity.class);
-                        intent.putExtra("title", advList.get(position - 1).getTitle());
-                        intent.putExtra("url", "http://www.ybt9.com/" + advList.get(position - 1).getLinkurl());
-                        startActivity(intent);
                     }
-                }else{
-                    toast("无网络连接");
+
                 }
 
-
-//                position = position - 1;
-//                Toast.makeText(getActivity(),
-//                        "position-->" + info.getContent(), Toast.LENGTH_SHORT)
-//                        .show();
-            }
-
-        }
-
-    };
+            };
 
     /**
      * 配置ImageLoder
@@ -532,7 +605,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     }
 
 
-
     /**
      * 获取轮播图
      */
@@ -553,23 +625,17 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
                         userInfo.saveADV(new Gson().toJson(wxADV.getMsg()));
 
+                        views.clear();//刷新之前先清除一下
 
                         infos = new ArrayList<>();
 
-                        for(int i = 0; i < wxADV.getMsg().size(); i ++){
+                        for (int i = 0; i < wxADV.getMsg().size(); i++) {
                             info = new ADInfo();
-                            info.setUrl("http://www.ybt9.com/"+wxADV.getMsg().get(i).getImg());
+                            info.setUrl("http://www.ybt9.com/" + wxADV.getMsg().get(i).getImg());
                             info.setContent("" + wxADV.getMsg().get(i).getTitle());
                             info.setImg("http://www.ybt9.com/" + wxADV.getMsg().get(i).getLinkurl());
                             infos.add(info);
                         }
-
-                        /*for(int i = 0; i < imageUrls.length; i ++){
-                            ADInfo info = new ADInfo();
-                            info.setUrl(imageUrls[i]);
-                            info.setContent("图片-->" + i );
-                            infos.add(info);
-                        }*/
 
                         // 将最后一个ImageView添加进来
                         views.add(ViewFactory.getImageView(getActivity(), infos.get(infos.size() - 1).getUrl()));
@@ -593,7 +659,8 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         cycleViewPager.setIndicatorCenter();
 
 
-                        /*轮播图*/
+                        /*轮播图(old)*/
+
 //                        HashMap<String, String> url_maps = new HashMap<String, String>();
 //                        for (int i = 0; i < wxADV.getMsg().size(); i++) {
 //                            //url_maps.put("易贝通开业了" + i, "http://www.ybt9.com/" + wxADV.getMsg().get(i).getImg());
@@ -643,20 +710,22 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
     }
 
+
     /**
      * 广告位图片1
+     *
      * @param type
      */
-    public void getAdvByType(String type){
-        PATH = HttpPath.PATH+HttpPath.ADV+"type="+type;
+    public void getAdvByType(String type) {
+        PATH = HttpPath.PATH + HttpPath.ADV + "type=" + type;
 
         RequestParams params = new RequestParams(PATH);
-        System.out.println("广告位一"+PATH);
+        System.out.println("广告位一" + PATH);
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
-                        System.out.println("广告位一"+result);
+                        System.out.println("广告位一" + result);
                         AdvByType advByType = GsonUtil.gsonIntance().gsonToBean(result, AdvByType.class);
 
                         x.image().bind(iv_adv002, "http://www.ybt9.com/" + advByType.getMsg().get(0).getImg());
@@ -683,18 +752,19 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
     /**
      * 广告位图片2
+     *
      * @param type
      */
-    public void getAdvByTypes(String type){
-        PATH = HttpPath.PATH+HttpPath.ADV+"type="+type;
+    public void getAdvByTypes(String type) {
+        PATH = HttpPath.PATH + HttpPath.ADV + "type=" + type;
 
         RequestParams params = new RequestParams(PATH);
-        System.out.println("广告位二"+PATH);
+        System.out.println("广告位二" + PATH);
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
-                        System.out.println("广告位二"+result);
+                        System.out.println("广告位二" + result);
                         AdvByType advByType = GsonUtil.gsonIntance().gsonToBean(result, AdvByType.class);
 
                         linkurl = advByType.getMsg().get(0).getLinkurl();
@@ -798,8 +868,9 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         if (error.isError() == true) {
                         } else {
                             //but_sign.setText("已签到");
+                            toast("签到成功");
                         }
-                        toast("" + error.getMsg().toString());
+
 
                     }
 
@@ -832,9 +903,8 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                 //gridViewData.add(R.mipmap.ic_adai);
                 //gridViewAdapter.setData(gridViewData);
                 //getShopGoodss(str_latitude, str_longtitude, page);
-                getShopGoods(latitude, longtitude, page);
+                getLoadingShopGood(latitude, longtitude, page);
 
-                //Toast.makeText(getActivity(), "加载更多数据!", Toast.LENGTH_SHORT).show();
             }
 
         }, 1000);
@@ -854,10 +924,9 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                 exit = false;
                 ceFoodList.clear();
 
-                //getShopGoods(latitude, longtitude, 1);
+                getShopGoods(latitude, longtitude, 1);
 
-                isNetworkUtil();
-                //Toast.makeText(getActivity(), "数据刷新完成!", Toast.LENGTH_SHORT).show();
+                //isNetworkUtil();
             }
 
         }, 1000);
@@ -881,15 +950,11 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
      * 获取首页数据
      *
      * @param latitude
-     * @param longtitude
-     * 118.351852   35.111124
+     * @param longtitude 118.351852   35.111124
      */
-    public void getShopGoods(String latitude, String longtitude, final int page) {
+    public void getShopGoods(String latitude, String longtitude, final int pages) {
         String Path = HttpPath.PATH + HttpPath.GOODSINDEX +
-                "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + page;
-
-//        String Path = HttpPath.PATH + HttpPath.GOODSINDEX +
-//                "lat=" + "116.2317" + "&lng=" + "39.5427" + "" + "&page=" + page; 背景天安门坐标
+                "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages;
 
         System.out.println("" + Path);
 
@@ -897,7 +962,14 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         x.http().post(params,
                 new Callback.CommonCallback<String>() {
                     public void onSuccess(String result) {
-                        pd.dismiss();
+                        //pd.dismiss();
+
+                        isToTops = true;
+
+                        isLoading = true;
+
+                        stopProgressDialog();
+
                         System.out.println("首页" + result);
                         //MD5加密数据
                         String results = MD5Util.getUnicode(result);
@@ -921,6 +993,8 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         //et_address.setText(shopName);
                         et_new_address.setText("" + shopName);
 
+                        et_new_address.setTextColor(Color.WHITE);
+
                         //tv_shopname.setText("(当前店铺：" + shopName + "）");
 
                         if (goodsIndex.getMsg().getCatefoodslist().toString().equals("[]")) {
@@ -931,10 +1005,17 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                             //获取信息列表
                             ceFoodList.addAll(ceFood);
 
-                            gridViewAdapter = new GridViewAdapter();
                             gridViewAdapter.setCatefoodslistBeanList(getActivity(), ceFoodList);
 
                             myGridView.setAdapter(gridViewAdapter);
+
+//                            ceFood = goodsIndex.getMsg().getCatefoodslist();
+//                            ceFoodList.addAll(ceFood);
+//
+//                            recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), ceFoodList);
+//
+//                            recyclerView.setAdapter(recyclerViewAdapter);
+
 
                         }
                     }
@@ -942,7 +1023,66 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
                         System.out.println("首页onError" + ex.toString());
-                        pd.dismiss();
+                        //pd.dismiss();
+                        stopProgressDialog();
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException cex) {
+                        System.out.println("onCancelled");
+                    }
+
+                    @Override
+                    public void onFinished() {
+                        System.out.println("onFinished");
+                    }
+                });
+    }
+
+
+    /**
+     * 获取首页数据(加载用)
+     *
+     * @param latitude
+     * @param longtitude 118.351852   35.111124
+     */
+    public void getLoadingShopGood(String latitude, String longtitude, final int pages) {
+        String Path = HttpPath.PATH + HttpPath.GOODSINDEX +
+                "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages;
+
+        System.out.println("" + Path);
+
+        RequestParams params = new RequestParams(Path);
+        x.http().post(params,
+                new Callback.CommonCallback<String>() {
+                    public void onSuccess(String result) {
+                        isToTops = true;
+                        System.out.println("加载数据" + result);
+                        //MD5加密数据
+                        String results = MD5Util.getUnicode(result);
+
+                        GoodsIndex goodsIndex = GsonUtil.gsonIntance().gsonToBean(results, GoodsIndex.class);
+
+                        if (goodsIndex.getMsg().getCatefoodslist().toString().equals("[]")) {
+                            toast("没有更多数据");
+
+                        } else {
+                            ceFood = goodsIndex.getMsg().getCatefoodslist();
+                            //获取信息列表
+                            ceFoodList.addAll(ceFood);
+
+//                            gridViewAdapter.setCatefoodslistBeanList(getActivity(), ceFoodList);
+//
+//                            myGridView.setAdapter(gridViewAdapter);
+
+                            gridViewAdapter.updateView(ceFoodList);
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable ex, boolean isOnCallback) {
+                        System.out.println("首页onError" + ex.toString());
                     }
 
                     @Override
@@ -998,18 +1138,61 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
      * 获取当前的经纬度
      */
     public void getLocation() {
-        pd = ProgressDialog.show(getActivity(), "正在刷新数据", "请稍候");
+
+        pdStyle();
 
         super.onStart();
-        locationService = new LocationService(getActivity());
+
         //获取locationservice实例，建议应用中只初始化1个location实例，
         // 然后使用，可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
         locationService.registerListener(mListener);
         locationService.start();
 
         /*开启线程*/
-        new Thread(new ThreadShow()).start();
+        //new Thread(new ThreadShow()).start();
 
+    }
+
+    /*ProgressDialog样式*/
+    public void pdStyle() {
+        //pd = ProgressDialog.show(getActivity(), "正在刷新数据", "请稍候");
+
+        startProgressDialog();
+
+        //pd.setProgress(100);
+
+        /*pd显示5秒*/
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                long startTime = System.currentTimeMillis();
+                int progress = 0;
+
+                while (System.currentTimeMillis() - startTime < 10000) {
+                    try {
+                        progress += 10;
+                        //pd.setProgress(progress);
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        //pd.dismiss();
+                        stopProgressDialog();
+                    }
+                }
+                if (System.currentTimeMillis() - startTime == 10000) {
+                    if (isLoading) {
+                        et_new_address.setText("重新加载");
+                        et_new_address.setTextColor(Color.RED);
+                    } else {
+                        et_new_address.setTextColor(Color.WHITE);
+                    }
+                }
+
+                //pd.dismiss();
+                stopProgressDialog();
+
+            }
+        }).start();
     }
 
 
@@ -1025,172 +1208,174 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         public void onReceiveLocation(BDLocation location) {
             locationService.stop();//出现结果即停止定位
             if (null != location && location.getLocType() != BDLocation.TypeServerError) {
-                StringBuffer sb = new StringBuffer(256);
-                sb.append("time : ");
-                /**
-                 * 时间也可以使用systemClock.elapsedRealtime()方法 获取的是自从开机以来，每次回调的时间；
-                 * location.getTime() 是指服务端出本次结果的时间，如果位置不发生变化，则时间不变
-                 */
-                sb.append(location.getTime());
-                sb.append("\nlocType : ");// 定位类型
-                sb.append(location.getLocType());
-                sb.append("\nlocType description : ");// *****对应的定位类型说明*****
-                //sb.append(location.getLocTypeDescription());
-                sb.append("\nlatitude : ");// 纬度
-                sb.append(location.getLatitude());
+                //StringBuffer sb = new StringBuffer(256);
+//                sb.append("time : ");
+//                /**
+//                 * 时间也可以使用systemClock.elapsedRealtime()方法 获取的是自从开机以来，每次回调的时间；
+//                 * location.getTime() 是指服务端出本次结果的时间，如果位置不发生变化，则时间不变
+//                 */
+//                sb.append(location.getTime());
+//                sb.append("\nlocType : ");// 定位类型
+//                sb.append(location.getLocType());
+//                sb.append("\nlocType description : ");// *****对应的定位类型说明*****
+//                //sb.append(location.getLocTypeDescription());
+//                sb.append("\nlatitude : ");// 纬度
+//                sb.append(location.getLatitude());
 
                 //获取纬度
                 latitude = Double.toString(location.getLatitude());
 
-                sb.append("\nlontitude : ");// 经度
-                sb.append(location.getLongitude());
+//                sb.append("\nlontitude : ");// 经度
+//                sb.append(location.getLongitude());
 
                 //获取经度
                 longtitude = Double.toString(location.getLongitude());
 
-                sb.append("\nradius : ");// 半径
-                sb.append(location.getRadius());
-                sb.append("\nCountryCode : ");// 国家码
-                sb.append(location.getCountryCode());
-                sb.append("\nCountry : ");// 国家名称
-                sb.append(location.getCountry());
-                sb.append("\ncitycode : ");// 城市编码
-                sb.append(location.getCityCode());
-                sb.append("\ncity : ");// 城市
-                sb.append(location.getCity());
-                sb.append("\nDistrict : ");// 区
-                sb.append(location.getDistrict());
-                sb.append("\nStreet : ");// 街道
-                sb.append(location.getStreet());
-                sb.append("\naddr : ");// 地址信息
-                sb.append(location.getAddrStr());
+//                sb.append("\nradius : ");// 半径
+//                sb.append(location.getRadius());
+//                sb.append("\nCountryCode : ");// 国家码
+//                sb.append(location.getCountryCode());
+//                sb.append("\nCountry : ");// 国家名称
+//                sb.append(location.getCountry());
+//                sb.append("\ncitycode : ");// 城市编码
+//                sb.append(location.getCityCode());
+//                sb.append("\ncity : ");// 城市
+//                sb.append(location.getCity());
+//                sb.append("\nDistrict : ");// 区
+//                sb.append(location.getDistrict());
+//                sb.append("\nStreet : ");// 街道
+//                sb.append(location.getStreet());
+//                sb.append("\naddr : ");// 地址信息
+//                sb.append(location.getAddrStr());
 
                 address = location.getStreet();
 
-                sb.append("\nUserIndoorState: ");// *****返回用户室内外判断结果*****
-                //sb.append(location.getUserIndoorState());
-                sb.append("\nDirection(not all devices have value): ");
-                sb.append(location.getDirection());// 方向
-                sb.append("\nlocationdescribe: ");
-                sb.append(location.getLocationDescribe());// 位置语义化信息
-                sb.append("\nPoi: ");// POI信息
-                if (location.getPoiList() != null && !location.getPoiList().isEmpty()) {
-                    for (int i = 0; i < location.getPoiList().size(); i++) {
-                        Poi poi = (Poi) location.getPoiList().get(i);
-                        sb.append(poi.getName() + ";");
-                    }
-                }
+//                sb.append("\nUserIndoorState: ");// *****返回用户室内外判断结果*****
+//                //sb.append(location.getUserIndoorState());
+//                sb.append("\nDirection(not all devices have value): ");
+//                sb.append(location.getDirection());// 方向
+//                sb.append("\nlocationdescribe: ");
+//                sb.append(location.getLocationDescribe());// 位置语义化信息
+//                sb.append("\nPoi: ");// POI信息
+//                if (location.getPoiList() != null && !location.getPoiList().isEmpty()) {
+//                    for (int i = 0; i < location.getPoiList().size(); i++) {
+//                        Poi poi = (Poi) location.getPoiList().get(i);
+//                        sb.append(poi.getName() + ";");
+//                    }
+//                }
                 if (location.getLocType() == BDLocation.TypeGpsLocation) {// GPS定位结果
-                    sb.append("\nspeed : ");
-                    sb.append(location.getSpeed());// 速度 单位：km/h
-                    sb.append("\nsatellite : ");
-                    sb.append(location.getSatelliteNumber());// 卫星数目
-                    sb.append("\nheight : ");
-                    sb.append(location.getAltitude());// 海拔高度 单位：米
-                    sb.append("\ngps status : ");
-                    //sb.append(location.getGpsAccuracyStatus());// *****gps质量判断*****
-                    sb.append("\ndescribe : ");
-                    sb.append("gps定位成功");
+//                    sb.append("\nspeed : ");
+//                    sb.append(location.getSpeed());// 速度 单位：km/h
+//                    sb.append("\nsatellite : ");
+//                    sb.append(location.getSatelliteNumber());// 卫星数目
+//                    sb.append("\nheight : ");
+//                    sb.append(location.getAltitude());// 海拔高度 单位：米
+//                    sb.append("\ngps status : ");
+//                    //sb.append(location.getGpsAccuracyStatus());// *****gps质量判断*****
+//                    sb.append("\ndescribe : ");
+//                    sb.append("gps定位成功");
 
                 } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// 网络定位结果
                     // 运营商信息
-                    if (location.hasAltitude()) {// *****如果有海拔高度*****
-                        sb.append("\nheight : ");
-                        sb.append(location.getAltitude());// 单位：米
-                    }
-                    sb.append("\noperationers : ");// 运营商信息
-                    sb.append(location.getOperators());
-                    sb.append("\ndescribe : ");
-                    sb.append("网络定位成功");
+//                    if (location.hasAltitude()) {// *****如果有海拔高度*****
+//                        sb.append("\nheight : ");
+//                        sb.append(location.getAltitude());// 单位：米
+//                    }
+//                    sb.append("\noperationers : ");// 运营商信息
+//                    sb.append(location.getOperators());
+//                    sb.append("\ndescribe : ");
+//                    sb.append("网络定位成功");
 
-                } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {// 离线定位结果
-                    sb.append("\ndescribe : ");
-                    sb.append("离线定位成功，离线定位结果也是有效的");
-                } else if (location.getLocType() == BDLocation.TypeServerError) {
-                    sb.append("\ndescribe : ");
-                    sb.append("服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因");
-                } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
-                    sb.append("\ndescribe : ");
-                    sb.append("网络不同导致定位失败，请检查网络是否通畅");
-                } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
-                    sb.append("\ndescribe : ");
-                    sb.append("无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机");
                 }
+//                else if (location.getLocType() == BDLocation.TypeOffLineLocation) {// 离线定位结果
+//                    sb.append("\ndescribe : ");
+//                    sb.append("离线定位成功，离线定位结果也是有效的");
+//                } else if (location.getLocType() == BDLocation.TypeServerError) {
+//                    sb.append("\ndescribe : ");
+//                    sb.append("服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因");
+//                } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
+//                    sb.append("\ndescribe : ");
+//                    sb.append("网络不同导致定位失败，请检查网络是否通畅");
+//                } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
+//                    sb.append("\ndescribe : ");
+//                    sb.append("无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机");
+//                }
 
-                netWorkType = location.getLocType();//网络定位返回码
+                //netWorkType = location.getLocType();//网络定位返回码
 
-                stringBuffer = sb.toString();//网络定位返回数据
+                //stringBuffer = sb.toString();//网络定位返回数据
 
                 System.out.println("经纬度1111111111111" + longtitude + "   " + latitude);
 
-                //logMsg(sb.toString());
+//                logMsg(sb.toString());
+                logMsg("");
 
             }
         }
     };
 
     // handler类接收数据
-    Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 1) {
-                pd.dismiss();
-
-                lin_yes_network.setVisibility(View.VISIBLE);
-                lin_no_network.setVisibility(View.INVISIBLE);
-
-                logMsg(stringBuffer);
-
-                exit = true;
-
-            } else if (msg.what == 2) {
-                pd.dismiss();
-                lin_yes_network.setVisibility(View.INVISIBLE);
-                lin_no_network.setVisibility(View.VISIBLE);
-
-                exit = true;
-
-            }
-        }
-
-        ;
-    };
+//    Handler handler = new Handler() {
+//        public void handleMessage(Message msg) {
+//            if (msg.what == 1) {
+//                pd.dismiss();
+//
+//                lin_yes_network.setVisibility(View.VISIBLE);
+//                lin_no_network.setVisibility(View.INVISIBLE);
+//
+//                logMsg(stringBuffer);
+//
+//                exit = true;
+//
+//            } else if (msg.what == 2) {
+//                pd.dismiss();
+//                lin_yes_network.setVisibility(View.INVISIBLE);
+//                lin_no_network.setVisibility(View.VISIBLE);
+//
+//                exit = true;
+//
+//            }
+//        }
+//
+//        ;
+//    };
 
     public boolean exit = false;
 
     // 线程类
-    class ThreadShow implements Runnable {
-
-        @Override
-        public void run() {
-            while (!exit) {
-                try {
-                    //超时10s
-                    Thread.sleep(3000);
-                    if (netWorkType == 161) {
-                        //pd.dismiss();
-                        Message msg = new Message();
-                        msg.what = 1;
-                        handler.sendMessage(msg);
-                        System.out.println("发送...");
-
-                    } else {
-                        Message msg = new Message();
-                        msg.what = 2;
-                        handler.sendMessage(msg);
-                        System.out.println("定位失败");
-
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println("线程 错误...");
-                }
-            }
-        }
-    }
+//    class ThreadShow implements Runnable {
+//
+//        @Override
+//        public void run() {
+//            while (!exit) {
+//                try {
+//                    //超时10s
+//                    Thread.sleep(3000);
+//                    if (netWorkType == 161) {
+//                        //pd.dismiss();
+//                        Message msg = new Message();
+//                        msg.what = 1;
+//                        handler.sendMessage(msg);
+//                        System.out.println("发送...");
+//
+//                    } else {
+//                        Message msg = new Message();
+//                        msg.what = 2;
+//                        handler.sendMessage(msg);
+//                        System.out.println("定位失败");
+//
+//                    }
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    System.out.println("线程 错误...");
+//                }
+//            }
+//        }
+//    }
 
     private List<Recommed.MsgBean> msgBeanCate = new ArrayList<>();
-    private CateInfoAdapter cateInfoAdapter;
+    //private CateInfoAdapter cateInfoAdapter;
 
     /**
      * 首页推荐 店铺优选
@@ -1198,7 +1383,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
      *
      * @param shopid
      */
-    public void getCateRecommed(String shopid) {
+    public void getCateRecommed(final String shopid) {
         String PATH = HttpPath.path + HttpPath.CATE_GETRECOMMED + "shopid=" + shopid;
 
         RequestParams params = new RequestParams(PATH);
@@ -1214,9 +1399,89 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
                         userInfo.saveClassify(new Gson().toJson(recommed.getMsg()));
 
-                        cateInfoAdapter = new CateInfoAdapter(getActivity(), msgBeanCate);
-                        //gv_cateinfo.setAdapter(cateInfoAdapter);
-                        mgv_classifly.setAdapter(cateInfoAdapter);
+//                        cateInfoAdapter = new CateInfoAdapter(getActivity(), msgBeanCate);
+//                        mgv_classifly.setAdapter(cateInfoAdapter);
+
+                        homeAdapter = new HomeAdapter(getActivity(), msgBeanCate);
+
+                        GridLayoutManager llmv;
+
+                        llmv = new GridLayoutManager(getActivity(), 4, GridLayoutManager.VERTICAL, false);
+                        //设置为一个4列的纵向网格布局
+
+                        recyclerView.setLayoutManager(llmv);
+                        recyclerView.setAdapter(homeAdapter);
+
+                        homeAdapter.setOnItemClickListener(new com.bh.yibeitong.Interface.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int i) {
+                                String type = msgBeanCate.get(i).getType();
+                                String cateid = msgBeanCate.get(i).getOrderid();
+                                String name = msgBeanCate.get(i).getName();
+                                String param = msgBeanCate.get(i).getParam();
+                                String url = (String) msgBeanCate.get(i).getUrl();
+                                if (type.equals("cate")) {
+                                    //toast("商品分类" + msgBeanList.get(i).getName());
+                                    if (isNetworkUtils()) {
+                                        intent = new Intent(getActivity(), CateInfoActivity.class);
+                                        intent.putExtra("shopid", shopid);
+                                        intent.putExtra("cateid", cateid);
+                                        intent.putExtra("param", param);
+                                        intent.putExtra("name", name);
+                                        startActivity(intent);
+                                    } else {
+                                        toast("无网络连接");
+                                    }
+
+
+                                } else if (type.equals("jiameng")) {
+                                    //toast("jiameng" + msgBeanList.get(i).getName());
+                                    if (isNetworkUtils()) {
+                                        intent = new Intent(getActivity(), JoinActivity.class);
+                                        intent.putExtra("title", "我要加盟");
+                                        intent.putExtra("url", url);
+                                        startActivity(intent);
+                                    } else {
+                                        toast("无网络连接");
+                                    }
+
+
+                                } else if (type.equals("tesefuwu")) {
+                                    //toast("tesefuwu" + msgBeanList.get(i).getName());
+                                    if (isNetworkUtils()) {
+                                        intent = new Intent(getActivity(), SpecialActivity.class);
+                                        intent.putExtra("shopid", shopid);
+                                        startActivity(intent);
+                                    } else {
+                                        toast("无网络连接");
+                                    }
+
+
+                                } else if (type.equals("fenlei")) {
+                                    //toast("fenlei" + msgBeanList.get(i).getName());
+
+                                    if (isNetworkUtils()) {
+                                        intent = new Intent(getActivity(), ShopNewActivity.class);
+                                        intent.putExtra("shopid", shopid);
+                                        intent.putExtra("shopname", shopName);
+                                        intent.putExtra("startTime", startTime);
+                                        intent.putExtra("mapphone", mapphone);
+                                        intent.putExtra("address", address);
+
+                                        intent.putExtra("lat", latitude);
+                                        intent.putExtra("lng", longtitude);
+
+                                        startActivity(intent);
+                                    } else {
+                                        toast("无网络连接");
+                                    }
+
+
+                                } else {
+                                    toast("啥啥啥");
+                                }
+                            }
+                        });
 
                     }
 
@@ -1241,155 +1506,260 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     /**
      * 首页推荐店铺区适配器(现为 商品分类按钮)
      */
-    public class CateInfoAdapter extends BaseAdapter {
+//    public class CateInfoAdapter extends BaseAdapter {
+//        private Context mContext;
+//        private List<Recommed.MsgBean> msgBeanList;
+//
+//        public CateInfoAdapter(Context mContext, List<Recommed.MsgBean> msgBeanList) {
+//            this.mContext = mContext;
+//            this.msgBeanList = msgBeanList;
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return msgBeanList.size();
+//        }
+//
+//        @Override
+//        public Object getItem(int i) {
+//            return msgBeanList.get(i);
+//        }
+//
+//        @Override
+//        public long getItemId(int i) {
+//            return i;
+//        }
+//
+//        @Override
+//        public View getView(int i, View view, ViewGroup viewGroup) {
+//            ViewHolder vh;
+//            if (view == null) {
+//                vh = new ViewHolder();
+//                view = LayoutInflater.from(mContext).inflate(R.layout.item_goods_classily, null);
+//
+//                vh.imageView = (ImageView) view.findViewById(R.id.iv_item_gc_img);
+//                vh.title = (TextView) view.findViewById(R.id.tv_item_gc_title);
+//
+//                view.setTag(vh);
+//
+//            } else {
+//                vh = (ViewHolder) view.getTag();
+//            }
+//
+//            //vh.imageView.getHeight();
+//
+//
+//            String name = msgBeanList.get(i).getName();
+//            String imgPath = msgBeanList.get(i).getImg();
+//
+//            if (imgPath.equals("")) {
+//                vh.imageView.setImageResource(R.mipmap.yibeitong001);
+//
+//            } else {
+//                x.image().bind(vh.imageView, "http://www.ybt9.com/" + imgPath);
+//
+//                System.out.println("" + i + vh.imageView.getMaxHeight());
+//
+//            }
+//
+//            vh.title.setText("" + name);
+//
+//            //点击GridView
+////            mgv_classifly.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+////                @Override
+////                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+////                    String type = msgBeanList.get(i).getType();
+////                    String cateid = msgBeanList.get(i).getOrderid();
+////                    String name = msgBeanList.get(i).getName();
+////                    String param = msgBeanList.get(i).getParam();
+////                    String url = (String) msgBeanList.get(i).getUrl();
+////                    if (type.equals("cate")) {
+////                        //toast("商品分类" + msgBeanList.get(i).getName());
+////                        if(isNetworkUtils()){
+////                            intent = new Intent(getActivity(), CateInfoActivity.class);
+////                            intent.putExtra("shopid", shopid);
+////                            intent.putExtra("cateid", cateid);
+////                            intent.putExtra("param", param);
+////                            intent.putExtra("name", name);
+////                            startActivity(intent);
+////                        }else{
+////                            toast("无网络连接");
+////                        }
+////
+////
+////                    } else if (type.equals("jiameng")) {
+////                        //toast("jiameng" + msgBeanList.get(i).getName());
+////                        if(isNetworkUtils()){
+////                            intent = new Intent(getActivity(), JoinActivity.class);
+////                            intent.putExtra("title", "我要加盟");
+////                            intent.putExtra("url", url);
+////                            startActivity(intent);
+////                        }else{
+////                            toast("无网络连接");
+////                        }
+////
+////
+////                    } else if (type.equals("tesefuwu")) {
+////                        //toast("tesefuwu" + msgBeanList.get(i).getName());
+////                        if(isNetworkUtils()){
+////                            intent = new Intent(getActivity(), SpecialActivity.class);
+////                            intent.putExtra("shopid", shopid);
+////                            startActivity(intent);
+////                        }else{
+////                            toast("无网络连接");
+////                        }
+////
+////
+////                    } else if (type.equals("fenlei")) {
+////                        //toast("fenlei" + msgBeanList.get(i).getName());
+////
+////                        if (isNetworkUtils()){
+////                            intent = new Intent(getActivity(), ShopNewActivity.class);
+////                            intent.putExtra("shopid", shopid);
+////                            intent.putExtra("shopname", shopName);
+////                            intent.putExtra("startTime", startTime);
+////                            intent.putExtra("mapphone", mapphone);
+////                            intent.putExtra("address", address);
+////
+////                            intent.putExtra("lat", latitude);
+////                            intent.putExtra("lng", longtitude);
+////
+////                            startActivity(intent);
+////                        }else{
+////                            toast("无网络连接");
+////                        }
+////
+////
+////                    } else {
+////                        toast("啥啥啥");
+////                    }
+////
+////                }
+////            });
+//
+////            点击事件
+////            vh.imageView.setOnClickListener(new View.OnClickListener() {
+////                @Override
+////                public void onClick(View view) {
+////                    if (param.equals("sssm")) {
+////                        System.out.println("送水上门");
+////                        intent = new Intent(getActivity(), SendWaterActivity.class);
+////                        intent.putExtra("shopid", shopid);
+////                        startActivity(intent);
+////
+////                    } else {
+////                        intent = new Intent(getActivity(), CateInfoActivity.class);
+////                        intent.putExtra("shopid", shopid);
+////                        intent.putExtra("param", param);
+////                        intent.putExtra("cateid", cateid);
+////                        intent.putExtra("name", name);
+////                        startActivity(intent);
+////                    }
+////
+////                }
+////            });
+//
+//
+//            return view;
+//        }
+//
+//        public class ViewHolder {
+//            public ImageView imageView;
+//            public TextView title;
+//
+//        }
+//
+//    }
+
+    /*新商品分类按钮（八个）*/
+    class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
+
+        private com.bh.yibeitong.Interface.OnItemClickListener mOnItemClickListener;
+        private OnItemLongClickListener mOnItemLongClickListener;
+
+        public void setOnItemClickListener(com.bh.yibeitong.Interface.OnItemClickListener mOnItemClickListener) {
+            this.mOnItemClickListener = mOnItemClickListener;
+        }
+
+        public void setOnItemLongClickListener(OnItemLongClickListener mOnItemLongClickListener) {
+            this.mOnItemLongClickListener = mOnItemLongClickListener;
+        }
+
         private Context mContext;
         private List<Recommed.MsgBean> msgBeanList;
 
-        public CateInfoAdapter(Context mContext, List<Recommed.MsgBean> msgBeanList) {
+        public HomeAdapter(Context mContext, List<Recommed.MsgBean> msgBeanList) {
             this.mContext = mContext;
             this.msgBeanList = msgBeanList;
         }
 
         @Override
-        public int getCount() {
+        public HomeAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            HomeAdapter.MyViewHolder vh = new HomeAdapter.MyViewHolder(LayoutInflater.from(
+                    mContext).inflate(R.layout.item_goods_classily, parent,
+                    false));
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(final HomeAdapter.MyViewHolder holder, int position) {
+            if (mOnItemClickListener != null) {
+                //为ItemView设置监听器
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = holder.getLayoutPosition(); // 1
+                        mOnItemClickListener.onItemClick(holder.itemView, position); // 2
+                    }
+                });
+            }
+            if (mOnItemLongClickListener != null) {
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int position = holder.getLayoutPosition();
+                        mOnItemLongClickListener.onItemLongClick(holder.itemView, position);
+                        //返回true 表示消耗了事件 事件不会继续传递
+                        return true;
+                    }
+                });
+            }
+
+            String name = msgBeanList.get(position).getName();
+            String imgPath = msgBeanList.get(position).getImg();
+
+            if (imgPath.equals("")) {
+                holder.imageView.setImageResource(R.mipmap.yibeitong001);
+
+            } else {
+                x.image().bind(holder.imageView, "http://www.ybt9.com/" + imgPath);
+
+            }
+
+            holder.title.setText("" + name);
+
+        }
+
+        @Override
+        public int getItemCount() {
             return msgBeanList.size();
         }
 
-        @Override
-        public Object getItem(int i) {
-            return msgBeanList.get(i);
-        }
+        class MyViewHolder extends BaseRecyclerViewHolder {
 
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            ViewHolder vh;
-            if (view == null) {
-                vh = new ViewHolder();
-                view = LayoutInflater.from(mContext).inflate(R.layout.item_goods_classily, null);
-
-                vh.imageView = (ImageView) view.findViewById(R.id.iv_item_gc_img);
-                vh.title = (TextView) view.findViewById(R.id.tv_item_gc_title);
-
-                view.setTag(vh);
-
-            } else {
-                vh = (ViewHolder) view.getTag();
-            }
-
-            String name = msgBeanList.get(i).getName();
-            String imgPath = msgBeanList.get(i).getImg();
-
-            if (imgPath.equals("")) {
-                vh.imageView.setImageResource(R.mipmap.yibeitong001);
-
-            } else {
-                /*BitmapUtils bitmapUtils = new BitmapUtils(mContext);
-
-                bitmapUtils.configDiskCacheEnabled(true);
-                bitmapUtils.configMemoryCacheEnabled(false);
-
-                bitmapUtils.display(vh.imageView, "http://www.ybt9.com/" + imgPath);*/
-                x.image().bind(vh.imageView, "http://www.ybt9.com/" + imgPath);
-
-            }
-
-            vh.title.setText("" + name);
-
-            //点击GridView
-            mgv_classifly.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    String type = msgBeanList.get(i).getType();
-                    String cateid = msgBeanList.get(i).getOrderid();
-                    String name = msgBeanList.get(i).getName();
-                    String param = msgBeanList.get(i).getParam();
-                    String url = (String) msgBeanList.get(i).getUrl();
-                    if (type.equals("cate")) {
-                        //toast("商品分类" + msgBeanList.get(i).getName());
-
-                        intent = new Intent(getActivity(), CateInfoActivity.class);
-                        intent.putExtra("shopid", shopid);
-                        intent.putExtra("cateid", cateid);
-                        intent.putExtra("param", param);
-                        intent.putExtra("name", name);
-                        startActivity(intent);
-
-                    } else if (type.equals("jiameng")) {
-                        //toast("jiameng" + msgBeanList.get(i).getName());
-                        intent = new Intent(getActivity(), JoinActivity.class);
-                        intent.putExtra("title", "我要加盟");
-                        intent.putExtra("url", url);
-                        startActivity(intent);
-                        //startActivity(new Intent(getActivity(), JoinActivity.class));
-
-                    } else if (type.equals("tesefuwu")) {
-                        //toast("tesefuwu" + msgBeanList.get(i).getName());
-                        intent = new Intent(getActivity(), SpecialActivity.class);
-                        intent.putExtra("shopid", shopid);
-                        startActivity(intent);
-
-                        //startActivity(new Intent(getActivity(), SpecialActivity.class));
-
-                    } else if (type.equals("fenlei")) {
-                        //toast("fenlei" + msgBeanList.get(i).getName());
-
-                        intent = new Intent(getActivity(), ShopNewActivity.class);
-                        intent.putExtra("shopid", shopid);
-                        intent.putExtra("shopname", shopName);
-                        intent.putExtra("startTime", startTime);
-                        intent.putExtra("mapphone", mapphone);
-                        intent.putExtra("address", address);
-
-                        intent.putExtra("lat", latitude);
-                        intent.putExtra("lng", longtitude);
-
-                        startActivity(intent);
-
-                    } else {
-                        toast("啥啥啥");
-                    }
-
-                }
-            });
-
-            /*点击事件*/
-            /*vh.imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (param.equals("sssm")) {
-                        System.out.println("送水上门");
-                        intent = new Intent(getActivity(), SendWaterActivity.class);
-                        intent.putExtra("shopid", shopid);
-                        startActivity(intent);
-
-                    } else {
-                        intent = new Intent(getActivity(), CateInfoActivity.class);
-                        intent.putExtra("shopid", shopid);
-                        intent.putExtra("param", param);
-                        intent.putExtra("cateid", cateid);
-                        intent.putExtra("name", name);
-                        startActivity(intent);
-                    }
-
-                }
-            });*/
-
-
-            return view;
-        }
-
-        public class ViewHolder {
             public ImageView imageView;
             public TextView title;
 
+            public MyViewHolder(View view) {
+                super(view);
+                //img = (ImageView) view.findViewById(R.id.iv_item_tese_img);
+                imageView = (ImageView) view.findViewById(R.id.iv_item_gc_img);
+                title = (TextView) view.findViewById(R.id.tv_item_gc_title);
+            }
         }
-
     }
+
 
     @Override
     protected void lazyLoad() {
@@ -1399,6 +1769,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
 //            case R.id.et_address:
 //                //定位
 //                intent = new Intent(getActivity(), LocationActivity.class);
@@ -1500,17 +1871,22 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
             case R.id.tv_gointo_shop:
                 //进入店铺
-                intent = new Intent(getActivity(), ShopNewActivity.class);
-                intent.putExtra("shopid", shopid);
-                intent.putExtra("shopname", shopName);
-                intent.putExtra("startTime", startTime);
-                intent.putExtra("mapphone", mapphone);
-                intent.putExtra("address", address);
+                if (isNetworkUtils()) {
+                    intent = new Intent(getActivity(), ShopNewActivity.class);
+                    intent.putExtra("shopid", shopid);
+                    intent.putExtra("shopname", shopName);
+                    intent.putExtra("startTime", startTime);
+                    intent.putExtra("mapphone", mapphone);
+                    intent.putExtra("address", address);
 
-                intent.putExtra("lat", latitude);
-                intent.putExtra("lng", longtitude);
+                    intent.putExtra("lat", latitude);
+                    intent.putExtra("lng", longtitude);
 
-                startActivity(intent);
+                    startActivity(intent);
+                } else {
+                    toast("无网络连接");
+                }
+
 
                 break;
 
@@ -1536,87 +1912,135 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 //
 //                break;
 
-            case R.id.but_load_again:
-                //重新加载
-                exit = false;
-                isNetworkUtil();
-
-                break;
+//            case R.id.but_load_again:
+//                //重新加载
+//                exit = false;
+//                isNetworkUtil();
+//
+//                break;
 
             case R.id.iv_new_scanning:
                 //新版扫一扫
 
-                if (ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(
-                            getActivity(), new String[]{
-                                    Manifest.permission.CAMERA
-                            }, 9
-                    );
+                if (isNetworkUtils()) {
+                    if (ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(
+                                getActivity(), new String[]{
+                                        Manifest.permission.CAMERA
+                                }, 9
+                        );
 
+                    } else {
+
+                        intent = new Intent(getActivity(), ZXingCaptureActivity.class);
+                        intent.putExtra("shopid", shopid);
+                        intent.putExtra("coder", "2");
+                        startActivity(intent);
+
+                    }
                 } else {
-
-                    intent = new Intent(getActivity(), ZXingCaptureActivity.class);
-                    intent.putExtra("shopid", shopid);
-                    intent.putExtra("coder", "2");
-                    startActivity(intent);
-
+                    toast("无网络连接");
                 }
+
+
                 break;
             case R.id.iv_new_search:
                 //新版搜索
-                intent = new Intent(getActivity(), SearchActivity.class);
-                intent.putExtra("lat", latitude);
-                intent.putExtra("lng", longtitude);
-                intent.putExtra("shopid", shopid);
-                startActivity(intent);
+                if (isNetworkUtils()) {
+                    intent = new Intent(getActivity(), SearchActivity.class);
+                    intent.putExtra("lat", latitude);
+                    intent.putExtra("lng", longtitude);
+                    intent.putExtra("shopid", shopid);
+                    startActivity(intent);
+                } else {
+                    toast("无网络连接");
+                }
+
                 break;
 
             case R.id.et_new_address:
                 //新版选择地址
-                intent = new Intent(getActivity(), LocationActivity.class);
-                startActivityForResult(intent, 10);
+                if (isNetworkUtils()) {
+                    if (isLoading) {
+                        intent = new Intent(getActivity(), LocationActivity.class);
+                        startActivityForResult(intent, 10);
+                    } else {
+                        isNetworkUtil();
+                    }
+
+                } else {
+                    toast("无网络连接");
+                }
+
                 break;
 
             case R.id.lin_jinfen:
                 //新版积分专区
+                if (isNetworkUtils()) {
+                    if (isLogin()) {
+//                        String url_jifen = "https://www.ybt9.com/index.php?ctrl=app&action=specialpage&&id=11&lat="
+//                                + latitude + "&lng" + longtitude + "=&mapname=" + address;
+//                        intent = new Intent(getActivity(), JoinActivity.class);
+//                        intent.putExtra("title", "积分专区");
+//                        intent.putExtra("url", url_jifen);
+//                        startActivity(intent);
 
-                String url_jifen = "https://www.ybt9.com/index.php?ctrl=app&action=specialpage&&id=11&lat="
-                        + latitude + "&lng" + longtitude + "=&mapname=" + address;
-                intent = new Intent(getActivity(), JoinActivity.class);
-                intent.putExtra("title", "积分专区");
-                intent.putExtra("url", url_jifen);
-                startActivity(intent);
+                        intent = new Intent(getActivity(), JiFenActivity.class);
+                        intent.putExtra("jifen", "");
+                        startActivityForResult(intent, 10);
+                        //startActivity(intent);
+
+
+                    } else {
+                        dialog();
+                    }
+                } else {
+                    toast("无网络连接");
+                }
+
+
                 break;
 
             case R.id.lin_qianggou:
                 //新版 抢购专区
 
-                String qianggou = "https://www.ybt9.com/index.php?ctrl=app&action=specialpage&&id=4&" +
-                        "lat=" + latitude + "&lng=" + longtitude + "&mapname=" + address;
-                intent = new Intent(getActivity(), JoinActivity.class);
-                intent.putExtra("title", "抢购专区");
-                intent.putExtra("url", qianggou);
-                startActivity(intent);
+                if (isNetworkUtils()) {
+                    String qianggou = "https://www.ybt9.com/index.php?ctrl=app&action=specialpage&&id=4&" +
+                            "lat=" + latitude + "&lng=" + longtitude + "&mapname=" + address;
+                    intent = new Intent(getActivity(), JoinActivity.class);
+                    intent.putExtra("title", "抢购专区");
+                    intent.putExtra("url", qianggou);
+                    startActivity(intent);
+                } else {
+                    toast("无网络连接");
+                }
+
+
                 break;
 
             case R.id.lin_ruzhu:
                 //改为签到
-                if (!(userInfo.getUserInfo().equals(""))) {
-                    Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
-                    uid = register.getMsg().getUid();
-                    if (!(userInfo.getPwd().equals(""))) {
-                        pwd = userInfo.getPwd();
-                    }
 
-                    if (userInfo.getCode().equals("0")) {
-                        signToDay(uid, pwd);
+                if (isNetworkUtils()) {
+                    if (isLogin()) {
+                        Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
+                        uid = register.getMsg().getUid();
+                        if (!(userInfo.getPwd().equals(""))) {
+                            pwd = userInfo.getPwd();
+                        }
+
+                        if (userInfo.getCode().equals("0")) {
+                            signToDay(uid, pwd);
+                        } else {
+                            System.out.println("1111111");
+                            signToDay("phone", phone);
+                        }
                     } else {
-                        System.out.println("1111111");
-                        signToDay("phone", phone);
+                        dialog();
                     }
                 } else {
-                    System.out.println("未登录");
+                    toast("无网络连接");
                 }
 
                 break;
@@ -1625,9 +2049,19 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                 //新版 跑腿服务
                 //startActivity(new Intent(getActivity(), WillOpenActivity.class));
                 //改为充值
-                intent = new Intent(getActivity(), YuEActivity.class);
-                intent.putExtra("yue","100.00");
-                startActivity(intent);
+
+                if (isNetworkUtils()) {
+                    if (isLogin()) {
+                        intent = new Intent(getActivity(), YuEActivity.class);
+                        intent.putExtra("yue", "100.00");
+                        startActivity(intent);
+                    } else {
+                        dialog();
+                    }
+                } else {
+                    toast("无网络连接");
+                }
+
 
                 break;
 
@@ -1670,12 +2104,16 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 //                break;
 
             case R.id.iv_adv001:
-                //toast("iv_adv001");
 
-                intent = new Intent(getActivity(), JoinActivity.class);
-                intent.putExtra("title", "我要加盟");
-                intent.putExtra("url", "https://www.ybt9.com"+linkurl);
-                startActivity(intent);
+                if (isNetworkUtils()) {
+                    intent = new Intent(getActivity(), JoinActivity.class);
+                    intent.putExtra("title", "我要加盟");
+                    intent.putExtra("url", "https://www.ybt9.com" + linkurl);
+                    startActivity(intent);
+                } else {
+                    toast("无网络连接");
+                }
+
                 break;
 
             case R.id.iv_adv002:
@@ -1706,6 +2144,65 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
     }
 
+    /*判断登录状态*/
+    public boolean isLogin() {
+        if (jingang.equals("")) {
+            //没有登录
+            //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
+            //dialog();
+            return false;
+        } else if (jingang.equals("0")) {
+            //没有登录
+            //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
+            //dialog();
+            return false;
+        } else if (jingang.equals("1")) {
+            //已登录
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 提示框
+     */
+    protected void dialog() {
+        CustomDialog.Builder builder = new CustomDialog.Builder(getActivity());
+        builder.setMessage("还未登录，确定要登录吗？");
+        //builder.setTitle("还未登录");
+        builder.setPositiveButton("登录/注册", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //设置你的操作事项
+                startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
+            }
+        });
+
+        builder.setNegativeButton("取消",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
+
+    }
+
+    /*判断联网状态*/
+    public boolean isNetworkUtils() {
+        if (NetworkUtils.isNotWorkAvilable(getActivity())) {
+            if (NetworkUtils.getCurrentNetType(getActivity()) != null) {
+                System.out.println("联网类型 = " + NetworkUtils.getCurrentNetType(getActivity()));
+                return true;
+            }
+        } else {
+            return false;
+        }
+        return false;
+    }
+
     /**
      * 判断网络连接情况 灵需要考虑请求超时的问题
      */
@@ -1720,26 +2217,37 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                 getLocation();
 
                 //轮播图
-                //getWxAdv();
+                getWxAdv();
+
+                /*广告位*/
+                getAdvByType("weixinmid");
+                getAdvByTypes("weixinmid2");
 
             }
         } else {
+
+            isLoading = false;
+
+            et_new_address.setText("重新加载");
+            et_new_address.setTextColor(Color.RED);
+            //pdStyle();
             configImageLoader();
+
             //无网络连接  显示缓存数 据
             //toast("无网络连接");
             //et_address.setText("定位失败");
-            et_new_address.setText("定位失败");
+            //et_new_address.setText("定位失败");
 
             //6.0读写权限的手动设置
-            /*if (ContextCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                        getActivity(), new String[]{
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        }, 7
-                );
-
-            } else {*/
+//            if (ContextCompat.checkSelfPermission(getActivity(),
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(
+//                        getActivity(), new String[]{
+//                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                        }, 7
+//                );
+//
+//            } else {
 
             /*首页商品展示*/
             String cateFoodList = userInfo.getMeetings();
@@ -1780,8 +2288,8 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
                 } else if (classifyList.size() > 0) {
                     System.out.println("aaaaa" + classifyList);
-                    cateInfoAdapter = new CateInfoAdapter(getActivity(), classifyList);
-                    mgv_classifly.setAdapter(cateInfoAdapter);
+//                    cateInfoAdapter = new CateInfoAdapter(getActivity(), classifyList);
+//                    mgv_classifly.setAdapter(cateInfoAdapter);
                 }
             }
 
@@ -1800,20 +2308,17 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
 
                 } else if (wxAdvList.size() > 0) {
 
+                    views.clear();
+
                     infos = new ArrayList<>();
-                    for(int i = 0; i < wxAdvList.size(); i ++){
+
+
+                    for (int i = 0; i < wxAdvList.size(); i++) {
                         info = new ADInfo();
-                        info.setUrl("http://www.ybt9.com/"+wxAdvList.get(i).getImg());
-                        info.setContent("图片-->" + i );
+                        info.setUrl("http://www.ybt9.com/" + wxAdvList.get(i).getImg());
+                        info.setContent("图片-->" + i);
                         infos.add(info);
                     }
-
-                        /*for(int i = 0; i < imageUrls.length; i ++){
-                            ADInfo info = new ADInfo();
-                            info.setUrl(imageUrls[i]);
-                            info.setContent("图片-->" + i );
-                            infos.add(info);
-                        }*/
 
                     // 将最后一个ImageView添加进来
                     views.add(ViewFactory.getImageView(getActivity(), infos.get(infos.size() - 1).getUrl()));
@@ -1835,7 +2340,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                     cycleViewPager.setTime(3000);
                     //设置圆点指示图标组居中显示，默认靠右
                     cycleViewPager.setIndicatorCenter();
-
 
 
 //                    HashMap<String, String> url_maps = new HashMap<String, String>();
@@ -1892,5 +2396,125 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
+    /**/
+    public class RecyclerViewAdapter extends BaseRecyclerViewAdapter<String> {
+        private Context mContext;
+        private List<GoodsIndex.MsgBean.CatefoodslistBean> foodList = new ArrayList<>();
+
+        public RecyclerViewAdapter(Context mContext, List<GoodsIndex.MsgBean.CatefoodslistBean> foodList) {
+            super(mContext, foodList);
+            this.mContext = mContext;
+            this.foodList = foodList;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreate(ViewGroup parent, int viewType) {
+
+
+            if (viewType == TYPE_ITEM) {
+
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_self_support, parent, false);
+                return new ViewHolder(view);
+
+            } else if (viewType == TYPE_FOOTER) {
+
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_foot, parent, false);
+                return new BaseRecyclerViewHolder(view);
+
+            }
+
+            return null;
+
+        }
+
+        @Override
+        public void onBind(RecyclerView.ViewHolder holder, int position) {
+
+
+            if (holder instanceof ViewHolder) {
+
+                ViewHolder vh = (ViewHolder) holder;
+                //viewHolder.tv.setText(mDatas.get(position));
+
+                // 组件赋值
+                String imgPath = foodList.get(position).getImg();
+
+                //购物车数量
+                int cartNum = foodList.get(position).getCartnum();
+                vh.tv_shop_num.setText("" + cartNum);
+
+                if (cartNum == 0) {
+                    vh.tv_shop_num.setVisibility(View.INVISIBLE);
+                    vh.iv_sub_botton.setVisibility(View.INVISIBLE);
+                } else if (cartNum > 0) {
+                    vh.tv_shop_num.setVisibility(View.VISIBLE);
+                    vh.iv_sub_botton.setVisibility(View.VISIBLE);
+                } else {
+                    Toast.makeText(mContext, "格式不正确", Toast.LENGTH_SHORT).show();
+                }
+
+                if (foodList.get(position).getImg().equals("")) {
+                    vh.imager.setImageResource(R.mipmap.yibeitong001);
+
+                } else {
+                    BitmapUtils bitmapUtils = new BitmapUtils(mContext);
+
+                    bitmapUtils.configDiskCacheEnabled(true);
+                    bitmapUtils.configMemoryCacheEnabled(false);
+
+                    bitmapUtils.display(vh.imager, "http://www.ybt9.com/" + imgPath);
+
+                }
+
+                 /*id 详情图片 名称 已售 评价 单价 单位 购物车数量*/
+                final String str_id = foodList.get(position).getId();
+                final String instro = foodList.get(position).getInstro();
+                final String foodName = foodList.get(position).getName();
+                final int str_foodSellCount = foodList.get(position).getSellcount();
+                final String foodPoint = foodList.get(position).getPoint();
+                final String foodCost = foodList.get(position).getCost();
+                final String foodGoodattr = foodList.get(position).getGoodattr();
+                final int str_cartNum = foodList.get(position).getCartnum();
+
+
+                vh.title.setText(foodList.get(position).getName());
+
+                vh.price.setText("￥" + foodList.get(position).getCost());
+
+                vh.num.setText("月售" + foodList.get(position).getSellcount() + "笔");
+
+            }
+
+
+        }
+
+        class ViewHolder extends BaseRecyclerViewHolder {
+
+            //TextView tv;
+
+            private ImageView imager;
+            private TextView title, price, num;
+
+            private ImageView iv_add_button, iv_sub_botton;
+            private TextView tv_shop_num;
+
+            public ViewHolder(View convertView) {
+                super(view);
+                //tv = (TextView) view.findViewById(R.id.tv);
+
+                imager = (ImageView) convertView.findViewById(R.id.iv_item_ss);
+                title = (TextView) convertView.findViewById(R.id.tv_item_ss_title);
+                price = (TextView) convertView.findViewById(R.id.tv_item_ss_price);
+                num = (TextView) convertView.findViewById(R.id.tv_item_ss_num);
+
+                //添加购物车
+                tv_shop_num = (TextView) convertView.findViewById(R.id.tv_shop_num);
+                iv_add_button = (ImageView) convertView.findViewById(R.id.iv_add);
+                iv_sub_botton = (ImageView) convertView.findViewById(R.id.iv_sub);
+            }
+        }
+    }
+
 
 }

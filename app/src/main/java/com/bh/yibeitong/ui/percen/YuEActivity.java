@@ -115,7 +115,7 @@ public class YuEActivity extends BaseTextActivity implements ViewPager.OnPageCha
                 getAppMem("phone", phone);
             }
         } else {
-            toast("未登录");
+            //toast("未登录");
         }
     }
 

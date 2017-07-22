@@ -182,7 +182,7 @@ public class SlideMenuView extends ViewGroup {
 	}
 
 	/*滑动 显示（隐藏）侧边栏*/
-	/*@Override
+	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		if (mLocked) {
 			return true;
@@ -198,10 +198,10 @@ public class SlideMenuView extends ViewGroup {
 
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
-			*//*
-			 * If being flinged and user touches, stop the fling. isFinished
-			 * will be false if being flinged.
-			 *//*
+
+			/* * If being flinged and user touches, stop the fling. isFinished
+			 * will be false if being flinged.*/
+
 			if (!mScroller.isFinished()) {
 				mScroller.abortAnimation();
 			}
@@ -260,7 +260,7 @@ public class SlideMenuView extends ViewGroup {
 		}
 
 		return true;
-	}*/
+	}
 	
 	@Override
 	public void computeScroll() {

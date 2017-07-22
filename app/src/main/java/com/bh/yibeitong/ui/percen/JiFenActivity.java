@@ -38,13 +38,13 @@ public class JiFenActivity extends BaseTextActivity {
 
     /*接收页面传值*/
     private Intent intent;
-    private String s_jifen;
+    //private String s_jifen;
 
     /*接口地址*/
     private String PATH = "";
 
     private UserInfo userInfo;
-    private String uid, pwd, phone, jingang;
+    private String uid, pwd, phone, jingang, s_jifen;
 
     /*积分明细显示UI*/
     private MyListView myListView;
@@ -71,7 +71,9 @@ public class JiFenActivity extends BaseTextActivity {
         jingang = userInfo.getCode();
 
         intent = getIntent();
-        s_jifen = intent.getStringExtra("jifen");
+        //s_jifen = intent.getStringExtra("jifen");
+
+        s_jifen = userInfo.getScore();//获取本地轻量缓存积分
 
         tv_jifen = (TextView) findViewById(R.id.tv_jifen_jifen);
         but_detailed = (Button) findViewById(R.id.but_jifen_detailed);
@@ -92,13 +94,12 @@ public class JiFenActivity extends BaseTextActivity {
         tv_jifen.setText("" + s_jifen);
 
         tv_rule.setText("1、积分是指成功购物即可累计金额获得的积分。消费1元积1分。\n" +
-                "2、成功购物是指：活动期间内在外卖人创建并完成交易——即买家已确认收货、安付通交易状态为“交易成功”的交易。\n" +
+                "2、成功购物是指：活动期间内在易贝通创建并完成交易——即买家已确认收货、安付通交易状态为“交易成功”的交易。\n" +
                 "3、不做累计的部分包括但不仅限于：运费，购物券金额。\n" +
                 "4、无论该交易属于一口价、拍卖，均可累计。\n" +
-                "5、单笔交易，最多可获得2000积分，多余积分作废处理。\n" +
-                "6、消费金额不足1元的零头部分不计入积分，积分按消费金额逐笔折算累加。\n" +
-                "7、积分可在积分有礼专区参加积分活动。按活动要求，参加1次扣除相应积分。\n" +
-                "8、现阶段活动包括积分兑换，积分抽奖。\n");
+                "5、消费金额不足1元的零头部分不计入积分，积分按消费金额逐笔折算累加。\n" +
+                "6、积分可在积分有礼专区参加积分活动。按活动要求，参加1次扣除相应积分。\n" +
+                "7、现阶段活动包括积分兑换，积分抽奖。\n");
 
         isLoginOrLogintype();
 
@@ -141,7 +142,7 @@ public class JiFenActivity extends BaseTextActivity {
                 intent = new Intent(JiFenActivity.this, ExChangeActivity.class);
                 intent.putExtra("jifen", s_jifen);//传值 积分
                 startActivityForResult(intent, 31);
-                startActivity(intent);
+                //startActivity(intent);
                 break;
         }
     }

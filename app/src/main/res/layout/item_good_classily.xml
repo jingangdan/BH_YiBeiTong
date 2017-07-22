@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="一级分类"
-        android:padding="5dp"/>
+        style="@style/text_cost"
+        android:textColor="#000"/>
 
 </LinearLayout>

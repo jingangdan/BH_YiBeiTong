@@ -1,7 +1,7 @@
 package com.bh.yibeitong.bean;
 
 /**
- * Created by binbin on 2016/12/13.
+ * Created by jingang on 2016/12/13.
  */
 
 public class Error {
@@ -37,4 +37,9 @@ public class Error {
                 ", msg='" + msg + '\'' +
                 '}';
     }
+
+    /*java.lang.SecurityException:
+    No permission to write to /storage/emulated/0/ybt_updateVersion/ybt.apk:
+    Neither user 10190 nor current process has android.permission.WRITE_EXTERNAL_STORAGE.*/
 }
+

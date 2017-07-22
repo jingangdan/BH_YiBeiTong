@@ -23,9 +23,9 @@ public class BaseActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         ActivityCollector.addActivity(this);
 
-        application = (CatchExcep)getApplication();
+        /*application = (CatchExcep)getApplication();
         application.init();
-        application.addActivity(this);
+        application.addActivity(this);*/
 
     }
 

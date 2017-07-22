@@ -19,7 +19,8 @@
             android:layout_height="wrap_content"
             android:text="二级分类"
             android:gravity="center"
-            android:textColor="#a2cb34"/>
+            android:textColor="#a2cb34"
+            style="@style/text_cost"/>
 
     </LinearLayout>
 

@@ -211,14 +211,14 @@ public class PullToRefreshView extends LinearLayout {
                 .findViewById(R.id.pull_to_load_progress);
         // footer layout
         measureView(mFooterView);
-        mFooterViewHeight = mFooterView.getMeasuredHeight();
+        mFooterViewHeight = 0;
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
                 mFooterViewHeight);
-        // int top = getHeight();
-        // params.topMargin
-        // =getHeight();//在这里getHeight()==0,但在onInterceptTouchEvent()方法里getHeight()已经有值了,不再是0;
-        // getHeight()什么时候会赋值,稍候再研究一下
-        // 由于是线性布局可以直接添加,只要AdapterView的高度是MATCH_PARENT,那么footer view就会被添加到最后,并隐藏
+        int top = getHeight();
+        params.topMargin= getHeight();
+        //在这里getHeight()==0,但在onInterceptTouchEvent()方法里getHeight()已经有值了,不再是0;
+//         getHeight()什么时候会赋值,稍候再研究一下
+//         由于是线性布局可以直接添加,只要AdapterView的高度是MATCH_PARENT,那么footer view就会被添加到最后,并隐藏
         addView(mFooterView, params);
     }
 
@@ -323,6 +323,8 @@ public class PullToRefreshView extends LinearLayout {
                     headerPrepareToRefresh(deltaY);
                     // setHeaderPadding(-mHeaderViewHeight);
                 } else if (mPullState == PULL_UP_STATE) {
+                    System.out.println("11111mPullState=" + mPullState);
+                    System.out.println("22222PULL_UP_STATE=" + PULL_UP_STATE);
                     // 执行上拉
                     footerPrepareToRefresh(deltaY);
                 }
@@ -363,49 +365,50 @@ public class PullToRefreshView extends LinearLayout {
         if (mHeaderState == REFRESHING || mFooterState == REFRESHING) {
             return false;
         }
+
         // 对于ListView和GridView
-        if (mAdapterView != null) {
-            // 子view(ListView or GridView)滑动到最顶端
-            if (deltaY > 0) {
-                System.out.println("向下滑动");
-
-                View child = mAdapterView.getChildAt(0);
-                if (child == null) {
-                    // 如果mAdapterView中没有数据,不拦截
-                    return false;
-                }
-                if (mAdapterView.getFirstVisiblePosition() == 0
-                        && child.getTop() == 0) {
-                    mPullState = PULL_DOWN_STATE;
-                    return true;
-                }
-                int top = child.getTop();
-                int padding = mAdapterView.getPaddingTop();
-                if (mAdapterView.getFirstVisiblePosition() == 0
-                        && Math.abs(top - padding) <= 8) {
-                    // 这里之前用3可以判断,但现在不行,还没找到原因
-                    mPullState = PULL_DOWN_STATE;
-                    return true;
-                }
-
-            } else if (deltaY < 0) {
-                System.out.println("向下滑动");
-                View lastChild = mAdapterView.getChildAt(mAdapterView
-                        .getChildCount() - 1);
-                if (lastChild == null) {
-                    // 如果mAdapterView中没有数据,不拦截
-                    return false;
-                }
-                // 最后一个子view的Bottom小于父View的高度说明mAdapterView的数据没有填满父view,
-                // 等于父View的高度说明mAdapterView已经滑动到最后
-                if (lastChild.getBottom() <= getHeight()
-                        && mAdapterView.getLastVisiblePosition() == mAdapterView
-                        .getCount() - 1) {
-                    mPullState = PULL_UP_STATE;
-                    return true;
-                }
-            }
-        }
+//        if (mAdapterView != null) {
+//            // 子view(ListView or GridView)滑动到最顶端
+//            if (deltaY > 0) {
+//                System.out.println("向下滑动");
+//
+//                View child = mAdapterView.getChildAt(0);
+//                if (child == null) {
+//                    // 如果mAdapterView中没有数据,不拦截
+//                    return false;
+//                }
+//                if (mAdapterView.getFirstVisiblePosition() == 0
+//                        && child.getTop() == 0) {
+//                    mPullState = PULL_DOWN_STATE;
+//                    return true;
+//                }
+//                int top = child.getTop();
+//                int padding = mAdapterView.getPaddingTop();
+//                if (mAdapterView.getFirstVisiblePosition() == 0
+//                        && Math.abs(top - padding) <= 8) {
+//                    // 这里之前用3可以判断,但现在不行,还没找到原因
+//                    mPullState = PULL_DOWN_STATE;
+//                    return true;
+//                }
+//
+//            } else if (deltaY < 0) {
+//                System.out.println("向下滑动");
+//                View lastChild = mAdapterView.getChildAt(mAdapterView
+//                        .getChildCount() - 1);
+//                if (lastChild == null) {
+//                    // 如果mAdapterView中没有数据,不拦截
+//                    return false;
+//                }
+//                // 最后一个子view的Bottom小于父View的高度说明mAdapterView的数据没有填满父view,
+//                // 等于父View的高度说明mAdapterView已经滑动到最后
+//                if (lastChild.getBottom() <= getHeight()
+//                        && mAdapterView.getLastVisiblePosition() == mAdapterView
+//                        .getCount() - 1) {
+//                    mPullState = PULL_UP_STATE;
+//                    return true;
+//                }
+//            }
+//        }
         // 对于ScrollView
         if (mScrollView != null) {
             // 子scroll view滑动到最顶端

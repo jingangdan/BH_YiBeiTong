@@ -37,22 +37,8 @@ public class GridViewAdapter extends BaseAdapter {
     public void setCatefoodslistBeanList(Context mContext, List<GoodsIndex.MsgBean.CatefoodslistBean> foodList) {
         this.context = mContext;
         this.foodList = foodList;
-        this.notifyDataSetChanged();
+        //this.notifyDataSetChanged();
     }
-
-    //private List<CeShi.MsgBean.CatefoodslistBean> foodList = new ArrayList<>();
-    /*public void setCatefoodslistBeanList(Context mContext, List<CeShi.MsgBean.CatefoodslistBean> foodList) {
-        this.context = mContext;
-        this.foodList = foodList;
-        this.notifyDataSetChanged();
-    }*/
-
-    //Callback callback;
-    /*public GridViewAdapter(Context context, Callback callback) {
-        this.context = context;
-        this.mCallback = callback;
-
-    }*/
 
     public interface Callback {
         void click(int position, int index);
@@ -75,8 +61,16 @@ public class GridViewAdapter extends BaseAdapter {
         return position;
     }
 
+
+    public void updateView(List<GoodsIndex.MsgBean.CatefoodslistBean> foodList) {
+        this.foodList = foodList;
+        this.notifyDataSetChanged();//强制动态刷新数据进而调用getView方法
+    }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+
+        System.out.println("--------------------");
         final ViewHolder vh;
         if (convertView == null) {
             vh = new ViewHolder();

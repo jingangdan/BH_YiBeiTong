@@ -66,7 +66,7 @@ public class ApkUpdateUtils {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         // 判断是否是7.0
-        if (Build.VERSION.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= 23) {
             Log.d(TAG, "android7.0");
             // 适配android7.0 ，不能直接访问原路径
             // 需要对intent 授权

@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="top"
         android:orientation="vertical">
 
@@ -23,16 +23,13 @@
             <com.bh.yibeitong.view.MyScrollView
                 android:id="@+id/sv_home_page"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:scrollbars="none">
 
-                <!--<ScrollView
-                    android:id="@+id/sv_home_page"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="fill_parent">-->
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/lin_yes_network"
@@ -46,43 +43,42 @@
                             android:id="@+id/myGridView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="#E1E1E1"
                             android:numColumns="2"
                             android:padding="5dp"
-                            android:background="#E1E1E1"
-                            >
+                            android:scrollbars="none">
 
                         </com.bh.yibeitong.refresh.MyGridView>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/lin_no_network"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                    <!--<LinearLayout-->
+                    <!--android:id="@+id/lin_no_network"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_centerHorizontal="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:gravity="center"-->
+                    <!--android:orientation="vertical"-->
+                    <!--android:visibility="gone">-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="网络出现问题了！" />
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="网络出现问题了！" />-->
 
-                        <Button
-                            android:id="@+id/but_load_again"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="重新加载" />
+                    <!--<Button-->
+                    <!--android:id="@+id/but_load_again"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="重新加载" />-->
 
-                        <!---->
+                    <!--&lt;!&ndash;&ndash;&gt;-->
 
-                    </LinearLayout>
+                    <!--</LinearLayout>-->
 
 
-                </RelativeLayout>
+                </LinearLayout>
 
-                <!--</ScrollView>-->
             </com.bh.yibeitong.view.MyScrollView>
 
         </com.bh.yibeitong.refresh.PullToRefreshView>

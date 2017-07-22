@@ -68,7 +68,7 @@ public class HttpPath {
 
 
     //接口地址
-    public static String PATH = "https://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&";
+    public static String PATH = "http://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&";
 
     //checkphone验证手机号是否存在 phone
     public static String CHECKPHONE = "action=checkphone&";
@@ -78,6 +78,16 @@ public class HttpPath {
 
     //注册tname pwd pwd2 phone email code
     public static String REG = "action=reg&";
+
+    /*找回密码
+    * 参数：
+    * phone=*****
+    * &newpwd=****
+    * &surepwd=*****
+    * &code=1234
+
+    * */
+    public static String LR_FINDPWD = "action=findpwd&";
 
     //登录  uname登录名  pwd密码
     public static String APPMENLOGIN = "action=appMemlogin&";
@@ -485,6 +495,13 @@ public class HttpPath {
      * userid	是	string
      */
     public static String APP_LOGIN = "action=applogin&";
+
+    /*订单数和营业额查询（商家端）
+    * 参数：
+    * uid：
+    * pwd：
+    * */
+    public static String APP_NEWSHOPTJ = "action=newshoptj&";
 
     /**
      * 商家端店铺

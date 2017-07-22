@@ -177,7 +177,7 @@
                 android:id="@+id/lv_shop_goods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#E1E1E1"
+                android:background="#F0F0F0"
                 android:divider="#fff"
                 android:dividerHeight="0.8dp"
                 android:scrollbars="none">
@@ -212,23 +212,23 @@
 
 
             <ScrollView
-                android:fillViewport="true"
                 android:id="@+id/sv_goods"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#E1E1E1"
+                    android:background="#F0F0F0"
                     android:orientation="vertical">
 
                     <com.bh.yibeitong.refresh.MyGridView
                         android:id="@+id/myGridView_goods"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:numColumns="2"
-                        />
+                        android:numColumns="2" />
 
                 </LinearLayout>
 

@@ -114,11 +114,10 @@
 
                         <TextView
                             android:id="@+id/tv_foodderails_price"
-                            style="@style/setting_text"
+                            style="@style/text_cost"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
-                            android:text="￥100元/盒"
-                            android:textColor="#F92621" />
+                            android:text="￥100元/盒" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"

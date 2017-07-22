@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,17 +19,22 @@ import android.widget.Toast;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.actitvity.ActivityCollector;
 import com.bh.yibeitong.actitvity.MainActivity;
+import com.bh.yibeitong.bean.seller.NewShoptj;
+import com.bh.yibeitong.bean.seller.SellerLogin;
 import com.bh.yibeitong.refresh.MyGridView;
+import com.bh.yibeitong.utils.GsonUtil;
+import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.SlideMenuView;
 import com.bh.yibeitong.view.UserInfo;
 import com.tencent.android.tpush.XGIOperateCallback;
-import com.tencent.android.tpush.XGPushActivity;
 import com.tencent.android.tpush.XGPushClickedResult;
-import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +58,8 @@ public class SellerActivity extends Activity implements View.OnClickListener {
 
     /*营业额 订单数*/
     private TextView tv_turnover, tv_order_num;
+    private double allcost = 0.00;
+    private int allcount = 0;
 
     /*立即结算*/
     private Button but_pay;
@@ -87,12 +92,15 @@ public class SellerActivity extends Activity implements View.OnClickListener {
 
     /*本地缓存*/
     private UserInfo userInfo;
-    private String str_userAccount = "";
+    private String str_userAccount = "", uid = "", pwd = "";
 
     /*接收页面传值*/
     private Intent intent;
     private String userAccount;
     private String shopid;
+
+    /*接口地址*/
+    private String PATH = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,7 +191,6 @@ public class SellerActivity extends Activity implements View.OnClickListener {
         /*Context context = getApplicationContext();
         Intent service = new Intent(context, XGPushActivity.class);
         context.startService(service);*/
-
 
         initData();
 
@@ -279,8 +286,6 @@ public class SellerActivity extends Activity implements View.OnClickListener {
     /*组件 初始化*/
     public void initData() {
 
-
-
         slideMenuView = (SlideMenuView) findViewById(R.id.slideMenuView);
         imageView = (ImageView) findViewById(R.id.title_bar_menu_btn);
         imageView.setOnClickListener(this);
@@ -316,6 +321,18 @@ public class SellerActivity extends Activity implements View.OnClickListener {
         tv_comment.setOnClickListener(this);
         tv_without.setOnClickListener(this);
 
+        tv_turnover = (TextView) findViewById(R.id.tv_seller_turnover);
+        tv_order_num = (TextView) findViewById(R.id.tv_seller_order_num);
+
+
+         /*获取订单数和营业额*/
+        SellerLogin sellerLogin = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), SellerLogin.class);
+
+        uid = sellerLogin.getMsg().getUid();
+        pwd = userInfo.getPwd();
+
+        newShoptj(uid, pwd);
+
         /*点击选项*/
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -336,6 +353,8 @@ public class SellerActivity extends Activity implements View.OnClickListener {
                 }
             }
         });
+
+
 
     }
 
@@ -391,8 +410,9 @@ public class SellerActivity extends Activity implements View.OnClickListener {
 
             case R.id.tv_sm_without:
                 userInfo.saveLogin("0");//退出登录保存数字0
-
                 userInfo.saveSellerUserAccoun("");
+                userInfo.saveUserInfo("");
+                userInfo.savePwd("");
 
                 XGPushManager.unregisterPush(this);//设备解绑
 
@@ -412,6 +432,53 @@ public class SellerActivity extends Activity implements View.OnClickListener {
             default:
                 break;
         }
+    }
+
+    /**
+     * 获取订单数和营业额（商家端）
+     *
+     * @param uid
+     * @param pwd
+     */
+    public void newShoptj(String uid, String pwd) {
+        PATH = HttpPath.PATH + HttpPath.APP_NEWSHOPTJ + "" +
+                "uid=" + uid + "&pwd=" + pwd;
+
+        RequestParams params = new RequestParams(PATH);
+        System.out.println("商家端订单数和营业额" + PATH);
+        x.http().get(params,
+                new Callback.CommonCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        System.out.println("商家端订单数和营业额" + result);
+
+                        NewShoptj newShoptj = GsonUtil.gsonIntance().gsonToBean(result, NewShoptj.class);
+
+                        allcost = newShoptj.getMsg().getAllcost();
+                        allcount = newShoptj.getMsg().getAllcount();
+
+                        /*订单数和营业额*/
+                        tv_turnover.setText(""+allcost);
+                        tv_order_num.setText(""+allcount);
+
+                    }
+
+                    @Override
+                    public void onError(Throwable ex, boolean isOnCallback) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException cex) {
+
+                    }
+
+                    @Override
+                    public void onFinished() {
+
+                    }
+                });
+
     }
 
     /**

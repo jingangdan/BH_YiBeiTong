@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,8 +32,6 @@ import com.bh.yibeitong.bean.GoodsIndex;
 import com.bh.yibeitong.bean.Order;
 import com.bh.yibeitong.bean.OrderDel;
 import com.bh.yibeitong.bean.Register;
-import com.bh.yibeitong.refresh.MyListView;
-import com.bh.yibeitong.refresh.PullToRefreshView;
 import com.bh.yibeitong.ui.LoginRegisterActivity;
 import com.bh.yibeitong.ui.OrderCommentActivity;
 import com.bh.yibeitong.ui.OrderDetaileActivity;
@@ -47,8 +50,6 @@ import org.xutils.x;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -56,11 +57,10 @@ import java.util.List;
  * 测试fragment懒加载
  */
 
-public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFooterRefreshListener,
-        PullToRefreshView.OnHeaderRefreshListener {
+public class FMOrderTest extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     // 标志位，标志已经初始化完成。
-    private boolean isPrepared;
+    //private boolean isPrepared;
 
     private TextView tv_header_title;
     private ImageView iv_header_left, iv_header_right;
@@ -71,8 +71,10 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
 
     public static String phone;
 
-    private PullToRefreshView pullToRefreshView;
-    private MyListView myListView;
+    //private PullToRefreshView pullToRefreshView;
+    //private MyListView myListView;
+
+    private ListView lv_order;
 
     /*本地存储*/
     UserInfo userInfo;
@@ -89,6 +91,12 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
     //没有登录登录时布局
     private Button but_login;
     private TextView tv_nologin_title;
+
+    /*UI展示*/
+//    private SwipeRefreshLayout swipeRefreshLayout;
+//    private RecyclerView recyclerView;
+//    private HomeAdapter homeAdapter;
+//    private LinearLayoutManager mLayoutManager;
 
     @Nullable
     @Override
@@ -130,6 +138,12 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
      * 组件初始化 登录状态下
      */
     public void initData() {
+//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.sr_order);
+//        recyclerView = (RecyclerView) view.findViewById(R.id.rv_order);
+//
+//        mLayoutManager = new LinearLayoutManager(getActivity());
+//        recyclerView.setLayoutManager(mLayoutManager);
+
         tv_header_title = (TextView) view.findViewById(R.id.tv_header_title);
         iv_header_left = (ImageView) view.findViewById(R.id.iv_header_left);
         iv_header_right = (ImageView) view.findViewById(R.id.iv_header_right);
@@ -137,12 +151,14 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
         tv_header_title.setText("我的订单");
         iv_header_left.setVisibility(View.INVISIBLE);
 
-        pullToRefreshView = (PullToRefreshView) view.findViewById(R.id.puToRefreshView_order);
-        myListView = (MyListView) view.findViewById(R.id.myListView_order);
+        //pullToRefreshView = (PullToRefreshView) view.findViewById(R.id.puToRefreshView_order);
+        //myListView = (MyListView) view.findViewById(R.id.myListView_order);
 
-        pullToRefreshView.setOnHeaderRefreshListener(this);
-        pullToRefreshView.setOnFooterRefreshListener(this);
-        pullToRefreshView.setLastUpdated(new Date().toLocaleString());
+        lv_order = (ListView) view.findViewById(R.id.lv_order);
+
+        //pullToRefreshView.setOnHeaderRefreshListener(this);
+        //pullToRefreshView.setOnFooterRefreshListener(this);
+        //pullToRefreshView.setLastUpdated(new Date().toLocaleString());
 
         gson = new Gson();
         Type listType = new TypeToken<List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean>>() {
@@ -152,26 +168,27 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
                 gson.fromJson(userInfo.getPostData(), listType);
 
         //XXX初始化view的各控件
-        isPrepared = true;
+        //isPrepared = true;
 
-        Bundle bundle = getArguments();
-        //从activity传过来的Bundle
-        if (bundle != null) {
-            login = bundle.getString("login");
-            System.out.println("主页传值：" + login);
-            if (!(login.equals(""))) {
-                //if (!(login == null)) {
-                Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
-                phone = register.getMsg().getPhone();
-
-                getOrder("phone", phone);
-
-            }
-        }
+//        Bundle bundle = getArguments();
+//        //从activity传过来的Bundle
+//        if (bundle != null) {
+//            login = bundle.getString("login");
+//            System.out.println("主页传值：" + login);
+//            if (!(login.equals(""))) {
+//                //if (!(login == null)) {
+//                Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+//                phone = register.getMsg().getPhone();
+//
+//                getOrder("phone", phone);
+//
+//            }
+//        }
         //验证登录方式
         if (!(userInfo.getUserInfo().equals(""))) {
             Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
             uid = register.getMsg().getUid();
+            phone = register.getMsg().getPhone();
             if (!(userInfo.getPwd().equals(""))) {
                 pwd = userInfo.getPwd();
 
@@ -258,7 +275,6 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
                 but_cancel = (Button) view_pop.findViewById(R.id.but_cancel);
 
                 parent.setOnClickListener(new View.OnClickListener() {
-
                     @Override
                     public void onClick(View v) {
                         pop.dismiss();
@@ -270,10 +286,6 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
                 but_user.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        /*Intent intent = new Intent(getActivity(), LoginRegisterActivity.class);
-                        intent.putExtra("loginType", "1");
-                        startActivity(intent);*/
-
                         startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
                         pop.dismiss();
                         parent.clearAnimation();
@@ -316,84 +328,84 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
 
 
 
-    /*public void initView() {
-        userInfo = new UserInfo(getActivity().getApplication());
-
-        jingang = userInfo.getLogin();
-
-        tv_header_title = findView(R.id.tv_header_title);
-        iv_header_left = findView(R.id.iv_header_left);
-        iv_header_right = findView(R.id.iv_header_right);
-
-        tv_header_title.setText("我的订单");
-        iv_header_left.setVisibility(View.INVISIBLE);
-
-        pullToRefreshView = findView(R.id.puToRefreshView_order);
-        myListView = findView(R.id.myListView_order);
-
-        pullToRefreshView.setOnHeaderRefreshListener(this);
-        pullToRefreshView.setOnFooterRefreshListener(this);
-        pullToRefreshView.setLastUpdated(new Date().toLocaleString());
-
-        gson = new Gson();
-        Type listType = new TypeToken<List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean>>() {
-        }.getType();
-
-        final List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean> catefoodslist =
-                gson.fromJson(userInfo.getPostData(), listType);
-
-        //XXX初始化view的各控件
-        isPrepared = true;
-
-        Bundle bundle = getArguments();
-        //从activity传过来的Bundle
-        if (bundle != null) {
-            login = bundle.getString("login");
-            System.out.println("主页传值：" + login);
-            if (!(login.equals(""))) {
-                //if (!(login == null)) {
-                Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
-                phone = register.getMsg().getPhone();
-
-                getOrder("phone", phone);
-
-            }
-        }
-
-        if (jingang.equals("")) {
-            System.out.println("订单页 空" + jingang + "未登录");
-            dialog();
-        } else if (jingang.equals("0")) {
-            System.out.println("订单页" + jingang + "未登录");
-            dialog();
-
-        } else if (jingang.equals("1")) {
-            System.out.println("订单页" + jingang + "已登录");
-
-            //验证登录方式
-            if (!(userInfo.getUserInfo().equals(""))) {
-                Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
-                uid = register.getMsg().getUid();
-                if (!(userInfo.getPwd().equals(""))) {
-                    pwd = userInfo.getPwd();
-
-                    if (userInfo.getCode().equals("0")) {
-                        System.out.println("我的验证码" + userInfo.getCode());
-                        getOrder(uid, pwd);
-                    } else {
-                        System.out.println("我的手机号" + phone);
-                        getOrder("phone", phone);
-                    }
-
-                }
-            } else {
-                //toast("未登录");
-                Toast.makeText(getActivity(), "未登录", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-
-    }*/
+//    public void initView() {
+//        userInfo = new UserInfo(getActivity().getApplication());
+//
+//        jingang = userInfo.getLogin();
+//
+//        tv_header_title = findView(R.id.tv_header_title);
+//        iv_header_left = findView(R.id.iv_header_left);
+//        iv_header_right = findView(R.id.iv_header_right);
+//
+//        tv_header_title.setText("我的订单");
+//        iv_header_left.setVisibility(View.INVISIBLE);
+//
+//        pullToRefreshView = findView(R.id.puToRefreshView_order);
+//        myListView = findView(R.id.myListView_order);
+//
+//        pullToRefreshView.setOnHeaderRefreshListener(this);
+//        pullToRefreshView.setOnFooterRefreshListener(this);
+//        pullToRefreshView.setLastUpdated(new Date().toLocaleString());
+//
+//        gson = new Gson();
+//        Type listType = new TypeToken<List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean>>() {
+//        }.getType();
+//
+//        final List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean> catefoodslist =
+//                gson.fromJson(userInfo.getPostData(), listType);
+//
+//        //XXX初始化view的各控件
+//        isPrepared = true;
+//
+//        Bundle bundle = getArguments();
+//        //从activity传过来的Bundle
+//        if (bundle != null) {
+//            login = bundle.getString("login");
+//            System.out.println("主页传值：" + login);
+//            if (!(login.equals(""))) {
+//                //if (!(login == null)) {
+//                Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+//                phone = register.getMsg().getPhone();
+//
+//                getOrder("phone", phone);
+//
+//            }
+//        }
+//
+//        if (jingang.equals("")) {
+//            System.out.println("订单页 空" + jingang + "未登录");
+//            dialog();
+//        } else if (jingang.equals("0")) {
+//            System.out.println("订单页" + jingang + "未登录");
+//            dialog();
+//
+//        } else if (jingang.equals("1")) {
+//            System.out.println("订单页" + jingang + "已登录");
+//
+//            //验证登录方式
+//            if (!(userInfo.getUserInfo().equals(""))) {
+//                Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
+//                uid = register.getMsg().getUid();
+//                if (!(userInfo.getPwd().equals(""))) {
+//                    pwd = userInfo.getPwd();
+//
+//                    if (userInfo.getCode().equals("0")) {
+//                        System.out.println("我的验证码" + userInfo.getCode());
+//                        getOrder(uid, pwd);
+//                    } else {
+//                        System.out.println("我的手机号" + phone);
+//                        getOrder("phone", phone);
+//                    }
+//
+//                }
+//            } else {
+//                //toast("未登录");
+//                Toast.makeText(getActivity(), "未登录", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//
+//
+//    }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -415,7 +427,7 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
                     gson.fromJson(userInfo.getPostData(), listType);
 
             //XXX初始化view的各控件
-            isPrepared = true;
+            //isPrepared = true;
 
             Bundle bundle = getArguments();
             //从activity传过来的Bundle
@@ -455,52 +467,52 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
         }
     }
 
-    @Override
-    public void onFooterRefresh(PullToRefreshView view) {
-        pullToRefreshView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullToRefreshView.onFooterRefreshComplete();
-                Toast.makeText(getActivity(), "加载更多数据", Toast.LENGTH_SHORT).show();
-            }
+//    @Override
+//    public void onFooterRefresh(PullToRefreshView view) {
+//        pullToRefreshView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                pullToRefreshView.onFooterRefreshComplete();
+//                Toast.makeText(getActivity(), "加载更多数据", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }, 1000);
+//    }
 
-        }, 1000);
-    }
-
-    @Override
-    public void onHeaderRefresh(PullToRefreshView view) {
-        pullToRefreshView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullToRefreshView.onHeaderRefreshComplete("更新于："
-                        + Calendar.getInstance().getTime().toLocaleString());
-                pullToRefreshView.onHeaderRefreshComplete();
-
-                /*判断用户登录状态*/
-
-                if (jingang.equals("")) {
-                    System.out.println("订单页 空" + jingang + "未登录");
-                    dialog();
-                } else if (jingang.equals("0")) {
-                    System.out.println("订单页" + jingang + "未登录");
-                    dialog();
-
-                } else if (jingang.equals("1")) {
-                    System.out.println("订单页" + jingang + "已登录");
-
-                    if (userInfo.getCode().equals("0")) {
-                        getOrder(uid, pwd);
-                    } else {
-                        getOrder("", pwd);
-                    }
-                }
-
-                //更新
-                Toast.makeText(getActivity(), "刷新成功!", Toast.LENGTH_SHORT).show();
-            }
-
-        }, 1000);
-    }
+//    @Override
+//    public void onHeaderRefresh(PullToRefreshView view) {
+//        pullToRefreshView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                pullToRefreshView.onHeaderRefreshComplete("更新于："
+//                        + Calendar.getInstance().getTime().toLocaleString());
+//                pullToRefreshView.onHeaderRefreshComplete();
+//
+//                判断用户登录状态
+//
+//                if (jingang.equals("")) {
+//                    System.out.println("订单页 空" + jingang + "未登录");
+//                    dialog();
+//                } else if (jingang.equals("0")) {
+//                    System.out.println("订单页" + jingang + "未登录");
+//                    dialog();
+//
+//                } else if (jingang.equals("1")) {
+//                    System.out.println("订单页" + jingang + "已登录");
+//
+//                    if (userInfo.getCode().equals("0")) {
+//                        getOrder(uid, pwd);
+//                    } else {
+//                        getOrder("", pwd);
+//                    }
+//                }
+//
+//                //更新
+//                Toast.makeText(getActivity(), "刷新成功!", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }, 1000);
+//    }
 
     /**
      * 获取订单
@@ -518,22 +530,38 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
                     "logintype=" + uid + "&loginphone=" + pwd;
         }
 
+        System.out.println("订单列表"+PATH);
+
 
         RequestParams params = new RequestParams(PATH);
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
+                        //swipeRefreshLayout.setRefreshing(false);
                         System.out.println("订单列表" + result);
 
                         Order order = GsonUtil.gsonIntance().gsonToBean(result, Order.class);
                         msgBeanList = order.getMsg();
 
                         orderAdapter = new OrderAdapter(getActivity(), msgBeanList);
-                        myListView.setAdapter(orderAdapter);
+                        lv_order.setAdapter(orderAdapter);
+
+//                        homeAdapter = new HomeAdapter(getActivity(), msgBeanList);
+//                        recyclerView.setAdapter(homeAdapter);
+
+//                        homeAdapter.setOnItemClickListener(new OnItemClickListener() {
+//                            @Override
+//                            public void onItemClick(View view, int position) {
+//                                Intent intent = new Intent(getActivity(), OrderDetaileActivity.class);
+//                                intent.putExtra("orderid", msgBeanList.get(position).getId());
+//                                intent.putExtra("status", msgBeanList.get(position).getStatus());
+//                                startActivity(intent);
+//                            }
+//                        });
 
                         //订单详情
-                        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        lv_order.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 //
@@ -597,6 +625,332 @@ public class FMOrderTest extends BaseFragment implements PullToRefreshView.OnFoo
     public void onClick(View view) {
 
     }
+
+    @Override
+    public void onRefresh() {
+        gson = new Gson();
+        Type listType = new TypeToken<List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean>>() {
+        }.getType();
+
+        final List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean> catefoodslist =
+                gson.fromJson(userInfo.getPostData(), listType);
+
+        //XXX初始化view的各控件
+        //isPrepared = true;
+
+        Bundle bundle = getArguments();
+        //从activity传过来的Bundle
+        if (bundle != null) {
+            login = bundle.getString("login");
+            System.out.println("主页传值：" + login);
+            if (!(login.equals(""))) {
+                Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+                phone = register.getMsg().getPhone();
+
+                getOrder("phone", phone);
+
+            }
+        }
+
+        if (!(userInfo.getUserInfo().equals(""))) {
+            Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
+            uid = register.getMsg().getUid();
+            if (!(userInfo.getPwd().equals(""))) {
+                pwd = userInfo.getPwd();
+
+                if (userInfo.getCode().equals("0")) {
+                    System.out.println("我的验证码" + userInfo.getCode());
+                    getOrder(uid, pwd);
+                } else {
+                    System.out.println("我的手机号" + phone);
+                    getOrder("phone", phone);
+                }
+
+            }
+        } else {
+            //toast("未登录");
+            //Toast.makeText(getActivity(), "未登录", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+//    class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
+//
+//        private OnItemClickListener mOnItemClickListener;
+//        private OnItemLongClickListener mOnItemLongClickListener;
+//
+//        public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+//            this.mOnItemClickListener = mOnItemClickListener;
+//        }
+//
+//        public void setOnItemLongClickListener(OnItemLongClickListener mOnItemLongClickListener) {
+//            this.mOnItemLongClickListener = mOnItemLongClickListener;
+//        }
+//
+//        private Context mContext;
+//        private List<Order.MsgBean> msgBeen;
+//
+//        public HomeAdapter(Context mContext, List<Order.MsgBean> msgBeen){
+//            this.mContext = mContext;
+//            this.msgBeen = msgBeen;
+//        }
+//
+//        @Override
+//        public HomeAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//
+//           HomeAdapter.MyViewHolder vh = new HomeAdapter.MyViewHolder(LayoutInflater.from(
+//                    mContext).inflate(R.layout.item_order, parent,
+//                    false));
+//            return vh;
+//        }
+//
+//        @Override
+//        public void onBindViewHolder(final HomeAdapter.MyViewHolder vh, final int position) {
+//            if (mOnItemClickListener != null) {
+//                //为ItemView设置监听器
+//                vh.itemView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        int position = vh.getLayoutPosition(); // 1
+//                        mOnItemClickListener.onItemClick(vh.itemView, position); // 2
+//                    }
+//                });
+//            }
+//            if (mOnItemLongClickListener != null) {
+//                vh.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//                    @Override
+//                    public boolean onLongClick(View v) {
+//                        int position = vh.getLayoutPosition();
+//                        mOnItemLongClickListener.onItemLongClick(vh.itemView, position);
+//                        //返回true 表示消耗了事件 事件不会继续传递
+//                        return true;
+//                    }
+//                });
+//            }
+//
+//            // 组件赋值
+//            String imgPath = msgBeen.get(position).getShoplogo();
+//            String shopname = msgBeen.get(position).getShopname();
+//            String state = msgBeen.get(position).getSeestatus();
+//            String price = msgBeen.get(position).getAllcost();
+//            String time = msgBeen.get(position).getAddtime();
+//
+//            //订单状态
+//            String status = msgBeen.get(position).getStatus();
+//
+//            final String orderid = msgBeen.get(position).getId();
+//
+//
+//            if (imgPath.equals("")) {
+//                vh.img.setImageResource(R.mipmap.yibeitong001);
+//
+//            } else {
+//                BitmapUtils bitmapUtils = new BitmapUtils(mContext);
+//
+//                bitmapUtils.configDiskCacheEnabled(true);
+//                bitmapUtils.configMemoryCacheEnabled(false);
+//
+//                bitmapUtils.display(vh.img, imgPath);
+//
+//            }
+//
+//            vh.shopname.setText(shopname);
+//            vh.state.setText(state);
+//            vh.price.setText("￥" + price);
+//            vh.time.setText(time);
+//
+//            /*订单状态*/
+//            if (status.toString().equals("0")) {
+//                //新订单
+//                vh.again.setVisibility(View.VISIBLE);
+//                vh.del.setVisibility(View.INVISIBLE);
+//                vh.c_receipt.setVisibility(View.INVISIBLE);
+//                vh.comment.setVisibility(View.INVISIBLE);
+//
+//
+//            } else if (status.toString().equals("1")) {
+//                //待发货
+//                vh.del.setVisibility(View.INVISIBLE);
+//                vh.again.setVisibility(View.VISIBLE);
+//
+//                vh.c_receipt.setVisibility(View.INVISIBLE);
+//                vh.comment.setVisibility(View.INVISIBLE);
+//            } else if (status.toString().equals("2")) {
+//                //待确认
+//                vh.del.setVisibility(View.INVISIBLE);
+//                vh.c_receipt.setVisibility(View.VISIBLE);
+//                vh.again.setVisibility(View.VISIBLE);
+//                vh.comment.setVisibility(View.INVISIBLE);
+//
+//            } else if (status.toString().equals("3")) {
+//                //已完成
+//                vh.del.setVisibility(View.INVISIBLE);
+//                vh.comment.setVisibility(View.VISIBLE);
+//                vh.again.setVisibility(View.VISIBLE);
+//
+//            } else if (status.toString().equals("4")) {
+//                //订单取消
+//                vh.del.setVisibility(View.VISIBLE);
+//
+//            } else if (status.toString().equals("5")) {
+//                //订单取消
+//                vh.del.setVisibility(View.VISIBLE);
+//            }
+//
+//            //删除订单
+//            vh.del.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    String PATH;
+//                    if (userInfo.getCode().equals("0")) {
+//                        PATH = "http://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&action=newordercontrol&doname=delorder&uid="
+//                                + uid + "+&pwd" + pwd + "&orderid=" + orderid;
+//                    } else {
+//
+//                        PATH = "http://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&action=newordercontrol&doname=delorder&" +
+//                                "logintype=phone" + "+&longinphone=" + phone + "&orderid=" + orderid;
+//                    }
+//
+//                    System.out.println(PATH);
+//
+//                    RequestParams params = new RequestParams(PATH);
+//                    x.http().post(params,
+//                            new Callback.CommonCallback<String>() {
+//                                @Override
+//                                public void onSuccess(String result) {
+//                                    System.out.println("删除订单" + result);
+//
+//                                    OrderDel orderDel = GsonUtil.gsonIntance().gsonToBean(result, OrderDel.class);
+//                                    if (orderDel.isError() == false) {
+//                                        Toast.makeText(mContext, "删除成功", Toast.LENGTH_SHORT).show();
+//                                        msgBeen.remove(position);
+//                                        orderAdapter.notifyDataSetChanged();
+//                                    } else {
+//                                        Toast.makeText(mContext, orderDel.getMsg().toString(), Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onError(Throwable ex, boolean isOnCallback) {
+//
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(CancelledException cex) {
+//
+//                                }
+//
+//                                @Override
+//                                public void onFinished() {
+//
+//                                }
+//                            });
+//
+//                }
+//            });
+//
+//            /*确认收货*/
+//            vh.c_receipt.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    String PATH;
+//                    if (userInfo.getCode().toString().equals("0")) {
+//                        PATH = HttpPath.PATH + HttpPath.ORDER_NEW_CONTROL +
+//                                "uid=" + uid + "&pwd=" + pwd + "&doname=sureorder" + "&orderid=" + orderid;
+//                    } else {
+//                        PATH = HttpPath.PATH + HttpPath.ORDER_NEW_CONTROL +
+//                                "logintype=phone" + "&loginphone=" + phone + "&doname=sureorder" + "&orderid=" + orderid;
+//                    }
+//
+//                    RequestParams params = new RequestParams(PATH);
+//                    x.http().post(params,
+//                            new Callback.CommonCallback<String>() {
+//                                @Override
+//                                public void onSuccess(String result) {
+//                                    System.out.println("确认收货" + result);
+//                                    Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
+//
+//                                    if (error.isError() == false) {
+//                                        vh.comment.setVisibility(View.VISIBLE);
+//                                        vh.c_receipt.setVisibility(View.INVISIBLE);
+//
+//                                    } else {
+//
+//                                    }
+//                                    Toast.makeText(mContext, error.getMsg().toString(), Toast.LENGTH_SHORT).show();
+//
+//                                }
+//
+//                                @Override
+//                                public void onError(Throwable ex, boolean isOnCallback) {
+//
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(CancelledException cex) {
+//
+//                                }
+//
+//                                @Override
+//                                public void onFinished() {
+//
+//                                }
+//                            });
+//
+//                }
+//            });
+//
+//            /*再来一单*/
+//            vh.again.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //跳到商店
+//                }
+//            });
+//
+//            /*评价订单*/
+//            vh.comment.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //
+//                    Intent intent = new Intent(mContext, OrderCommentActivity.class);
+//                    intent.putExtra("orderid", orderid);
+//                    startActivity(intent);
+//
+//                }
+//            });
+//
+//        }
+//
+//        @Override
+//        public int getItemCount() {
+//            return msgBeen.size();
+//        }
+//
+//        class MyViewHolder extends BaseRecyclerViewHolder {
+//
+//            private TextView shopname, price, state, time;
+//            private ImageView img;
+//            private Button del, comment, again, c_receipt;
+//
+//
+//            public MyViewHolder(View convertView) {
+//                super(view);
+////                img = (ImageView) view.findViewById(R.id.iv_item_tese_img);
+//
+//                img = (ImageView) convertView.findViewById(R.id.iv_item_order_img);
+//                shopname = (TextView) convertView.findViewById(R.id.tv_item_order_shopname);
+//                state = (TextView) convertView.findViewById(R.id.tv_item_order_state);
+//                price = (TextView) convertView.findViewById(R.id.tv_item_order_price);
+//                time = (TextView) convertView.findViewById(R.id.tv_item_order_time);
+//
+//                /*删除订单 确认收货 评价订单 再来一单*/
+//                del = (Button) convertView.findViewById(R.id.but_item_order_del);
+//                c_receipt = (Button) convertView.findViewById(R.id.but_item_order_c_receipt);
+//                comment = (Button) convertView.findViewById(R.id.but_item_order_comment);
+//                again = (Button) convertView.findViewById(R.id.but_item_order_again);
+//            }
+//        }
+//    }
 
     /**
      * 将适配器嵌套在Activity中 更好的操作Activity中的控件变化

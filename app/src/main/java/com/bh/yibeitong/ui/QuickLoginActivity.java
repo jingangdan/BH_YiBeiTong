@@ -182,7 +182,7 @@ public class QuickLoginActivity extends BaseTextActivity {
                             Toast.makeText(QuickLoginActivity.this, register.getMsg().toString(), Toast.LENGTH_SHORT).show();
                         } else if (register.isError() == false) {
                             //登录成功 跳转主界面
-                            userInfo.saveCoder(code);
+                            userInfo.saveCoder("1");//保存数字1
                             userInfo.saveLogin("1");//登录成功 保存数字1
 
                             Intent intent = new Intent(QuickLoginActivity.this, MainActivity.class);

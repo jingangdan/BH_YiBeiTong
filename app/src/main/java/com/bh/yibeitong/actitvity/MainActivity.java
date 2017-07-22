@@ -4,16 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
@@ -38,6 +36,7 @@ import com.bh.yibeitong.bean.GoodsIndex;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.bean.VerCode;
 import com.bh.yibeitong.fragment.FMHomePage;
+import com.bh.yibeitong.fragment.FMHomePageTest;
 import com.bh.yibeitong.fragment.FMOrderTest;
 import com.bh.yibeitong.fragment.FMPerCen;
 import com.bh.yibeitong.fragment.FMShopCar;
@@ -49,20 +48,11 @@ import com.bh.yibeitong.utils.UpdataUtils;
 import com.bh.yibeitong.view.UserInfo;
 import com.google.gson.Gson;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,6 +77,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     //用于展示的Fragment  首页 我的订单 购物车 个人中心
     public FMHomePage fmHomePage;
+    //public FMHomePageTest fmHomePageTest;
+
     //public FMOrders fmOrders;
     public FMOrderTest fmOrderTest;
     public FMShopCar fmShopping;
@@ -110,13 +102,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean> postdateList = new ArrayList<>();
 
+
+    /*String 数组，保存需要检查的权限*/
+    private static final String[] PERMISSIONS_CONTACT = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE};
+
+    /*定义一个请求码*/
+    private static final int REQUEST_CONTACTS = 1000;
+
+    private View view;
+
+    /*是否加载数据成功*/
+    private boolean isLoading = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        view = LayoutInflater.from(this).inflate(R.layout.activity_main, null);
 
-        setContentView(R.layout.activity_main);
+        setContentView(view);
 
         x.Ext.init(getApplication());
         x.Ext.setDebug(BuildConfig.DEBUG);
@@ -125,31 +131,170 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
         initData();
-        m_appNameStr = "ybt.apk";
+        //m_appNameStr = "ybt.apk";
 
-        isNetworkUtil();//判断网络连接状况
-
-        getIntent = getIntent();
-        login = getIntent.getStringExtra("login");
-
-        if (login != null) {
-            Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
-            userInfo.saveUserInfo(login);
-
-        }
-
-        //fm = getFragmentManager();
-        fm = getSupportFragmentManager();
-        setTabSelection(0);
+        init();
 
     }
+
+    private void requestSetPermissions(View view) {
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
+            Snackbar.make(view, "permission_contacts_rationale",
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction("ok", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            System.out.println("okokokokok");
+                            ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS_CONTACT, REQUEST_CONTACTS);
+
+
+                        }
+                    }).setAction("no", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    System.out.println("nonononono");
+                }
+            })
+                    .show();
+        } else {
+            ActivityCompat.requestPermissions(this, PERMISSIONS_CONTACT, REQUEST_CONTACTS);
+        }
+    }
+
+
+    /*com.huawei.lcagent.util.FileUtils  MethodName:runCommand*/
+    public void init() {
+        if (Build.VERSION.SDK_INT > 22) {
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                System.out.println("没有");
+                requestSetPermissions(view);
+            } else {
+                //mLocClient.start();
+                System.out.println("有");
+
+                isNetworkUtil();//判断网络连接状况
+
+                getIntent = getIntent();
+                login = getIntent.getStringExtra("login");
+
+                if (login != null) {
+                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+                    userInfo.saveUserInfo(login);
+
+                }
+
+                //fm = getFragmentManager();
+                fm = getSupportFragmentManager();
+                setTabSelection(0);
+            }
+
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                if (!Settings.System.canWrite(this)) {
+//                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,
+//                            Uri.parse("package:" + getPackageName()));
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(intent);
+//                } else {
+//                    //有了权限，你要做什么呢？具体的动作
+//                    System.out.println("已经有了ACTION_MANAGE_WRITE_SETTINGS");
+//                }
+//            }
+
+
+//            if (hasExternalStoragePermission(MainActivity.this)) {
+//                //开启
+//
+//                System.out.println("开了");
+//                isNetworkUtil();//判断网络连接状况
+//
+//                getIntent = getIntent();
+//                login = getIntent.getStringExtra("login");
+//
+//                if (login != null) {
+//                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+//                    userInfo.saveUserInfo(login);
+//
+//                }
+//
+//                //fm = getFragmentManager();
+//                fm = getSupportFragmentManager();
+//                setTabSelection(0);
+//
+//            } else {
+//                //未开启
+//                System.out.println("没开");
+//                if (ContextCompat.checkSelfPermission(MainActivity.this,
+//                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//
+//                    ActivityCompat.requestPermissions(
+//                            MainActivity.this, new String[]{
+//                                    Manifest.permission.ACCESS_COARSE_LOCATION
+//                            }, 8
+//                    );
+//
+//                }
+//
+//            }
+        } else {
+            //6.0版本以下
+
+            isNetworkUtil();//判断网络连接状况
+
+            getIntent = getIntent();
+            login = getIntent.getStringExtra("login");
+
+            if (login != null) {
+                Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+                userInfo.saveUserInfo(login);
+
+            }
+
+            //fm = getFragmentManager();
+            fm = getSupportFragmentManager();
+            setTabSelection(0);
+        }
+    }
+
+    /*三星可以*/
+    private static final String EXTERNAL_STORAGE_PERMISSION = "android.permission.ACCESS_COARSE_LOCATION";
+
+    private static boolean hasExternalStoragePermission(Context context) {
+        int perm = context.checkCallingOrSelfPermission(EXTERNAL_STORAGE_PERMISSION);
+        return perm == PackageManager.PERMISSION_GRANTED;
+    }
+
+
+    @Override
+    public int checkSelfPermission(String permission) {
+        //
+        return super.checkSelfPermission(permission);
+    }
+
+    private static boolean checkPermission(Context context, String permName, String pkgName) {
+        PackageManager pm = context.getPackageManager();
+
+
+        if (PackageManager.PERMISSION_GRANTED == pm.checkPermission(permName, pkgName)) {
+            System.out.println(pkgName + "has permission : " + permName);
+            return true;
+        } else {
+            //PackageManager.PERMISSION_DENIED == pm.checkPermission(permName, pkgName)
+            System.out.println(pkgName + "not has permission : " + permName);
+            return false;
+        }
+    }
+
 
     /**
      * 组件 初始化
      */
     private void initData() {
-        m_progressDlg = new ProgressDialog(this);
-        m_mainHandler = new Handler();
+//        m_progressDlg = new ProgressDialog(this);
+//        m_mainHandler = new Handler();
 
         //脚部
         lin_home_page = (LinearLayout) findViewById(R.id.lin_home_page);
@@ -185,7 +330,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         isGrantExternalRW(this);
 
-        getLoadVersion(verName);
+        getLoadVersion(verName, verCode);
 
     }
 
@@ -261,6 +406,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     // 如果HomePageFragment不为空，则直接将它显示出来
                     ft.show(fmHomePage);
                 }
+
+//                if (fmHomePageTest == null) {
+//                    // 如果HomePageFragment为空，则创建一个并添加到界面上
+//                    fmHomePageTest = new FMHomePageTest();
+//                    fmHomePageTest.setArguments(bundle);
+//                    ft.add(R.id.content, fmHomePageTest);
+//                } else {
+//                    // 如果HomePageFragment不为空，则直接将它显示出来
+//                    ft.show(fmHomePageTest);
+//                }
+
 
                 break;
             case 1:
@@ -344,6 +500,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (fmHomePage != null) {
             transaction.hide(fmHomePage);
         }
+
+//        if (fmHomePageTest != null) {
+//            transaction.hide(fmHomePageTest);
+//        }
+
        /* if (fmOrders != null) {
             transaction.hide(fmOrders);
         }*/
@@ -438,13 +599,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 });
     }
 
-    private LocationService locationService;
+    public static LocationService locationService;
 
     /**
      * 开启定位
      */
     public void getLocation() {
         super.onStart();
+
+        System.out.println("location start");
         // -----------location config ------------
         //locationService = ((LocationApplication) getApplication()).locationService;
 
@@ -452,6 +615,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //获取locationservice实例，建议应用中只初始化1个location实例，然后使用，可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
         locationService.registerListener(mListener);
         locationService.start();
+
+        System.out.println("location2 start");
 
     }
 
@@ -463,6 +628,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         public void onReceiveLocation(BDLocation location) {
+
+            System.out.println("location stop");
+
             locationService.stop();//出现结果即停止定位
 
             if (null != location && location.getLocType() != BDLocation.TypeServerError) {
@@ -553,6 +721,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     sb.append("无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机");
                 }
 
+                System.out.println("描述" + sb.toString());
+
                 logMsg(sb.toString());
 
             }
@@ -570,6 +740,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 //有网络连接 判断网络的连接类型是否符合标准
                 //可以根据规定进行数据的刷新
 
+                System.out.println("判断网络情况");
                 //toast(NetworkUtils.getCurrentNetType(this));
 
                 getLocation();//获取经纬度
@@ -591,7 +762,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      *
      * @param v 当前版本号
      */
-    public void getLoadVersion(final String v) {
+    public void getLoadVersion(final String v, final int verCoder) {
         String PATH = HttpPath.path + HttpPath.ANDROID_CHECKV + "" +
                 "v=" + v;
 
@@ -614,30 +785,34 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     //doNewVersionUpdate(verCode.getMsg().getUrl(), verCode.getMsg().getMsg());
 
 
-                    final Dialog dialog = new AlertDialog.Builder(MainActivity.this).create();
-                    final File file = new File(SDCardUtils.getRootDirectory() + "/ybt_updateVersion/ybt.apk");
-                    dialog.setCancelable(true);// 可以用“返回键”取消
-                    dialog.setCanceledOnTouchOutside(false);//
-                    dialog.show();
-                    View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.version_update_dialog, null);
-                    dialog.setContentView(view);
-
-                    final Button btnOk = (Button) view.findViewById(R.id.btn_update_id_ok);
-                    Button btnCancel = (Button) view.findViewById(R.id.btn_update_id_cancel);
-                    TextView tvContent = (TextView) view.findViewById(R.id.tv_update_content);
-                    TextView tvUpdateTile = (TextView) view.findViewById(R.id.tv_update_title);
-                    final TextView tvUpdateMsgSize = (TextView) view.findViewById(R.id.tv_update_msg_size);
-
-                    //tvContent.setText(versionInfo.getVersionDesc());
-                    tvContent.setText("");//更新内容
-                    tvUpdateTile.setText("当前版本：" + v);
-                    tvUpdateMsgSize.setText("新版本："+verCode.getMsg().getVersion());
-
-                    if (file.exists() && file.getName().equals("ybt.apk")) {
-                        //tvUpdateMsgSize.setText("新版本已经下载，是否安装？");
+                    if ((verCoder + 100) >= Integer.parseInt(verCode.getMsg().getVersion())) {
+                        //toast(verCode.getMsg().getMsg().toString());
+                        System.out.println("最新" + verCode.getMsg());
                     } else {
-                        //tvUpdateMsgSize.setText("新版本大小：" + versionInfo.getVersionSize());
-                    }
+                        final Dialog dialog = new AlertDialog.Builder(MainActivity.this).create();
+                        final File file = new File(SDCardUtils.getRootDirectory() + "/ybt_updateVersion/ybt.apk");
+                        dialog.setCancelable(true);// 可以用“返回键”取消
+                        dialog.setCanceledOnTouchOutside(false);//
+                        dialog.show();
+                        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.version_update_dialog, null);
+                        dialog.setContentView(view);
+
+                        final Button btnOk = (Button) view.findViewById(R.id.btn_update_id_ok);
+                        Button btnCancel = (Button) view.findViewById(R.id.btn_update_id_cancel);
+                        TextView tvContent = (TextView) view.findViewById(R.id.tv_update_content);
+                        TextView tvUpdateTile = (TextView) view.findViewById(R.id.tv_update_title);
+                        final TextView tvUpdateMsgSize = (TextView) view.findViewById(R.id.tv_update_msg_size);
+
+                        //tvContent.setText(versionInfo.getVersionDesc());
+                        tvContent.setText("");//更新内容
+                        tvUpdateTile.setText("当前版本：" + v);
+                        tvUpdateMsgSize.setText("新版本：" + verCode.getMsg().getVersion());
+
+                        if (file.exists() && file.getName().equals("ybt.apk")) {
+                            //tvUpdateMsgSize.setText("新版本已经下载，是否安装？");
+                        } else {
+                            //tvUpdateMsgSize.setText("新版本大小：" + versionInfo.getVersionSize());
+                        }
 
                     btnOk.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -702,7 +877,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //                                }
 //                            }, v);
 
-
+                    }
                 }
             }
 
@@ -724,133 +899,134 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
-    /**
-     * 提示更新新版本
-     */
-    private void doNewVersionUpdate(final String str_url, String str_msg) {
+//    /**
+//     * 提示更新新版本
+//     */
+//    private void doNewVersionUpdate(final String str_url, String str_msg) {
+//
+//        Dialog dialog = new AlertDialog.
+//                Builder(this).
+//                setTitle("软件更新").
+//                setMessage(str_msg)
+//                // 设置内容
+//                .setPositiveButton("更新",
+//                        // 设置确定按钮
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog,
+//                                                int which) {
+//                                downFile("http://www.ybt9.com/app/ybt.apk");
+//                            }
+//                        })
+//                .setNegativeButton("暂不更新",
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog,
+//                                                int whichButton) {
+//                                // 点击"取消"按钮之后退出程序
+//                                dialog.dismiss();
+//                            }
+//                        }).create();// 创建
+//        // 显示对话框
+//        dialog.show();
+//    }
 
-        Dialog dialog = new AlertDialog.
-                Builder(this).
-                setTitle("软件更新").
-                setMessage(str_msg)
-                // 设置内容
-                .setPositiveButton("更新",
-                        // 设置确定按钮
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                downFile("http://www.ybt9.com/app/ybt.apk");
-                            }
-                        })
-                .setNegativeButton("暂不更新",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                // 点击"取消"按钮之后退出程序
-                                dialog.dismiss();
-                            }
-                        }).create();// 创建
-        // 显示对话框
-        dialog.show();
-    }
-
-    /**
-     * 提示当前为最新版本
-     */
-    private void notNewVersionDlgShow(String str_url, String str_msg) {
-
-        Dialog dialog = new AlertDialog.Builder(this).setTitle("软件更新")
-                .setMessage(str_msg)// 设置内容
-                .setPositiveButton("确定",// 设置确定按钮
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                dialog.dismiss();
-                                //finish();
-                            }
-                        }).create();// 创建
-        // 显示对话框
-        dialog.show();
-    }
+//    /**
+//     * 提示当前为最新版本
+//     */
+//    private void notNewVersionDlgShow(String str_url, String str_msg) {
+//
+//        Dialog dialog = new AlertDialog.Builder(this).setTitle("软件更新")
+//                .setMessage(str_msg)// 设置内容
+//                .setPositiveButton("确定",// 设置确定按钮
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog,
+//                                                int which) {
+//                                dialog.dismiss();
+//                                //finish();
+//                            }
+//                        }).create();// 创建
+//        // 显示对话框
+//        dialog.show();
+//    }
 
     /*显示版本情况*/
-    ProgressDialog m_progressDlg;
-    Handler m_mainHandler;
+//    ProgressDialog m_progressDlg;
+//    Handler m_mainHandler;
+//
+//
+//    String m_appNameStr; //下载到本地要给这个APP命的名字
+//
+//    private void downFile(final String url) {
+//        m_progressDlg.setMessage("正在下载，请稍候。。。");
+//        m_progressDlg.show();
+//        new Thread() {
+//            public void run() {
+//                HttpClient client = new DefaultHttpClient();
+//                HttpGet get = new HttpGet(url);
+//                HttpResponse response;
+//                try {
+//                    response = client.execute(get);
+//                    HttpEntity entity = response.getEntity();
+//                    long length = entity.getContentLength();
+//
+//                    m_progressDlg.setMax((int) length);//设置进度条的最大值
+//
+//                    InputStream is = entity.getContent();
+//                    FileOutputStream fileOutputStream = null;
+//                    if (is != null) {
+//                        File file = new File(
+//                                Environment.getExternalStorageDirectory(),
+//                                m_appNameStr);
+//                        fileOutputStream = new FileOutputStream(file);
+//                        byte[] buf = new byte[1024];
+//                        int ch = -1;
+//                        int count = 0;
+//                        while ((ch = is.read(buf)) != -1) {
+//                            fileOutputStream.write(buf, 0, ch);
+//                            count += ch;
+//                            if (length > 0) {
+//                                m_progressDlg.setProgress(count);
+//                            }
+//                        }
+//                    }
+//                    fileOutputStream.flush();
+//                    if (fileOutputStream != null) {
+//                        fileOutputStream.close();
+//                    }
+//                    down();  //告诉HANDER已经下载完成了，可以安装了
+//                } catch (ClientProtocolException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }.start();
+//    }
 
-
-    String m_appNameStr; //下载到本地要给这个APP命的名字
-
-    private void downFile(final String url) {
-        m_progressDlg.setMessage("正在下载，请稍候。。。");
-        m_progressDlg.show();
-        new Thread() {
-            public void run() {
-                HttpClient client = new DefaultHttpClient();
-                HttpGet get = new HttpGet(url);
-                HttpResponse response;
-                try {
-                    response = client.execute(get);
-                    HttpEntity entity = response.getEntity();
-                    long length = entity.getContentLength();
-
-                    m_progressDlg.setMax((int) length);//设置进度条的最大值
-
-                    InputStream is = entity.getContent();
-                    FileOutputStream fileOutputStream = null;
-                    if (is != null) {
-                        File file = new File(
-                                Environment.getExternalStorageDirectory(),
-                                m_appNameStr);
-                        fileOutputStream = new FileOutputStream(file);
-                        byte[] buf = new byte[1024];
-                        int ch = -1;
-                        int count = 0;
-                        while ((ch = is.read(buf)) != -1) {
-                            fileOutputStream.write(buf, 0, ch);
-                            count += ch;
-                            if (length > 0) {
-                                m_progressDlg.setProgress(count);
-                            }
-                        }
-                    }
-                    fileOutputStream.flush();
-                    if (fileOutputStream != null) {
-                        fileOutputStream.close();
-                    }
-                    down();  //告诉HANDER已经下载完成了，可以安装了
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-    }
-
-    /**
-     * 告诉HANDER已经下载完成了，可以安装了
-     */
-    private void down() {
-        m_mainHandler.post(new Runnable() {
-            public void run() {
-                m_progressDlg.cancel();
-                update();
-            }
-        });
-    }
+//    /**
+//     * 告诉HANDER已经下载完成了，可以安装了
+//     */
+//    private void down() {
+//        m_mainHandler.post(new Runnable() {
+//            public void run() {
+//                m_progressDlg.cancel();
+//                update();
+//            }
+//        });
+//    }
 
     /**
      * 安装程序
      */
-    void update() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(new File(Environment
-                        .getExternalStorageDirectory(), m_appNameStr)),
-                "application/vnd.android.package-archive");
-        startActivity(intent);
-    }
+
+//    void update() {
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setDataAndType(Uri.fromFile(new File(Environment
+//                        .getExternalStorageDirectory(), m_appNameStr)),
+//                "application/vnd.android.package-archive");
+//        startActivity(intent);
+//    }
 
     /**
      * 解决安卓6.0以上版本不能读取外部存储权限的问题
@@ -871,5 +1047,95 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         return true;
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == REQUEST_CONTACTS) {
+            if (PackageManager.PERMISSION_GRANTED == grantResults[0]) {
+                //mLocClient.start();
+                //getLocation();
+                isNetworkUtil();//判断网络连接状况
+
+                getIntent = getIntent();
+                login = getIntent.getStringExtra("login");
+
+                if (login != null) {
+                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+                    userInfo.saveUserInfo(login);
+
+                }
+
+                //fm = getFragmentManager();
+                fm = getSupportFragmentManager();
+                setTabSelection(0);
+
+
+            } else {
+                isNetworkUtil();//判断网络连接状况
+
+                getIntent = getIntent();
+                login = getIntent.getStringExtra("login");
+
+                if (login != null) {
+                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+                    userInfo.saveUserInfo(login);
+
+                }
+
+                //fm = getFragmentManager();
+                fm = getSupportFragmentManager();
+                setTabSelection(0);
+                //Toast.makeText(getApplicationContext(), "授权不通过", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//
+//        if (requestCode == 8) {
+//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                //callPhone();
+//                isNetworkUtil();//判断网络连接状况
+//
+//                getIntent = getIntent();
+//                login = getIntent.getStringExtra("login");
+//
+//                if (login != null) {
+//                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+//                    userInfo.saveUserInfo(login);
+//
+//                }
+//
+//                //fm = getFragmentManager();
+//                fm = getSupportFragmentManager();
+//                setTabSelection(0);
+//                //Toast.makeText(GuideActivity.this, "开启定位权限", Toast.LENGTH_SHORT).show();
+//
+//            } else {
+//                isNetworkUtil();//判断网络连接状况
+//
+//                getIntent = getIntent();
+//                login = getIntent.getStringExtra("login");
+//
+//                if (login != null) {
+//                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+//                    userInfo.saveUserInfo(login);
+//
+//                }
+//
+//                //fm = getFragmentManager();
+//                fm = getSupportFragmentManager();
+//                setTabSelection(0);
+//                // Permission Denied
+//                //Toast.makeText(GuideActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+//            }
+//            return;
+//        }
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    }
 
 }

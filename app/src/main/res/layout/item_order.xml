@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="#fff"
     android:descendantFocusability="blocksDescendants"
+    android:gravity="center"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
 
@@ -40,31 +41,24 @@
     </RelativeLayout>
 
     <View
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="0.8dp"
         android:background="#EEEEEE"></View>
 
     <!---->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <LinearLayout
+
+        <ImageView
+            android:layout_margin="5dp"
+            android:id="@+id/iv_item_order_img"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="10dp">
-
-            <ImageView
-                android:id="@+id/iv_item_order_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_adai" />
-
-        </LinearLayout>
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -130,7 +124,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingRight="10dp">
 

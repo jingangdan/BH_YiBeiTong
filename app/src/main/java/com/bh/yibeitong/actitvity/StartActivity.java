@@ -1,8 +1,14 @@
 package com.bh.yibeitong.actitvity;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.WindowManager;
 
 import com.bh.yibeitong.R;
@@ -29,6 +35,11 @@ public class StartActivity extends BaseActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_start);
+        System.out.println(""+("手机型号: " + android.os.Build.MODEL + ",\nSDK版本:"
+                + Build.VERSION.SDK_INT + ",\n系统版本:"
+                + android.os.Build.VERSION.RELEASE));
+
+        //api = 23 对应Android 6.0
 
         userInfo = new UserInfo(getApplication());
 
@@ -51,6 +62,7 @@ public class StartActivity extends BaseActivity {
                     e.printStackTrace();
 
                 }
+
                 if (user.equals("1")) {
                     //首次进入
                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -60,6 +72,7 @@ public class StartActivity extends BaseActivity {
                     startActivity(new Intent(StartActivity.this, GuideActivity.class));
 
                 } else {
+
                     if(userInfo.getLogin().equals("2")){
                         //商家登录
                         startActivity(new Intent(StartActivity.this, SellerActivity.class));
@@ -67,12 +80,11 @@ public class StartActivity extends BaseActivity {
                         startActivity(new Intent(StartActivity.this, MainActivity.class));
                     }
 
-                    /*startActivity(new Intent(StartActivity.this, MainActivity.class));*/
                 }
 
                 finish();
             }
         }).start();
     }
-}
 
+}

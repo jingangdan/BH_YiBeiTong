@@ -41,6 +41,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.BitmapUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.BuildConfig;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -98,7 +100,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
     /*接收页面传值*/
     private Intent intent;
-    private String shopid, shopname, startTime, mapphone, address, lat, lng;
+    private String shopid = "", shopname, startTime, mapphone, address, lat, lng;
 
     /*店铺信息*/
     private LinearLayout lin_shop_manage;
@@ -150,10 +152,33 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
         jingang = userInfo.getLogin();
 
-        limitcost = Double.parseDouble(userInfo.getShopDet());
-
+        limitcost = Double.parseDouble(userInfo.getShopDet().trim());
 
         pd = ProgressDialog.show(this, "", "请稍候");
+        pd.setProgress(100);
+
+        /*pd显示5秒*/
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                long startTime = System.currentTimeMillis();
+                int progress = 0;
+
+                while (System.currentTimeMillis() - startTime < 5000) {
+                    try {
+                        progress += 10;
+                        pd.setProgress(progress);
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        pd.dismiss();
+                    }
+                }
+
+                pd.dismiss();
+            }
+        }).start();
+
         shopNewUtils = new ShopNewUtils();
         //一级分类
         lv_shop_goods = (ListView) findViewById(R.id.lv_shop_goods);
@@ -216,44 +241,57 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                     public void onSuccess(String result) {
 
                         System.out.println("店铺" + result);
-                        ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
 
-                        int size = shopCart.getMsg().getList().size();
-                        double d_cost = 0;
-                        int count = 0;
-                        if (size == 0) {
-                            return;
-                        }
-                        for (int i = 0; i < size; i++) {
-                            d_cost = Double.parseDouble(shopCart.getMsg().getList().get(i).getCost());
-                            count = shopCart.getMsg().getList().get(i).getCount();
+                        JSONObject response = null;
+                            try {
+                                response = new JSONObject(result);
+                                if(response.get("msg").toString().equals("[]")){
+                                    System.out.println("没有数据");
+                                }else{
+                                    ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
 
-                            totalPrice += d_cost * count;
+                                    int size = shopCart.getMsg().getList().size();
+                                    double d_cost = 0;
+                                    int count = 0;
+                                    if (size == 0) {
+                                        return;
+                                    }
+                                    for (int i = 0; i < size; i++) {
+                                        d_cost = Double.parseDouble(shopCart.getMsg().getList().get(i).getCost());
+                                        count = shopCart.getMsg().getList().get(i).getCount();
 
-                            count += count;
-                        }
+                                        totalPrice += d_cost * count;
 
-                        System.out.println("totalPrice = " + totalPrice);
+                                        count += count;
+                                    }
 
-                        //
+                                    System.out.println("totalPrice = " + totalPrice);
 
-                        if (limitcost == 0) {
-                            but_sg_pay.setText("去支付");
-                            but_sg_pay.setTextColor(Color.RED);
-                        } else if (totalPrice >= limitcost) {
-                            but_sg_pay.setText("去支付");
-                            but_sg_pay.setTextColor(Color.RED);
-                        } else if (totalPrice > 0 && totalPrice < limitcost) {
-                            double add = limitcost - totalPrice;
-                            but_sg_pay.setText("还差" + df.format(add) + "元");
-                            but_sg_pay.setTextColor(Color.GRAY);
-                        } else if (totalPrice == 0) {
-                            but_sg_pay.setText("购物车为空");
-                            but_sg_pay.setTextColor(Color.GRAY);
-                        } else {
-                            Toast.makeText(ShopNewActivity.this, "错误", Toast.LENGTH_SHORT).show();
-                        }
-                        tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+                                    //
+
+                                    if (limitcost == 0) {
+                                        but_sg_pay.setText("去支付");
+                                        but_sg_pay.setTextColor(Color.RED);
+                                    } else if (totalPrice >= limitcost) {
+                                        but_sg_pay.setText("去支付");
+                                        but_sg_pay.setTextColor(Color.RED);
+                                    } else if (totalPrice > 0 && totalPrice < limitcost) {
+                                        double add = limitcost - totalPrice;
+                                        but_sg_pay.setText("还差" + df.format(add) + "元");
+                                        but_sg_pay.setTextColor(Color.GRAY);
+                                    } else if (totalPrice == 0) {
+                                        but_sg_pay.setText("购物车为空");
+                                        but_sg_pay.setTextColor(Color.GRAY);
+                                    } else {
+                                        Toast.makeText(ShopNewActivity.this, "错误", Toast.LENGTH_SHORT).show();
+                                    }
+                                    tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                     }
 
                     @Override

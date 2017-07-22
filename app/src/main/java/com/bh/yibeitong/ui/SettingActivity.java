@@ -64,10 +64,12 @@ public class SettingActivity extends BaseTextActivity{
 
         switch (v.getId()){
             case R.id.but_log_off:
-
                 userInfo.saveUserInfo("");//清空本地保存的个人信息
-
                 userInfo.saveLogin("0");//退出登录保存数字0
+                //userInfo.saveCoder("");//保存 空
+                userInfo.savePwd("");//密码
+
+                userInfo.saveScore("");//积分
 
                 Intent intent = new Intent(SettingActivity.this, MainActivity.class);
                 intent.putExtra("islogin", false);

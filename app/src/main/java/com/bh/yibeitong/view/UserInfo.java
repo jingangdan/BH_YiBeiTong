@@ -183,7 +183,7 @@ public class UserInfo {
         return sp.edit().putString("classify", info).commit();
     }
 
-    /**/
+    /*首页轮播图*/
     public String getADV(){
         //取
         SharedPreferences sp = app.getSharedPreferences("advList", 0);
@@ -197,7 +197,7 @@ public class UserInfo {
         return sp.edit().putString("adv", info).commit();
     }
 
-    /**/
+    /*username+uid(用于信鸽注册)*/
     public String getSellerUserAccount(){
         //取
         SharedPreferences sp = app.getSharedPreferences("ualist", 0);
@@ -209,6 +209,20 @@ public class UserInfo {
         //存
         SharedPreferences sp = app.getSharedPreferences("ualist", 0);
         return sp.edit().putString("ua", info).commit();
+    }
+
+    /*登录时积分score*/
+    public String getScore(){
+        //取
+        SharedPreferences sp = app.getSharedPreferences("scorelist", 0);
+
+        return sp.getString("score", "");
+    }
+
+    public boolean saveScore(String info){
+        //存
+        SharedPreferences sp = app.getSharedPreferences("scorelist", 0);
+        return sp.edit().putString("score", info).commit();
     }
 
 }

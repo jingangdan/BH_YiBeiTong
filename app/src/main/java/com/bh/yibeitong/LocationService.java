@@ -25,7 +25,7 @@ public class LocationService {
         synchronized (objLock) {
             if(client == null){
                 client = new LocationClient(locationContext);
-                client.setLocOption(getDefaultLocationClientOption());
+                //client.setLocOption(getDefaultLocationClientOption());
             }
         }
     }

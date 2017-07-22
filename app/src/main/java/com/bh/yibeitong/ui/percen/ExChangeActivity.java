@@ -149,26 +149,26 @@ public class ExChangeActivity extends BaseTextActivity {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode==32) {
-            if(resultCode==33) {
-                String paytype=data.getStringExtra("jifen");
-                String giftscore = data.getStringExtra("giftscore");
-
-                //textView.setText(result);
-                if(paytype.equals("1")){
-                    //当前积分 - 礼品积分  //此处刷新页面
-                    i_jifen =  (int) Double.parseDouble(s_jifen) - (int) Double.parseDouble(giftscore);
-                    //System.out.println("111111111111111111111"+result);
-                    myJifen.setText(""+i_jifen);
-                }
-
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if(requestCode==32) {
+//            if(resultCode==33) {
+//                String paytype=data.getStringExtra("jifen");
+//                String giftscore = data.getStringExtra("giftscore");
+//
+//                //textView.setText(result);
+//                if(paytype.equals("1")){
+//                    //当前积分 - 礼品积分  //此处刷新页面
+//                    i_jifen =  (int) Double.parseDouble(s_jifen) - (int) Double.parseDouble(giftscore);
+//                    //System.out.println("111111111111111111111"+result);
+//                    myJifen.setText(""+i_jifen);
+//                }
+//
+//            }
+//        }
+//    }
 
     /*礼品列表适配器*/
     public class GiftAdapter extends BaseAdapter {

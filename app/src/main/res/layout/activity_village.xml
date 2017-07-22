@@ -58,6 +58,7 @@
         android:padding="10dp">
 
         <GridView
+            android:scrollbars="none"
             android:id="@+id/gv_village_guanzhu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

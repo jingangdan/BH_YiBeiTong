@@ -34,7 +34,6 @@ import java.util.List;
  * Created by jingang on 2016/11/23.
  * 管理收货地址 增删改查
  */
-
 public class ManageAddressActivity extends BaseTextActivity {
     private LinearLayout lin_add_address;
 

@@ -32,6 +32,8 @@ import com.bh.yibeitong.view.CustomDialog;
 import com.bh.yibeitong.view.UserInfo;
 import com.lidroid.xutils.BitmapUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.BuildConfig;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -104,7 +106,13 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
         shopid = userInfo.getShopInfo();
 
-        limitcost = Double.parseDouble(userInfo.getShopDet());
+        System.out.println("a ="+userInfo.getShopDet());
+        if(!userInfo.getShopDet().equals("")){
+            limitcost = Double.parseDouble(userInfo.getShopDet());
+        }else{
+
+        }
+
 
         /*Bundle bundle = getArguments();
         //从activity传过来的Bundle
@@ -184,42 +192,54 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
         } else {
             System.out.println("刷新FMShopCart");
 
+            userInfo = new UserInfo(getActivity().getApplication());
+
+            System.out.println("a ="+userInfo.getShopDet());
+
             //initData();
 
             //店铺id
             shopid = userInfo.getShopInfo();
 
             //店铺起送价格
-            limitcost = Double.parseDouble(userInfo.getShopDet());
 
-            /*Bundle bundle = getArguments();
-            //从activity传过来的Bundle
-            if (bundle != null) {
-                login = bundle.getString("login");
-                if (!(login == null)) {
-                    getShopCart(shopid);
-                } else {
-                    Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-                }
+            if(!"".equals(""+userInfo.getShopDet())){
+                limitcost = Double.parseDouble(userInfo.getShopDet());
+            }else{
 
-            }*/
+            }
 
-            /*jingang = userInfo.getLogin();
-            if (jingang.equals("")) {
-                //没有登录
-                //System.out.println("购物车 空" + jingang + "未登录");
-                //dialog();
-                //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-            } else if (jingang.equals("0")) {
-                //没有登录
-                //System.out.println("购物车" + jingang + "未登录");
-                //dialog();
-                //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-            } else if (jingang.equals("1")) {
-                //已登录
-                //System.out.println("购物车" + jingang + "已登录");
 
-            }*/
+//            //**Bundle bundle = getArguments();
+//            //从activity传过来的Bundle
+//            if (bundle != null) {
+//                login = bundle.getString("login");
+//                if (!(login == null)) {
+//                    getShopCart(shopid);
+//                } else {
+//                    Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }*/
+
+//            jingang = userInfo.getLogin();
+//            if (jingang.equals("")) {
+//                //没有登录
+//                //System.out.println("购物车 空" + jingang + "未登录");
+//                //dialog();
+//                //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
+//            } else if (jingang.equals("0")) {
+//                //没有登录
+//                //System.out.println("购物车" + jingang + "未登录");
+//                //dialog();
+//                //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
+//            } else if (jingang.equals("1")) {
+//                //已登录
+//                //System.out.println("购物车" + jingang + "已登录");
+//
+//            }
+
+
             getShopCart(shopid);
 
             puToRefreshView.setOnHeaderRefreshListener(this);
@@ -345,77 +365,91 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                         System.out.println("购物车 = " + result);
                         totalPrice = 0;
                         /**/
-                        System.out.println("222222222");
-                        ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
+                        //System.out.println("222222222");
 
-                        listBean = shopCart.getMsg().getList();
+                        try {
+                            JSONObject response = new JSONObject(result);
 
-                        System.out.println("11111111111111");
+                            if(response.get("msg").toString().equals("[]")){
+                                System.out.println("没有数据");
+                            }else{
+                                ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
 
-                        totalPrice = shopCart.getMsg().getSurecost();
+                                listBean = shopCart.getMsg().getList();
 
-                        sumCount = shopCart.getMsg().getSumcount();
-                        //显示购物车数量
-                        tv_shopcart_num.setText("" + sumCount);
+                                //System.out.println("11111111111111");
+
+                                totalPrice = shopCart.getMsg().getSurecost();
+
+                                sumCount = shopCart.getMsg().getSumcount();
+                                //显示购物车数量
+                                tv_shopcart_num.setText("" + sumCount);
 
                         /*判断快递情况*/
-                        if (shopCart.getMsg().isOnlynewtype() == true) {
-                            System.out.println("只有快递");
+                                if (shopCart.getMsg().isOnlynewtype() == true) {
+                                    System.out.println("只有快递");
 
 
-                            //判断总计小于1的情况
-                            if (totalPrice < 1) {
-                                tv_all_pay.setText("合计：￥" + "0" + df.format(totalPrice) + "元");
-                            } else {
-                                tv_all_pay.setText("合计：￥" + df.format(totalPrice) + "元");
-                            }
+                                    //判断总计小于1的情况
+                                    if (totalPrice < 1) {
+                                        tv_all_pay.setText("合计：￥" + "0" + df.format(totalPrice) + "元");
+                                    } else {
+                                        tv_all_pay.setText("合计：￥" + df.format(totalPrice) + "元");
+                                    }
 
-                            but_pay.setVisibility(View.VISIBLE);
-                            but_pay.setText("去支付");
-                            but_pay.setTextColor(Color.RED);
-
-                        } else {
-                            System.out.println("不是只有快递");
-
-                            if (shopCart.getMsg().getList().size() == 0) {
-                                tv_shopcart_num.setText("" + 0);
-                                tv_all_pay.setText("购物车为空");
-                                but_pay.setVisibility(View.INVISIBLE);
-
-                            } else if (shopCart.getMsg().getList().size() > 0) {
-
-                                but_pay.setVisibility(View.VISIBLE);
-                                //listBean = shopCart.getMsg().getList();
-
-                                //
-                                if (limitcost == 0) {
+                                    but_pay.setVisibility(View.VISIBLE);
                                     but_pay.setText("去支付");
                                     but_pay.setTextColor(Color.RED);
-                                } else if (totalPrice >= limitcost) {
-                                    but_pay.setText("去支付");
-                                    but_pay.setTextColor(Color.RED);
-                                } else if (totalPrice > 0 && totalPrice < limitcost) {
-                                    double add = limitcost - totalPrice;
-                                    but_pay.setText("还差" + df.format(add) + "元");
-                                    but_pay.setTextColor(Color.GRAY);
-                                } else if (totalPrice == 0) {
-                                    but_pay.setText("购物车为空");
-                                    but_pay.setTextColor(Color.GRAY);
+
                                 } else {
+                                    System.out.println("不是只有快递");
+
+                                    if (shopCart.getMsg().getList().size() == 0) {
+                                        tv_shopcart_num.setText("" + 0);
+                                        tv_all_pay.setText("购物车为空");
+                                        but_pay.setVisibility(View.INVISIBLE);
+
+                                    } else if (shopCart.getMsg().getList().size() > 0) {
+
+                                        but_pay.setVisibility(View.VISIBLE);
+                                        //listBean = shopCart.getMsg().getList();
+
+                                        //
+                                        if (limitcost == 0) {
+                                            but_pay.setText("去支付");
+                                            but_pay.setTextColor(Color.RED);
+                                        } else if (totalPrice >= limitcost) {
+                                            but_pay.setText("去支付");
+                                            but_pay.setTextColor(Color.RED);
+                                        } else if (totalPrice > 0 && totalPrice < limitcost) {
+                                            double add = limitcost - totalPrice;
+                                            but_pay.setText("还差" + df.format(add) + "元");
+                                            but_pay.setTextColor(Color.GRAY);
+                                        } else if (totalPrice == 0) {
+                                            but_pay.setText("购物车为空");
+                                            but_pay.setTextColor(Color.GRAY);
+                                        } else {
+
+                                        }
+                                        //判断总计小于1的情况
+                                        System.out.println("totalPrice=" + totalPrice);
+                                        if (totalPrice < 1) {
+                                            tv_all_pay.setText("合计：￥" + "0" + df.format(totalPrice) + "元");
+                                        } else {
+                                            tv_all_pay.setText("合计：￥" + df.format(totalPrice) + "元");
+                                        }
+                                    }
 
                                 }
-                                //判断总计小于1的情况
-                                System.out.println("totalPrice=" + totalPrice);
-                                if (totalPrice < 1) {
-                                    tv_all_pay.setText("合计：￥" + "0" + df.format(totalPrice) + "元");
-                                } else {
-                                    tv_all_pay.setText("合计：￥" + df.format(totalPrice) + "元");
-                                }
+                                shopCartAdapter = new ShopCartAdapter(getActivity(), listBean);
+                                myListView.setAdapter(shopCartAdapter);
                             }
-
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        shopCartAdapter = new ShopCartAdapter(getActivity(), listBean);
-                        myListView.setAdapter(shopCartAdapter);
+
+
+
 
                     }
 

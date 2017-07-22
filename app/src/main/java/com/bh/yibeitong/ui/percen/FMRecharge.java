@@ -109,7 +109,7 @@ public class FMRecharge extends Fragment implements View.OnClickListener {
                 getMemcard("phone", phone);
             }
         } else {
-            Toast.makeText(getActivity(), "未登录", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "未登录", Toast.LENGTH_SHORT).show();
             //toast("未登录");
         }
 

@@ -39,32 +39,35 @@ public class MyScrollView extends ScrollView {
             isScrolledToTop = clampedY;
             isScrolledToBottom = false;
             //System.out.println("onOverScrolled 顶部:" + isScrolledToTop);
-        } else {
+        } else if (scrollY > 0) {
             isScrolledToTop = false;
             isScrolledToBottom = clampedY;
-            //System.out.println("onOverScrolled 底部:" + isScrolledToBottom);
+        } else if (scrollY < 0) {
+            isScrolledToTop = false;
+            isScrolledToBottom = false;
         }
-        notifyScrollChangedListeners();
+        //notifyScrollChangedListeners();
     }
 
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
         // 这个log可以研究ScrollView的上下padding对结果的影响
-        //System.out.println("onScrollChanged getScrollY():" + getScrollY() + " t: " + t + " paddingTop: " + getPaddingTop());
+        //System.out.println("11111111onScrollChanged getScrollY():" + getScrollY() + " t: " + t + " paddingTop: " + getPaddingTop());
         if (getScrollY() == 0) {
             isScrolledToTop = true;
             isScrolledToBottom = false;
-            //System.out.println("onScrollChanged 顶部:" + isScrolledToTop);
+            //System.out.println("onScrollChanged 顶部:" + isScrolledToBottom);
 
         } else if (getScrollY() + getHeight() - getPaddingTop() - getPaddingBottom() == getChildAt(0).getHeight()) {
             isScrolledToBottom = true;
-            //System.out.println("onScrollChanged 底部:" + isScrolledToBottom);
             isScrolledToTop = false;
+            //System.out.println("onScrollChanged 底部:" + isScrolledToBottom);
         } else {
             isScrolledToTop = false;
             isScrolledToBottom = false;
         }
+
         notifyScrollChangedListeners();
     }
 
@@ -85,14 +88,15 @@ public class MyScrollView extends ScrollView {
     }
 
     public static void doSomeThing() {
-        mSmartScrollChangedListener.onScrolledToBottom(true);
+        mSmartScrollChangedListener.onScrolledToBottom(false);
     }
 
-    public boolean isScrolledToTop() {
-        return isScrolledToTop;
-    }
+//    public boolean isScrolledToTop() {
+//        return isScrolledToTop;
+//    }
+//
+//    public boolean isScrolledToBottom() {
+//        return isScrolledToBottom;
+//    }
 
-    public boolean isScrolledToBottom() {
-        return isScrolledToBottom;
-    }
 }

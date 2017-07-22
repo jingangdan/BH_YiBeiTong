@@ -11,6 +11,7 @@
         android:layout_height="wrap_content">
 
         <ListView
+            android:scrollbars="none"
             android:id="@+id/lv_sendwater"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></ListView>

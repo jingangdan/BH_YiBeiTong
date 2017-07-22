@@ -25,6 +25,7 @@ import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.ui.QuickLoginActivity;
+import com.bh.yibeitong.ui.loginregist.FindCodeActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.view.UserInfo;
 
@@ -217,7 +218,12 @@ public class FMLongin extends Fragment implements View.OnClickListener, View.OnL
 
             case R.id.tv_retrieve_pwd:
                 //找回密码
-                Toast.makeText(getActivity(), "找回密码系统暂未开发", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "找回密码系统暂未开发", Toast.LENGTH_SHORT).show();
+
+                intent = new Intent(getActivity(), FindCodeActivity.class);
+                intent.putExtra("title", "找回密码");
+                startActivity(intent);
+
                 break;
 
             default:
@@ -261,6 +267,10 @@ public class FMLongin extends Fragment implements View.OnClickListener, View.OnL
 
                     userInfo.savePwd(pwd);//保存密码 方便后续操作
                     userInfo.saveCoder("0");
+
+                    userInfo.saveScore(register.getMsg().getScore());//积分
+
+                    MainActivity.locationService.stop();//停止定位
 
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     intent.putExtra("login", result);

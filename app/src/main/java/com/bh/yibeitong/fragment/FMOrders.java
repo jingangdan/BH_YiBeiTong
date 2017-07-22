@@ -42,8 +42,7 @@ import java.util.List;
  * 我的订单页
  */
 
-public class FMOrders extends BaseFragment implements PullToRefreshView.OnHeaderRefreshListener,
-        PullToRefreshView.OnFooterRefreshListener {
+public class FMOrders extends BaseFragment {
     private View view;
 
     private TextView tv_header_title;
@@ -55,7 +54,7 @@ public class FMOrders extends BaseFragment implements PullToRefreshView.OnHeader
 
     public static String phone;
 
-    private PullToRefreshView pullToRefreshView;
+    //private PullToRefreshView pullToRefreshView;
     private MyListView myListView;
 
     /*本地存储*/
@@ -122,9 +121,9 @@ public class FMOrders extends BaseFragment implements PullToRefreshView.OnHeader
 
         //响应pullToRefreshView上拉下拉事件
 
-        pullToRefreshView.setOnHeaderRefreshListener(this);
-        pullToRefreshView.setOnFooterRefreshListener(this);
-        pullToRefreshView.setLastUpdated(new Date().toLocaleString());
+//        pullToRefreshView.setOnHeaderRefreshListener(this);
+//        pullToRefreshView.setOnFooterRefreshListener(this);
+//        pullToRefreshView.setLastUpdated(new Date().toLocaleString());
 
         return view;
     }
@@ -157,8 +156,8 @@ public class FMOrders extends BaseFragment implements PullToRefreshView.OnHeader
 
         iv_header_right.setOnClickListener(this);
 
-        pullToRefreshView = (PullToRefreshView) view.findViewById(R.id.puToRefreshView_order);
-        myListView = (MyListView) view.findViewById(R.id.myListView_order);
+       // pullToRefreshView = (PullToRefreshView) view.findViewById(R.id.puToRefreshView_order);
+        //myListView = (MyListView) view.findViewById(R.id.myListView_order);
 
     }
 
@@ -177,52 +176,52 @@ public class FMOrders extends BaseFragment implements PullToRefreshView.OnHeader
 
     }
 
-    @Override
-    public void onFooterRefresh(PullToRefreshView view) {
-        pullToRefreshView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullToRefreshView.onFooterRefreshComplete();
-                Toast.makeText(getActivity(), "加载更多数据", Toast.LENGTH_SHORT).show();
-            }
+//    @Override
+//    public void onFooterRefresh(PullToRefreshView view) {
+//        pullToRefreshView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                pullToRefreshView.onFooterRefreshComplete();
+//                Toast.makeText(getActivity(), "加载更多数据", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }, 3000);
+//    }
 
-        }, 3000);
-    }
-
-    @Override
-    public void onHeaderRefresh(PullToRefreshView view) {
-        pullToRefreshView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullToRefreshView.onHeaderRefreshComplete("更新于："
-                        + Calendar.getInstance().getTime().toLocaleString());
-                pullToRefreshView.onHeaderRefreshComplete();
-
-                /*判断用户登录状态*/
-                jingang = userInfo.getLogin();
-                if (jingang.equals("")) {
-                    System.out.println("订单页 空" + jingang + "未登录");
-
-                } else if (jingang.equals("0")) {
-                    System.out.println("订单页" + jingang + "未登录");
-
-                } else if (jingang.equals("1")) {
-                    System.out.println("订单页" + jingang + "已登录");
-                }
-
-                if(userInfo.getCode().equals("0")){
-                    getOrder(uid, pwd);
-                }else{
-                    getOrder("", pwd);
-                }
-
-
-                //更新
-                Toast.makeText(getActivity(), "刷新成功!", Toast.LENGTH_SHORT).show();
-            }
-
-        }, 3000);
-    }
+//    @Override
+//    public void onHeaderRefresh(PullToRefreshView view) {
+//        pullToRefreshView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                pullToRefreshView.onHeaderRefreshComplete("更新于："
+//                        + Calendar.getInstance().getTime().toLocaleString());
+//                pullToRefreshView.onHeaderRefreshComplete();
+//
+//                /*判断用户登录状态*/
+//                jingang = userInfo.getLogin();
+//                if (jingang.equals("")) {
+//                    System.out.println("订单页 空" + jingang + "未登录");
+//
+//                } else if (jingang.equals("0")) {
+//                    System.out.println("订单页" + jingang + "未登录");
+//
+//                } else if (jingang.equals("1")) {
+//                    System.out.println("订单页" + jingang + "已登录");
+//                }
+//
+//                if(userInfo.getCode().equals("0")){
+//                    getOrder(uid, pwd);
+//                }else{
+//                    getOrder("", pwd);
+//                }
+//
+//
+//                //更新
+//                Toast.makeText(getActivity(), "刷新成功!", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }, 3000);
+//    }
 
     /**
      * 获取订单
