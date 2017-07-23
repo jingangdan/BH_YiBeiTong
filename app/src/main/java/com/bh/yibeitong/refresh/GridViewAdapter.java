@@ -61,16 +61,22 @@ public class GridViewAdapter extends BaseAdapter {
         return position;
     }
 
-
     public void updateView(List<GoodsIndex.MsgBean.CatefoodslistBean> foodList) {
-        this.foodList = foodList;
+        //this.foodList = foodList;
+        this.foodList.addAll(foodList);
         this.notifyDataSetChanged();//强制动态刷新数据进而调用getView方法
+    }
+
+    /**
+     * 添加数据列表项
+     */
+    public void addNewsItem(GoodsIndex.MsgBean.CatefoodslistBean ceFood) {
+        foodList.add(ceFood);
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        System.out.println("--------------------");
         final ViewHolder vh;
         if (convertView == null) {
             vh = new ViewHolder();

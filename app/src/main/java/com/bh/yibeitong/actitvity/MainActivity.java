@@ -505,6 +505,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //            transaction.hide(fmHomePageTest);
 //        }
 
+
        /* if (fmOrders != null) {
             transaction.hide(fmOrders);
         }*/

@@ -45,10 +45,10 @@
                             android:layout_height="wrap_content"
                             android:background="#E1E1E1"
                             android:numColumns="2"
-                            android:padding="5dp"
-                            android:scrollbars="none">
+                            android:padding="5dp">
 
                         </com.bh.yibeitong.refresh.MyGridView>
+
                     </LinearLayout>
 
                     <!--<LinearLayout-->

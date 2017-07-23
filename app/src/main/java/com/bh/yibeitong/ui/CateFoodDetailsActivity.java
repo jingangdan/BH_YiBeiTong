@@ -125,6 +125,8 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
 
         instro = intent.getStringExtra("instro");//详细图片
 
+        System.out.println(""+instro);
+
         /*foodName = intent.getStringExtra("foodName");//商品名称
         foodSellCount = intent.getStringExtra("foodSellCount");//商品销量
 

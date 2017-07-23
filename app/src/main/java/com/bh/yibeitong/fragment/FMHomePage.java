@@ -866,6 +866,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                         lin_ruzhu.setClickable(true);
                         Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
                         if (error.isError() == true) {
+                            toast("" + error.getMsg().toString());
                         } else {
                             //but_sign.setText("已签到");
                             toast("签到成功");
@@ -903,7 +904,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                 //gridViewData.add(R.mipmap.ic_adai);
                 //gridViewAdapter.setData(gridViewData);
                 //getShopGoodss(str_latitude, str_longtitude, page);
-                getLoadingShopGood(latitude, longtitude, page);
+                //getLoadingShopGood(latitude, longtitude, page);
 
             }
 
@@ -1001,21 +1002,13 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                             toast("没有更多数据");
 
                         } else {
-                            ceFood = goodsIndex.getMsg().getCatefoodslist();
+                            //ceFood = goodsIndex.getMsg().getCatefoodslist();
                             //获取信息列表
-                            ceFoodList.addAll(ceFood);
+                            ceFoodList.addAll(goodsIndex.getMsg().getCatefoodslist());
 
                             gridViewAdapter.setCatefoodslistBeanList(getActivity(), ceFoodList);
 
                             myGridView.setAdapter(gridViewAdapter);
-
-//                            ceFood = goodsIndex.getMsg().getCatefoodslist();
-//                            ceFoodList.addAll(ceFood);
-//
-//                            recyclerViewAdapter = new RecyclerViewAdapter(getActivity(), ceFoodList);
-//
-//                            recyclerView.setAdapter(recyclerViewAdapter);
-
 
                         }
                     }
@@ -1038,7 +1031,6 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                     }
                 });
     }
-
 
     /**
      * 获取首页数据(加载用)
@@ -1067,15 +1059,13 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                             toast("没有更多数据");
 
                         } else {
-                            ceFood = goodsIndex.getMsg().getCatefoodslist();
+                            //ceFood = goodsIndex.getMsg().getCatefoodslist();
                             //获取信息列表
-                            ceFoodList.addAll(ceFood);
 
-//                            gridViewAdapter.setCatefoodslistBeanList(getActivity(), ceFoodList);
-//
-//                            myGridView.setAdapter(gridViewAdapter);
+                            ceFoodList.addAll(goodsIndex.getMsg().getCatefoodslist());
+                            gridViewAdapter.notifyDataSetChanged();
+                            //myGridView.setAdapter(gridViewAdapter);
 
-                            gridViewAdapter.updateView(ceFoodList);
 
                         }
                     }
@@ -1183,6 +1173,7 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
                     if (isLoading) {
                         et_new_address.setText("重新加载");
                         et_new_address.setTextColor(Color.RED);
+                        et_new_address.setBackgroundColor(Color.RED);
                     } else {
                         et_new_address.setTextColor(Color.WHITE);
                     }
@@ -2398,100 +2389,99 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
     }
 
     /**/
-    public class RecyclerViewAdapter extends BaseRecyclerViewAdapter<String> {
+    class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
+
+        private com.bh.yibeitong.Interface.OnItemClickListener mOnItemClickListener;
+        private OnItemLongClickListener mOnItemLongClickListener;
+
+        public void setOnItemClickListener(com.bh.yibeitong.Interface.OnItemClickListener mOnItemClickListener) {
+            this.mOnItemClickListener = mOnItemClickListener;
+        }
+
+        public void setOnItemLongClickListener(OnItemLongClickListener mOnItemLongClickListener) {
+            this.mOnItemLongClickListener = mOnItemLongClickListener;
+        }
+
         private Context mContext;
-        private List<GoodsIndex.MsgBean.CatefoodslistBean> foodList = new ArrayList<>();
+        private List<GoodsIndex.MsgBean.CatefoodslistBean> msgBeanList;
 
-        public RecyclerViewAdapter(Context mContext, List<GoodsIndex.MsgBean.CatefoodslistBean> foodList) {
-            super(mContext, foodList);
+        public RecyclerViewAdapter(Context mContext, List<GoodsIndex.MsgBean.CatefoodslistBean> msgBeanList) {
             this.mContext = mContext;
-            this.foodList = foodList;
+            this.msgBeanList = msgBeanList;
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreate(ViewGroup parent, int viewType) {
+        public RecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
+            MyViewHolder vh = new MyViewHolder(LayoutInflater.from(
+                    mContext).inflate(R.layout.item_self_support,null));
+            return vh;
+        }
 
-            if (viewType == TYPE_ITEM) {
+        @Override
+        public void onBindViewHolder(final MyViewHolder holder, int position) {
+            if (mOnItemClickListener != null) {
+                //为ItemView设置监听器
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = holder.getLayoutPosition(); // 1
+                        mOnItemClickListener.onItemClick(holder.itemView, position); // 2
+                    }
+                });
+            }
+            if (mOnItemLongClickListener != null) {
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int position = holder.getLayoutPosition();
+                        mOnItemLongClickListener.onItemLongClick(holder.itemView, position);
+                        //返回true 表示消耗了事件 事件不会继续传递
+                        return true;
+                    }
+                });
+            }
 
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_self_support, parent, false);
-                return new ViewHolder(view);
+            // 组件赋值
+            String imgPath = msgBeanList.get(position).getImg();
 
-            } else if (viewType == TYPE_FOOTER) {
+            //购物车数量
+            int cartNum = msgBeanList.get(position).getCartnum();
+            holder.tv_shop_num.setText("" + cartNum);
 
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_foot, parent, false);
-                return new BaseRecyclerViewHolder(view);
+            if (cartNum == 0) {
+                holder.tv_shop_num.setVisibility(View.INVISIBLE);
+                holder.iv_sub_botton.setVisibility(View.INVISIBLE);
+            } else if (cartNum > 0) {
+                holder.tv_shop_num.setVisibility(View.VISIBLE);
+                holder.iv_sub_botton.setVisibility(View.VISIBLE);
+            } else {
+                Toast.makeText(mContext, "格式不正确", Toast.LENGTH_SHORT).show();
+            }
+
+            if (msgBeanList.get(position).getImg().equals("")) {
+                holder.imager.setImageResource(R.mipmap.yibeitong001);
+
+            } else {
+                BitmapUtils bitmapUtils = new BitmapUtils(mContext);
+
+                bitmapUtils.configDiskCacheEnabled(true);
+                bitmapUtils.configMemoryCacheEnabled(false);
+
+                bitmapUtils.display(holder.imager, "http://www.ybt9.com/" + imgPath);
 
             }
 
-            return null;
+            holder.title.setText(msgBeanList.get(position).getName());
 
         }
 
         @Override
-        public void onBind(RecyclerView.ViewHolder holder, int position) {
-
-
-            if (holder instanceof ViewHolder) {
-
-                ViewHolder vh = (ViewHolder) holder;
-                //viewHolder.tv.setText(mDatas.get(position));
-
-                // 组件赋值
-                String imgPath = foodList.get(position).getImg();
-
-                //购物车数量
-                int cartNum = foodList.get(position).getCartnum();
-                vh.tv_shop_num.setText("" + cartNum);
-
-                if (cartNum == 0) {
-                    vh.tv_shop_num.setVisibility(View.INVISIBLE);
-                    vh.iv_sub_botton.setVisibility(View.INVISIBLE);
-                } else if (cartNum > 0) {
-                    vh.tv_shop_num.setVisibility(View.VISIBLE);
-                    vh.iv_sub_botton.setVisibility(View.VISIBLE);
-                } else {
-                    Toast.makeText(mContext, "格式不正确", Toast.LENGTH_SHORT).show();
-                }
-
-                if (foodList.get(position).getImg().equals("")) {
-                    vh.imager.setImageResource(R.mipmap.yibeitong001);
-
-                } else {
-                    BitmapUtils bitmapUtils = new BitmapUtils(mContext);
-
-                    bitmapUtils.configDiskCacheEnabled(true);
-                    bitmapUtils.configMemoryCacheEnabled(false);
-
-                    bitmapUtils.display(vh.imager, "http://www.ybt9.com/" + imgPath);
-
-                }
-
-                 /*id 详情图片 名称 已售 评价 单价 单位 购物车数量*/
-                final String str_id = foodList.get(position).getId();
-                final String instro = foodList.get(position).getInstro();
-                final String foodName = foodList.get(position).getName();
-                final int str_foodSellCount = foodList.get(position).getSellcount();
-                final String foodPoint = foodList.get(position).getPoint();
-                final String foodCost = foodList.get(position).getCost();
-                final String foodGoodattr = foodList.get(position).getGoodattr();
-                final int str_cartNum = foodList.get(position).getCartnum();
-
-
-                vh.title.setText(foodList.get(position).getName());
-
-                vh.price.setText("￥" + foodList.get(position).getCost());
-
-                vh.num.setText("月售" + foodList.get(position).getSellcount() + "笔");
-
-            }
-
-
+        public int getItemCount() {
+            return msgBeanList.size();
         }
 
-        class ViewHolder extends BaseRecyclerViewHolder {
-
-            //TextView tv;
+        class MyViewHolder extends BaseRecyclerViewHolder {
 
             private ImageView imager;
             private TextView title, price, num;
@@ -2499,14 +2489,13 @@ public class FMHomePage extends BaseFragment implements PullToRefreshView.OnHead
             private ImageView iv_add_button, iv_sub_botton;
             private TextView tv_shop_num;
 
-            public ViewHolder(View convertView) {
+            public MyViewHolder(View convertView) {
                 super(view);
-                //tv = (TextView) view.findViewById(R.id.tv);
-
+                //img = (ImageView) view.findViewById(R.id.iv_item_tese_img);
                 imager = (ImageView) convertView.findViewById(R.id.iv_item_ss);
                 title = (TextView) convertView.findViewById(R.id.tv_item_ss_title);
                 price = (TextView) convertView.findViewById(R.id.tv_item_ss_price);
-                num = (TextView) convertView.findViewById(R.id.tv_item_ss_num);
+               num = (TextView) convertView.findViewById(R.id.tv_item_ss_num);
 
                 //添加购物车
                 tv_shop_num = (TextView) convertView.findViewById(R.id.tv_shop_num);

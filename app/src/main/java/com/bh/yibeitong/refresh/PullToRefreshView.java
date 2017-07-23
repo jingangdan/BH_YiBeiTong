@@ -323,8 +323,8 @@ public class PullToRefreshView extends LinearLayout {
                     headerPrepareToRefresh(deltaY);
                     // setHeaderPadding(-mHeaderViewHeight);
                 } else if (mPullState == PULL_UP_STATE) {
-                    System.out.println("11111mPullState=" + mPullState);
-                    System.out.println("22222PULL_UP_STATE=" + PULL_UP_STATE);
+//                    System.out.println("11111mPullState=" + mPullState);
+//                    System.out.println("22222PULL_UP_STATE=" + PULL_UP_STATE);
                     // 执行上拉
                     footerPrepareToRefresh(deltaY);
                 }

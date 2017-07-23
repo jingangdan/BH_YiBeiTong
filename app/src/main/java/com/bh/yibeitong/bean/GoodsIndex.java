@@ -933,36 +933,43 @@ public class GoodsIndex {
              * typeid : 363
              * parentid : 1590
              * name : 波力10枚烧海苔
+             *
              * count : 98
              * cost : 16.50
              * img :
              * point : 0
              * sellcount : 2
+             *
              * shopid : 8
              * uid : 0
              * signid :
              * pointcount : 0
              * instro :
+             *
              * descgoods : null
              * daycount : 0
              * marketcost : 0.00
              * is_com : 0
              * show_com : 0
+             *
              * is_hot : 0
              * is_new : 0
              * bagcost : 0.00
              * shoptype : 1
              * good_order : 0
+             *
              * is_waisong : 1
              * is_dingtai : 1
              * weeks : 1,2,3,4,5,6,0
              * goodattr : 包
              * have_det : 0
+             *
              * product_attr :
              * is_cx : 0
              * wx_url : null
              * virtualsellcount : 0
              * is_live : 1
+             *
              * pfcost : 0.00
              * guige : null
              * cartnum : 0

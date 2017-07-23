@@ -2,6 +2,8 @@ package com.bh.yibeitong.ui.percen;
 
 import android.content.Intent;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,8 +32,12 @@ public class GiftInfoActivity extends BaseTextActivity {
 
     /*UI显示*/
     private ImageView iv_img;
-    private TextView tv_title, tv_score, tv_content, tv_ex;
+    private TextView tv_title, tv_score, tv_ex;
     private String img, title, score, content;
+
+    /*礼品详情（简介）*/
+    private WebView contentWeb;
+    private WebSettings webSettings;
 
     @Override
     protected void setRootView() {
@@ -55,7 +61,7 @@ public class GiftInfoActivity extends BaseTextActivity {
         iv_img = (ImageView) findViewById(R.id.iv_giftinfo_img);
         tv_title = (TextView) findViewById(R.id.tv_giftinfo_title);
         tv_score = (TextView) findViewById(R.id.tv_giftinfo_score);
-        tv_content = (TextView) findViewById(R.id.tv_giftinfo_content);
+        //tv_content = (TextView) findViewById(R.id.tv_giftinfo_content);
 
         tv_ex = (TextView) findViewById(R.id.tv_giftinfo_ex);
         tv_ex.setOnClickListener(this);
@@ -109,7 +115,7 @@ public class GiftInfoActivity extends BaseTextActivity {
                         }
                         tv_title.setText("" + title);
                         tv_score.setText("" + score);
-                        tv_content.setText("" + content);
+//                        tv_content.setText("" + content);
 
                         if ((int) Double.parseDouble(s_jifen) >= Integer.parseInt(score)) {
                             tv_ex.setBackgroundResource(R.drawable.button_red_shape);
@@ -118,6 +124,8 @@ public class GiftInfoActivity extends BaseTextActivity {
                             tv_ex.setBackgroundResource(R.drawable.button_gray_shape);
                             tv_ex.setText("积分不足");
                         }
+
+                        getWebHTML(content.toString());
 
                     }
 
@@ -138,4 +146,35 @@ public class GiftInfoActivity extends BaseTextActivity {
                 });
 
     }
+
+    /**
+     * @param html_bady
+     */
+    public void getWebHTML(String html_bady) {
+        contentWeb = (WebView) findViewById(R.id.wv_giftinfo);
+        contentWeb.getSettings().setJavaScriptEnabled(true);
+        webSettings = contentWeb.getSettings();
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setJavaScriptEnabled(false);
+        String baseUrl = "http://www.ybt9.com/";
+        //拼接HTML
+        String css = "<style type=\"text/css\"> img {" +
+                "width:100%;" +
+                "height:auto;" +
+                "}" +
+                "body {" +
+                "margin-right:15px;" +
+                "margin-left:15px;" +
+                "margin-top:15px;" +
+                "font-size:45px;" +
+                "}" +
+                "</style>";
+        String html = "<html><header>" + css + "</header><body>" + html_bady + "</body></html>";
+        contentWeb.loadDataWithBaseURL(baseUrl, html, "text/html", "utf-8", null);
+
+        System.out.println(""+html);
+
+    }
+
 }

@@ -263,7 +263,7 @@ public class FindPwdActivity extends BaseTextActivity {
                         Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
 
                         if(error.isError() == false){
-                            toast(""+error.getMsg().toString());
+                            toast("更改成功");
                             FindPwdActivity.this.finish();
                         }else{
                             toast("操作失败，请重试");

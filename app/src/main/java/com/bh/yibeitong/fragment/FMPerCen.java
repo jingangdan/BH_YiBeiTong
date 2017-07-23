@@ -560,6 +560,7 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
                         System.out.println("签到" + result);
                         Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
                         if (error.isError() == true) {
+                            toast(""+error.getMsg().toString());
                         } else {
                             tv_sign.setText("已签到");
                         }
