@@ -2,6 +2,7 @@ package com.bh.yibeitong.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.ScrollView;
 
 /**
@@ -18,6 +19,12 @@ public class MyScrollView extends ScrollView {
     }
 
     public static ISmartScrollChangedListener mSmartScrollChangedListener;
+
+    /**/
+    private int downX;
+    private int downY;
+    private int mTouchSlop;
+
 
     /**
      * 定义监听接口
@@ -98,5 +105,22 @@ public class MyScrollView extends ScrollView {
 //    public boolean isScrolledToBottom() {
 //        return isScrolledToBottom;
 //    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent e) {
+        int action = e.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                downX = (int) e.getRawX();
+                downY = (int) e.getRawY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                int moveY = (int) e.getRawY();
+                if (Math.abs(moveY - downY) > mTouchSlop) {
+                    return true;
+                }
+        }
+        return super.onInterceptTouchEvent(e);
+    }
 
 }

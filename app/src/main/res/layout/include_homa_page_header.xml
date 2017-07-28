@@ -90,7 +90,8 @@
             android:layout_centerVertical="true"
             android:drawableRight="@mipmap/new_drop_down"
             android:editable="false"
-            android:text="定位中。。。"/>
+            android:text="定位中。。。"
+            android:layout_margin="5dp"/>
 
         <ImageView
             android:id="@+id/iv_new_search"

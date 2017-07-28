@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bh.yibeitong.R;
-import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.base.BaseTextActivity;
 import com.bh.yibeitong.bean.Address;
 import com.bh.yibeitong.bean.Error;
@@ -29,7 +28,6 @@ import com.bh.yibeitong.bean.OrderReturn;
 import com.bh.yibeitong.bean.PSCost;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.bean.ShopCart;
-import com.bh.yibeitong.bean.ShopInfo;
 import com.bh.yibeitong.bean.YHQuan;
 import com.bh.yibeitong.fragment.FMHomePage;
 import com.bh.yibeitong.refresh.MyListView;
@@ -59,6 +57,8 @@ import java.util.List;
  * 支付 购物车下单
  */
 public class OrderActivity extends BaseTextActivity {
+    /*requestCode*/
+    public static final int SHOPCART_REQUEST_CODE = 0x04;
     /**
      * 我的收货地址
      */
@@ -1006,6 +1006,9 @@ public class OrderActivity extends BaseTextActivity {
                                 startActivity(intent);
 
                                 OrderActivity.this.finish();
+
+                                intent = new Intent();
+                                setResult(SHOPCART_REQUEST_CODE);
                             }
                         }
 

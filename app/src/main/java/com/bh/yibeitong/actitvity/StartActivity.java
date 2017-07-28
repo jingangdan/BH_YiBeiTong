@@ -87,4 +87,36 @@ public class StartActivity extends BaseActivity {
         }).start();
     }
 
+
+
+//    /**
+//     * 针对6.0动态请求权限问题
+//     * 判断是否允许此权限
+//     *
+//     * @param permissions
+//     * @return
+//     */
+//    protected boolean hasPermission(String permissions) {
+//        for (String permission : permissions) {
+//            if (ContextCompat.checkSelfPermission(this, permission)
+//                    != PackageManager.PERMISSION_GRANTED) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+//
+//    /**
+//     * 动态请求权限
+//     *
+//     * @param code
+//     * @param permissions
+//     */
+//    protected void requestPermission(int code, String permissions) {
+//        ActivityCompat.requestPermissions(this, permissions, code);
+//    }
+
+
+
+
 }

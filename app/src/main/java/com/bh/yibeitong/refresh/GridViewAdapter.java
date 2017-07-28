@@ -1,7 +1,6 @@
 package com.bh.yibeitong.refresh;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +13,9 @@ import com.bh.yibeitong.R;
 import com.bh.yibeitong.bean.AddShopCart;
 import com.bh.yibeitong.bean.GoodsIndex;
 import com.bh.yibeitong.bean.ShopCartReturn;
-import com.bh.yibeitong.ui.CateFoodDetailsActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
-import com.lidroid.xutils.BitmapUtils;
+import com.bh.yibeitong.utils.XUtilsImageUtils;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -25,8 +23,7 @@ import org.xutils.x;
 import java.util.ArrayList;
 import java.util.List;
 
-//import com.bh.yibeitong.bean.CeShi;
-
+/*首页商品适配器*/
 public class GridViewAdapter extends BaseAdapter {
     Context context;
 
@@ -37,17 +34,10 @@ public class GridViewAdapter extends BaseAdapter {
     public void setCatefoodslistBeanList(Context mContext, List<GoodsIndex.MsgBean.CatefoodslistBean> foodList) {
         this.context = mContext;
         this.foodList = foodList;
-        //this.notifyDataSetChanged();
     }
-
-    public interface Callback {
-        void click(int position, int index);
-    }
-
 
     @Override
     public int getCount() {
-
         return foodList.size();
     }
 
@@ -61,28 +51,14 @@ public class GridViewAdapter extends BaseAdapter {
         return position;
     }
 
-    public void updateView(List<GoodsIndex.MsgBean.CatefoodslistBean> foodList) {
-        //this.foodList = foodList;
-        this.foodList.addAll(foodList);
-        this.notifyDataSetChanged();//强制动态刷新数据进而调用getView方法
-    }
-
-    /**
-     * 添加数据列表项
-     */
-    public void addNewsItem(GoodsIndex.MsgBean.CatefoodslistBean ceFood) {
-        foodList.add(ceFood);
-    }
-
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
         final ViewHolder vh;
         if (convertView == null) {
             vh = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.item_self_support, null);
-            //获取item中的组件
 
+            //获取item中的组件
             vh.imager = (ImageView) convertView.findViewById(R.id.iv_item_ss);
             vh.title = (TextView) convertView.findViewById(R.id.tv_item_ss_title);
             vh.price = (TextView) convertView.findViewById(R.id.tv_item_ss_price);
@@ -120,12 +96,11 @@ public class GridViewAdapter extends BaseAdapter {
             vh.imager.setImageResource(R.mipmap.yibeitong001);
 
         } else {
-            BitmapUtils bitmapUtils = new BitmapUtils(context);
+            //加载图片
+            //x.image().bind(vh.imager, "http://www.ybt9.com/" + imgPath);
+            XUtilsImageUtils.display(vh.imager, "http://www.ybt9.com/" + imgPath);
 
-            bitmapUtils.configDiskCacheEnabled(true);
-            bitmapUtils.configMemoryCacheEnabled(false);
-
-            bitmapUtils.display(vh.imager, "http://www.ybt9.com/" + imgPath);
+            //vh.imager.setImageBitmap(XUtilsImageUtils.getBitmapOptions("http://www.ybt9.com/" + imgPath));
 
         }
 
@@ -139,33 +114,11 @@ public class GridViewAdapter extends BaseAdapter {
         final String foodGoodattr = foodList.get(position).getGoodattr();
         final int str_cartNum = foodList.get(position).getCartnum();
 
-        /*点击图片查看商品详细信息*/
-        vh.imager.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("点击" + position);
+        vh.title.setText("" + foodName);
 
-                Intent intent = new Intent(context, CateFoodDetailsActivity.class);
-                intent.putExtra("id", str_id);//商品id
-                intent.putExtra("instro", instro);
+        vh.price.setText("￥" + foodCost);
 
-                /*intent.putExtra("foodName", foodName);
-                intent.putExtra("foodSellCount", String.valueOf(str_foodSellCount));
-                intent.putExtra("foodPoint", foodPoint);
-                intent.putExtra("foodCost", foodCost);
-                intent.putExtra("foodGoodattr", foodGoodattr);
-
-                intent.putExtra("cartNum", String.valueOf(str_cartNum));*/
-
-                context.startActivity(intent);
-            }
-        });
-
-        vh.title.setText(foodList.get(position).getName());
-
-        vh.price.setText("￥" + foodList.get(position).getCost());
-
-        vh.num.setText("月售" + foodList.get(position).getSellcount() + "笔");
+        vh.num.setText("月售" + str_foodSellCount + "笔");
 
         //增加
         vh.iv_add_button.setOnClickListener(new View.OnClickListener() {
@@ -174,10 +127,6 @@ public class GridViewAdapter extends BaseAdapter {
             public void onClick(View v) {
                 vh.iv_add_button.setClickable(false);
 
-                //大于一秒方个通过
-                /*if (System.currentTimeMillis() - lastClick <= 0){
-                    return;
-                }else{*/
                 //获取shopcart的初始值
                 String str_num = vh.tv_shop_num.getText().toString();
                 good_num = Integer.valueOf(str_num);
@@ -204,7 +153,6 @@ public class GridViewAdapter extends BaseAdapter {
 
                                     AddShopCart addShopCart = GsonUtil.gsonIntance().gsonToBean(result, AddShopCart.class);
 
-
                                     if (addShopCart.isError() == false) {
                                         if (good_num >= 0 && good_num < 100) {
                                             vh.tv_shop_num.setVisibility(View.VISIBLE);
@@ -215,8 +163,6 @@ public class GridViewAdapter extends BaseAdapter {
                                     }
                                     vh.tv_shop_num.setText(String.valueOf(good_num));
 
-                                    //响应按钮点击事件,调用子定义接口，并传入View
-                                    //mCallback.click(position, 2);
                                 } else if (shopCartReturn.getMsg().isResult() == false) {
                                     Toast.makeText(context, "添加失败，库存不足", Toast.LENGTH_SHORT).show();
                                 }
@@ -240,9 +186,6 @@ public class GridViewAdapter extends BaseAdapter {
 
                             }
                         });
-
-//                    }
-//                lastClick = System.currentTimeMillis();
 
             }
         });
@@ -302,8 +245,6 @@ public class GridViewAdapter extends BaseAdapter {
                                     System.out.println("good_num = " + good_num);
                                     vh.tv_shop_num.setText(String.valueOf(good_num));
 
-                                    //响应按钮点击事件,调用子定义接口，并传入View
-                                    //mCallback.click(position, 1);
                                 }else if(shopCartReturn.getMsg().isResult() == false){
                                     Toast.makeText(context, "减少失败，库存不足", Toast.LENGTH_SHORT).show();
                                 }

@@ -59,7 +59,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
-        <include layout="@layout/include_shopcar" />
+        <include layout="@layout/include_shopcart_test" />
 
     </LinearLayout>
 

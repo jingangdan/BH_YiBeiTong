@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -37,6 +38,7 @@ import com.bh.yibeitong.utils.MD5Util;
 import com.bh.yibeitong.view.CustomDialog;
 import com.bh.yibeitong.view.HorizontalListView;
 import com.bh.yibeitong.view.UserInfo;
+import com.bh.yibeitong.zxing.decoding.Intents;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.BitmapUtils;
@@ -91,8 +93,16 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
     //购物车
     private double totalPrice = 0;
-    private TextView tv_sg_all_price;
-    private Button but_sg_pay;
+
+
+//    private TextView tv_sg_all_price;
+//    private Button but_sg_pay;
+
+    /*购物车UI*/
+    private Button but_pay;
+    private TextView tv_all_pay, tv_shopcart_num;
+    private FrameLayout fl_shopcart;
+    private int cartnum = 0;
 
     /*起送费*/
     private double limitcost = 0;
@@ -207,10 +217,19 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
         tv_shop_address.setText("店铺地址：" + address);
 
         //购物车
-        tv_sg_all_price = (TextView) findViewById(R.id.tv_sg_all_price);
-        but_sg_pay = (Button) findViewById(R.id.but_sg_pay);
+//        tv_sg_all_price = (TextView) findViewById(R.id.tv_sg_all_price);
+//        but_sg_pay = (Button) findViewById(R.id.but_sg_pay);
+//
+//        but_sg_pay.setOnClickListener(this);
 
-        but_sg_pay.setOnClickListener(this);
+        /*购物车UI*/
+        but_pay = (Button) findViewById(R.id.but_pay);
+        tv_all_pay = (TextView) findViewById(R.id.tv_all_pay);
+        tv_shopcart_num = (TextView) findViewById(R.id.tv_shopcart_num);
+        fl_shopcart = (FrameLayout) findViewById(R.id.fl_shopcart);
+
+        but_pay.setOnClickListener(this);
+        fl_shopcart.setOnClickListener(this);
 
         iv_back = (ImageView) findViewById(R.id.iv_shop_back);
         iv_back.setOnClickListener(this);
@@ -222,6 +241,17 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
         tv_limitcost.setText("满" + limitcost + "元起送");
 
 
+    }
+
+    /*支付按钮状态*/
+    public void goPay() {
+        but_pay.setTextColor(Color.WHITE);
+        but_pay.setBackgroundColor(Color.rgb(162, 203, 52));
+    }
+
+    public void noGoPay() {
+        but_pay.setTextColor(Color.GRAY);
+        but_pay.setBackgroundColor(Color.rgb(204, 204, 204));
     }
 
     /**
@@ -250,6 +280,8 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                                 }else{
                                     ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
 
+                                    cartnum = shopCart.getMsg().getSumcount();
+
                                     int size = shopCart.getMsg().getList().size();
                                     double d_cost = 0;
                                     int count = 0;
@@ -259,33 +291,36 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                                     for (int i = 0; i < size; i++) {
                                         d_cost = Double.parseDouble(shopCart.getMsg().getList().get(i).getCost());
                                         count = shopCart.getMsg().getList().get(i).getCount();
-
                                         totalPrice += d_cost * count;
 
                                         count += count;
                                     }
 
-                                    System.out.println("totalPrice = " + totalPrice);
-
-                                    //
-
                                     if (limitcost == 0) {
-                                        but_sg_pay.setText("去支付");
-                                        but_sg_pay.setTextColor(Color.RED);
+//                                        but_sg_pay.setText("去支付");
+//                                        but_sg_pay.setTextColor(Color.RED);
+                                        goPay();
                                     } else if (totalPrice >= limitcost) {
-                                        but_sg_pay.setText("去支付");
-                                        but_sg_pay.setTextColor(Color.RED);
+//                                        but_sg_pay.setText("去支付");
+//                                        but_sg_pay.setTextColor(Color.RED);
+                                        goPay();
                                     } else if (totalPrice > 0 && totalPrice < limitcost) {
                                         double add = limitcost - totalPrice;
-                                        but_sg_pay.setText("还差" + df.format(add) + "元");
-                                        but_sg_pay.setTextColor(Color.GRAY);
+//                                        but_sg_pay.setText("还差" + df.format(add) + "元");
+//                                        but_sg_pay.setTextColor(Color.GRAY);
+                                        but_pay.setText("还差" + df.format(add) + "元");
+                                        noGoPay();
                                     } else if (totalPrice == 0) {
-                                        but_sg_pay.setText("购物车为空");
-                                        but_sg_pay.setTextColor(Color.GRAY);
+//                                        but_sg_pay.setText("购物车为空");
+//                                        but_sg_pay.setTextColor(Color.GRAY);
+                                        but_pay.setText("购物车为空");
+                                        noGoPay();
                                     } else {
                                         Toast.makeText(ShopNewActivity.this, "错误", Toast.LENGTH_SHORT).show();
                                     }
-                                    tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+                                    tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
+                                    tv_shopcart_num.setText(""+cartnum);
+                                    //tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
                                 }
                             } catch (JSONException e) {
@@ -605,9 +640,9 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
                 break;
 
-            case R.id.but_sg_pay:
+            case R.id.but_pay:
                 //去支付
-                if (but_sg_pay.getText().toString().equals("去支付")) {
+                if (but_pay.getText().toString().equals("去支付")) {
 
                     if (jingang.equals("")) {
                         //没有登录
@@ -623,6 +658,13 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                 }
 
                 break;
+
+            case R.id.fl_shopcart:
+                intent = new Intent(ShopNewActivity.this, ShopCarActivity.class);
+                intent.putExtra("shopid", shopid);
+                startActivity(intent);
+                break;
+
             default:
                 break;
         }
@@ -750,15 +792,15 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
             final String goodId = detBeen.get(position).getId();
 
-
             //添加购物车
             vh.shopCart_add.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    String str_num = vh.shopCart_num.getText().toString();
-                    good_num = Integer.valueOf(str_num);
                     vh.shopCart_add.setClickable(false);
+
+                    good_num = Integer.valueOf(vh.shopCart_num.getText().toString());
+                    cartnum = Integer.parseInt(tv_shopcart_num.getText().toString());
                     //添加购物车  请求接口 成功则添加 反之不添加
                     //添加购物车
                     RequestParams params = new RequestParams(
@@ -786,6 +828,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                                                 vh.shopCart_num.setVisibility(View.VISIBLE);
                                                 vh.shopCart_sub.setVisibility(View.VISIBLE);
                                                 good_num++;
+                                                cartnum++;
 
                                                 totalPrice += d_cost;
 
@@ -793,25 +836,32 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
                                             //
                                             if (limitcost == 0) {
-                                                but_sg_pay.setText("去支付");
-                                                but_sg_pay.setTextColor(Color.RED);
+//                                                but_sg_pay.setText("去支付");
+//                                                but_sg_pay.setTextColor(Color.RED);
+                                                goPay();
                                             } else if (totalPrice >= limitcost) {
-                                                but_sg_pay.setText("去支付");
-                                                but_sg_pay.setTextColor(Color.RED);
+//                                                but_sg_pay.setText("去支付");
+//                                                but_sg_pay.setTextColor(Color.RED);
+                                                goPay();
                                             } else if (totalPrice > 0 && totalPrice < limitcost) {
                                                 double add = limitcost - totalPrice;
-                                                but_sg_pay.setText("还差" + df.format(add) + "元");
-                                                but_sg_pay.setTextColor(Color.GRAY);
+//                                                but_sg_pay.setText("还差" + df.format(add) + "元");
+//                                                but_sg_pay.setTextColor(Color.GRAY);
+                                                but_pay.setText("还差" + df.format(add) + "元");
+                                                noGoPay();
                                             } else if (totalPrice == 0) {
-                                                but_sg_pay.setText("购物车为空");
-                                                but_sg_pay.setTextColor(Color.GRAY);
+//                                                but_sg_pay.setText("购物车为空");
+//                                                but_sg_pay.setTextColor(Color.GRAY);
+                                                but_pay.setText("购物车为空");
+                                                noGoPay();
                                             } else {
-                                                Toast.makeText(ShopNewActivity.this, "错误", Toast.LENGTH_SHORT).show();
                                             }
 
                                             vh.shopCart_num.setText("" + good_num);
+                                            tv_shopcart_num.setText(""+cartnum);
+                                            tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
 
-                                            tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+                                            //tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
                                             //响应按钮点击事件,调用子定义接口，并传入View
                                             callbackCart.click(position, 2);
@@ -845,16 +895,13 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
             //减少购物车
             vh.shopCart_sub.setOnClickListener(new View.OnClickListener() {
-                int cartNum = detBeen.get(position).getCartnum();
-                //long lastClick;
-
                 @Override
                 public void onClick(View v) {
                     vh.shopCart_sub.setClickable(false);
                     //减少购物车  请求接口 成功则减少 反之 不减少
 
-                    String str_num = vh.shopCart_num.getText().toString();
-                    good_num = Integer.valueOf(str_num);
+                    good_num = Integer.valueOf(vh.shopCart_num.getText().toString());
+                    cartnum = Integer.parseInt(tv_shopcart_num.getText().toString());
 
                     if (good_num > 0) {
                         String PATH = HttpPath.PATH + HttpPath.ADD_SHOPCART + "&shopid=" + shopid + "&num=-1" + "&gid=" + goodId;
@@ -875,28 +922,35 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
                                             totalPrice -= a_cost;
                                             good_num--;
+                                            cartnum--;
 
                                             if (limitcost == 0) {
-                                                but_sg_pay.setText("去支付");
-                                                but_sg_pay.setTextColor(Color.RED);
+//                                                but_sg_pay.setText("去支付");
+//                                                but_sg_pay.setTextColor(Color.RED);
+                                                goPay();
                                             } else if (totalPrice >= limitcost) {
-                                                but_sg_pay.setText("去支付");
-                                                but_sg_pay.setTextColor(Color.RED);
+//                                                but_sg_pay.setText("去支付");
+//                                                but_sg_pay.setTextColor(Color.RED);
+                                                goPay();
                                             } else if (totalPrice > 0 && totalPrice < limitcost) {
                                                 double add = limitcost - totalPrice;
-                                                but_sg_pay.setText("还差" + df.format(add) + "元");
-                                                but_sg_pay.setTextColor(Color.GRAY);
+//                                                but_sg_pay.setText("还差" + df.format(add) + "元");
+//                                                but_sg_pay.setTextColor(Color.GRAY);
+                                                but_pay.setText("还差" + df.format(add) + "元");
+                                                noGoPay();
                                             } else if (totalPrice == 0) {
-                                                but_sg_pay.setText("购物车为空");
-                                                but_sg_pay.setTextColor(Color.GRAY);
+//                                                but_sg_pay.setText("购物车为空");
+//                                                but_sg_pay.setTextColor(Color.GRAY);
+                                                but_pay.setText("购物车为空");
+                                                noGoPay();
                                             } else {
                                                 Toast.makeText(ShopNewActivity.this, "错误", Toast.LENGTH_SHORT).show();
                                             }
-
-                                            tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
-
+                                            //tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
                                             vh.shopCart_num.setText("" + good_num);
+                                            tv_shopcart_num.setText(""+cartnum);
+                                            tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
 
                                         } else if (shopCartReturn.getMsg().isResult() == false) {
                                             Toast.makeText(ShopNewActivity.this, "减少失败，库存不足", Toast.LENGTH_SHORT).show();
@@ -923,6 +977,8 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
                     } else if (good_num == 0) {
                         vh.shopCart_sub.setClickable(true);
+//                        vh.shopCart_sub.setVisibility(View.GONE);
+//                        vh.shopCart_num.setText(View.GONE);
                     }
 
                 }

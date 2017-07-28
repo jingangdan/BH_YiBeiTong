@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import com.bh.yibeitong.refresh.MyGridView;
 import com.bh.yibeitong.ui.CateFoodDetailsActivity;
 import com.bh.yibeitong.ui.LoginRegisterActivity;
 import com.bh.yibeitong.ui.OrderActivity;
+import com.bh.yibeitong.ui.ShopCarActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.CustomDialog;
@@ -41,6 +43,8 @@ import org.xutils.x;
 
 import java.text.DecimalFormat;
 import java.util.List;
+
+import static com.bh.yibeitong.R.id.but_sg_pay;
 
 /**
  * Created by jingang on 2017/6/29.
@@ -70,9 +74,14 @@ public class TeseCateInfoActivity extends BaseTextActivity {
 
     //购物车
     private double totalPrice = 0;
-    private TextView tv_sg_all_price;
-    private Button but_sg_pay;
+//    private TextView tv_sg_all_price;
+//    private Button but_sg_pay;
     DecimalFormat df;
+
+    private Button but_pay;
+    private TextView tv_all_pay, tv_shopcart_num;
+    private FrameLayout fl_shopcart;
+    private int cartnum = 0;
 
     /*起送费*/
     private double limitcost = 0;
@@ -119,10 +128,17 @@ public class TeseCateInfoActivity extends BaseTextActivity {
         imageView = (ImageView) findViewById(R.id.iv_tese_cate);
         scrollView = (ScrollView) findViewById(R.id.sv_tese_cateinfo);
 
-        tv_sg_all_price = (TextView) findViewById(R.id.tv_shopcar_all_price);
-        but_sg_pay = (Button) findViewById(R.id.but_shopcar_pay);
+//        tv_sg_all_price = (TextView) findViewById(R.id.tv_shopcar_all_price);
+//        but_sg_pay = (Button) findViewById(R.id.but_shopcar_pay);
+//
+//        but_sg_pay.setOnClickListener(this);
+        but_pay = (Button) findViewById(R.id.but_pay);
+        tv_all_pay = (TextView) findViewById(R.id.tv_all_pay);
+        tv_shopcart_num = (TextView) findViewById(R.id.tv_shopcart_num);
+        fl_shopcart = (FrameLayout) findViewById(R.id.fl_shopcart);
 
-        but_sg_pay.setOnClickListener(this);
+        but_pay.setOnClickListener(this);
+        fl_shopcart.setOnClickListener(this);
 
         teseCate(action, id, shopid);
 
@@ -134,8 +150,8 @@ public class TeseCateInfoActivity extends BaseTextActivity {
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()){
-            case R.id.but_shopcar_pay:
-                if (but_sg_pay.getText().toString().equals("去支付")) {
+            case R.id.but_pay:
+                if (but_pay.getText().toString().equals("去支付")) {
 
                     if (jingang.equals("")) {
                         //没有登录
@@ -149,11 +165,31 @@ public class TeseCateInfoActivity extends BaseTextActivity {
                         startActivity(intent);
                     }
                 }
+
+                break;
+
+            case R.id.fl_shopcart:
+                //跳转到购物车
+                intent = new Intent(TeseCateInfoActivity.this, ShopCarActivity.class);
+                intent.putExtra("shopid", shopid);
+                startActivity(intent);
                 break;
 
             default:
                 break;
         }
+    }
+
+    /*支付按钮状态*/
+    public void goPay() {
+        but_pay.setTextColor(Color.WHITE);
+        but_pay.setBackgroundColor(Color.rgb(162, 203, 52));
+    }
+
+    /*未达到支付要求状态*/
+    public void noGoPay() {
+        but_pay.setTextColor(Color.GRAY);
+        but_pay.setBackgroundColor(Color.rgb(204, 204, 204));
     }
 
     /**
@@ -180,8 +216,12 @@ public class TeseCateInfoActivity extends BaseTextActivity {
 
                             if (response.get("msg").toString().equals("[]")) {
                                 System.out.println("没有数据");
+                                but_pay.setText("购物车为空");
+                                noGoPay();
                             } else {
                                 ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
+
+                                cartnum = shopCart.getMsg().getSumcount();
 
                                 int size = shopCart.getMsg().getList().size();
                                 double d_cost = 0;
@@ -198,30 +238,31 @@ public class TeseCateInfoActivity extends BaseTextActivity {
                                     count += count;
                                 }
 
-                                System.out.println("totalPrice = " + totalPrice);
-
-                                //
-
                                 if (limitcost == 0) {
-                                    but_sg_pay.setText("去支付");
-                                    but_sg_pay.setTextColor(Color.RED);
+//                                    but_sg_pay.setText("去支付");
+//                                    but_sg_pay.setTextColor(Color.RED);
+                                    goPay();
                                 } else if (totalPrice >= limitcost) {
-                                    but_sg_pay.setText("去支付");
-                                    but_sg_pay.setTextColor(Color.RED);
+//                                    but_sg_pay.setText("去支付");
+//                                    but_sg_pay.setTextColor(Color.RED);
+                                    goPay();
                                 } else if (totalPrice > 0 && totalPrice < limitcost) {
                                     double add = limitcost - totalPrice;
-                                    but_sg_pay.setText("还差" + df.format(add) + "元");
-                                    but_sg_pay.setTextColor(Color.GRAY);
+                                    but_pay.setText("还差" + df.format(add) + "元");
+                                    //but_sg_pay.setTextColor(Color.GRAY);
+                                    noGoPay();
                                 } else if (totalPrice == 0) {
-                                    but_sg_pay.setText("购物车为空");
-                                    but_sg_pay.setTextColor(Color.GRAY);
+                                    but_pay.setText("购物车为空");
+                                    //but_sg_pay.setTextColor(Color.GRAY);
+                                    noGoPay();
                                 } else {
-                                    Toast.makeText(TeseCateInfoActivity.this, "错误", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(TeseCateInfoActivity.this, "错误", Toast.LENGTH_SHORT).show();
                                 }
-                                tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+                                //tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+                                tv_shopcart_num.setText(""+cartnum);
+                                tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
 
                             }
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -403,6 +444,7 @@ public class TeseCateInfoActivity extends BaseTextActivity {
     }
 
     private int good_num = 0;
+
     /*获取商品列表适配器*/
     public class TeseCateInfoAdapter extends BaseAdapter {
         private Context mContext;
@@ -453,7 +495,7 @@ public class TeseCateInfoActivity extends BaseTextActivity {
             final String cost = goodslistBeen.get(i).getCost();
             final String goodId = goodslistBeen.get(i).getId();
 
-            int cartnum = goodslistBeen.get(i).getCartnum();
+            final int count = goodslistBeen.get(i).getCartnum();
 
             if (img.equals("")) {
                 vh.img.setImageResource(R.mipmap.yibeitong001);
@@ -465,12 +507,12 @@ public class TeseCateInfoActivity extends BaseTextActivity {
             vh.name.setText("" + name);
             vh.cost.setText("￥" + cost);
 
-            vh.num.setText("" + cartnum);
+            vh.num.setText("" + count);
 
-            if (cartnum == 0) {
+            if (count == 0) {
                 vh.sub.setVisibility(View.INVISIBLE);
                 vh.num.setVisibility(View.INVISIBLE);
-            } else if (cartnum > 0) {
+            } else if (count > 0) {
                 vh.sub.setVisibility(View.VISIBLE);
                 vh.num.setVisibility(View.VISIBLE);
             } else {
@@ -482,8 +524,9 @@ public class TeseCateInfoActivity extends BaseTextActivity {
 
                 @Override
                 public void onClick(View v) {
-                    String str_num = vh.num.getText().toString();
-                    good_num = Integer.valueOf(str_num);
+                    good_num = Integer.valueOf(vh.num.getText().toString());
+                    cartnum = Integer.parseInt(tv_shopcart_num.getText().toString());
+
                     vh.add.setClickable(false);
                     //添加购物车  请求接口 成功则添加 反之不添加
                     //添加购物车
@@ -512,32 +555,38 @@ public class TeseCateInfoActivity extends BaseTextActivity {
                                                 vh.num.setVisibility(View.VISIBLE);
                                                 vh.sub.setVisibility(View.VISIBLE);
                                                 good_num++;
+                                                cartnum++;
 
                                                 totalPrice += d_cost;
-
                                             }
 
-                                            //
                                             if (limitcost == 0) {
-                                                but_sg_pay.setText("去支付");
-                                                but_sg_pay.setTextColor(Color.RED);
+//                                                but_sg_pay.setText("去支付");
+//                                                but_sg_pay.setTextColor(Color.RED);
+                                                goPay();
                                             } else if (totalPrice >= limitcost) {
-                                                but_sg_pay.setText("去支付");
-                                                but_sg_pay.setTextColor(Color.RED);
+//                                                but_sg_pay.setText("去支付");
+//                                                but_sg_pay.setTextColor(Color.RED);
+                                                goPay();
                                             } else if (totalPrice > 0 && totalPrice < limitcost) {
                                                 double add = limitcost - totalPrice;
-                                                but_sg_pay.setText("还差" + df.format(add) + "元");
-                                                but_sg_pay.setTextColor(Color.GRAY);
+                                                but_pay.setText("还差" + df.format(add) + "元");
+                                                //but_sg_pay.setTextColor(Color.GRAY);
+                                                noGoPay();
                                             } else if (totalPrice == 0) {
-                                                but_sg_pay.setText("购物车为空");
-                                                but_sg_pay.setTextColor(Color.GRAY);
+                                                but_pay.setText("购物车为空");
+                                                //but_sg_pay.setTextColor(Color.GRAY);
+                                                noGoPay();
                                             } else {
-                                                Toast.makeText(TeseCateInfoActivity.this, "错误", Toast.LENGTH_SHORT).show();
+                                                //Toast.makeText(TeseCateInfoActivity.this, "错误", Toast.LENGTH_SHORT).show();
                                             }
 
                                             vh.num.setText("" + good_num);
+                                            tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
 
-                                            tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+                                            tv_shopcart_num.setText(""+cartnum);
+
+                                            //tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
 
                                         } else {
@@ -569,16 +618,14 @@ public class TeseCateInfoActivity extends BaseTextActivity {
 
             //减少购物车
             vh.sub.setOnClickListener(new View.OnClickListener() {
-                int cartNum = goodslistBeen.get(i).getCartnum();
-                //long lastClick;
 
                 @Override
                 public void onClick(View v) {
                     vh.sub.setClickable(false);
                     //减少购物车  请求接口 成功则减少 反之 不减少
 
-                    String str_num = vh.num.getText().toString();
-                    good_num = Integer.valueOf(str_num);
+                    good_num = Integer.valueOf(vh.num.getText().toString());
+                    cartnum = Integer.parseInt(tv_shopcart_num.getText().toString());
 
                     if (good_num > 0) {
                         String PATH = HttpPath.PATH + HttpPath.ADD_SHOPCART + "&shopid=" + shopid + "&num=-1" + "&gid=" + goodId;
@@ -599,28 +646,35 @@ public class TeseCateInfoActivity extends BaseTextActivity {
 
                                             totalPrice -= a_cost;
                                             good_num--;
+                                            cartnum--;
 
                                             if (limitcost == 0) {
-                                                but_sg_pay.setText("去支付");
-                                                but_sg_pay.setTextColor(Color.RED);
+//                                                but_sg_pay.setText("去支付");
+//                                                but_sg_pay.setTextColor(Color.RED);
+                                                goPay();
                                             } else if (totalPrice >= limitcost) {
-                                                but_sg_pay.setText("去支付");
-                                                but_sg_pay.setTextColor(Color.RED);
+//                                                but_sg_pay.setText("去支付");
+//                                                but_sg_pay.setTextColor(Color.RED);
+                                                goPay();
                                             } else if (totalPrice > 0 && totalPrice < limitcost) {
                                                 double add = limitcost - totalPrice;
-                                                but_sg_pay.setText("还差" + df.format(add) + "元");
-                                                but_sg_pay.setTextColor(Color.GRAY);
+                                                but_pay.setText("还差" + df.format(add) + "元");
+                                                //but_sg_pay.setTextColor(Color.GRAY);
+                                                noGoPay();
                                             } else if (totalPrice == 0) {
-                                                but_sg_pay.setText("购物车为空");
-                                                but_sg_pay.setTextColor(Color.GRAY);
+                                                but_pay.setText("购物车为空");
+                                                //but_sg_pay.setTextColor(Color.GRAY);
+                                                noGoPay();
                                             } else {
                                                 Toast.makeText(TeseCateInfoActivity.this, "错误", Toast.LENGTH_SHORT).show();
                                             }
 
-                                            tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+                                            //tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
 
                                             vh.num.setText("" + good_num);
+                                            tv_shopcart_num.setText(""+cartnum);
+                                            tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
 
                                         } else if (shopCartReturn.getMsg().isResult() == false) {
                                             Toast.makeText(TeseCateInfoActivity.this, "减少失败，库存不足", Toast.LENGTH_SHORT).show();

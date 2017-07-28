@@ -214,8 +214,8 @@ public class SpecialActivity extends BaseTextActivity implements SwipeRefreshLay
                                     //startActivity(intent);
 
                                 } else if (action.equals("tesecate")) {
-                                    //定汽车
                                     //getTscar(action);
+                                    //商品分类
 
                                     intent = new Intent(SpecialActivity.this, TeseCateInfoActivity.class);
                                     intent.putExtra("title",tese.getMsg().get(position).getName());

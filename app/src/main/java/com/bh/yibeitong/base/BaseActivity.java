@@ -16,16 +16,16 @@ import com.bh.yibeitong.application.CatchExcep;
 public class BaseActivity extends FragmentActivity {
     private Toast mToast;
 
-    private CatchExcep application;
+    //private CatchExcep application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityCollector.addActivity(this);
 
-        /*application = (CatchExcep)getApplication();
-        application.init();
-        application.addActivity(this);*/
+//        application = (CatchExcep)getApplication();
+//        application.init();
+//        application.addActivity(this);
 
     }
 

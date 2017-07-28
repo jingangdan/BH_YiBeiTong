@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#fff">
 
     <LinearLayout
         android:id="@+id/lin_shop_header"
@@ -257,56 +258,59 @@
             android:background="#CCC"
             android:visibility="gone"></View>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center_vertical"
-            android:padding="5dp">
+        <include layout="@layout/include_shopcart_test" />
 
-            <FrameLayout
-                android:id="@+id/lin_catefood_foot_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:background="@mipmap/ic_yuan">
+        <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:padding="5dp">-->
 
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:src="@mipmap/ic_shopcart_white" />
+        <!--<FrameLayout-->
+        <!--android:id="@+id/lin_catefood_foot_left"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:background="@mipmap/ic_yuan">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="0"
-                    android:visibility="gone" />
+        <!--<ImageView-->
+        <!--android:layout_width="28dp"-->
+        <!--android:layout_height="28dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:src="@mipmap/ic_shopcart_white" />-->
 
-            </FrameLayout>
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:text="0"-->
+        <!--android:visibility="gone" />-->
 
-            <TextView
-                android:id="@+id/tv_sg_all_price"
-                style="@style/title_second_text"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/lin_catefood_foot_left"
-                android:text="购物车是空的" />
+        <!--</FrameLayout>-->
 
-            <Button
-                android:id="@+id/but_sg_pay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_margin="5dp"
-                android:background="@null"
-                android:text="还差9.00元"
-                android:textColor="#666" />
+        <!--<TextView-->
+        <!--android:id="@+id/tv_sg_all_price"-->
+        <!--style="@style/title_second_text"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:text="购物车是空的"-->
+        <!--android:layout_toRightOf="@+id/lin_catefood_foot_left"-->
+        <!--android:layout_toEndOf="@+id/lin_catefood_foot_left" />-->
 
-        </RelativeLayout>
+        <!--<Button-->
+        <!--android:id="@+id/but_sg_pay"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:background="@null"-->
+        <!--android:text="还差9.00元"-->
+        <!--android:textColor="#666" />-->
+
+        <!--</RelativeLayout>-->
 
 
     </RelativeLayout>

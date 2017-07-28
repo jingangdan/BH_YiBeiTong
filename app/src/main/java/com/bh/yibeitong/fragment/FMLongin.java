@@ -270,7 +270,7 @@ public class FMLongin extends Fragment implements View.OnClickListener, View.OnL
 
                     userInfo.saveScore(register.getMsg().getScore());//积分
 
-                    MainActivity.locationService.stop();//停止定位
+                    //MainActivity.locationService.stop();//停止定位
 
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     intent.putExtra("login", result);

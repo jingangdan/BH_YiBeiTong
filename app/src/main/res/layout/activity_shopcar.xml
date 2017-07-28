@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EEEEEE"
+    android:background="#fff"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -58,59 +58,69 @@
         android:id="@+id/rel_shopcart_footers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#fff"
-        android:gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_alignParentBottom="true">
 
-        <FrameLayout
-            android:id="@+id/lin_catefood_foot_lefts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:background="@mipmap/ic_yuan">
-
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="center"
-                android:src="@mipmap/ic_shopcart_white" />
-
-            <LinearLayout
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginLeft="5dp"
-                android:background="@mipmap/ic_yuan_red"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tv_shopcart_nums"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="#fff" />
-
-            </LinearLayout>
-
-
-        </FrameLayout>
-
-        <Button
-            android:id="@+id/but_pays"
-            style="@style/setting_text"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@null" />
-
-        <TextView
-            android:id="@+id/tv_all_pays"
-            style="@style/title_second_text"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/lin_catefood_foot_lefts"
-            android:layout_toRightOf="@+id/lin_catefood_foot_lefts"
-            android:text="购物车是空的" />
+        <include layout="@layout/include_shopcart_test"/>
 
     </RelativeLayout>
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rel_shopcart_footers"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="#fff"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:paddingRight="10dp">-->
+
+        <!--<FrameLayout-->
+            <!--android:id="@+id/lin_catefood_foot_lefts"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:background="@mipmap/ic_yuan">-->
+
+            <!--<ImageView-->
+                <!--android:layout_width="28dp"-->
+                <!--android:layout_height="28dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:src="@mipmap/ic_shopcart_white" />-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="18dp"-->
+                <!--android:layout_height="18dp"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:background="@mipmap/ic_yuan_red"-->
+                <!--android:gravity="center">-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_shopcart_nums"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="0"-->
+                    <!--android:textColor="#fff" />-->
+
+            <!--</LinearLayout>-->
+
+
+        <!--</FrameLayout>-->
+
+        <!--<Button-->
+            <!--android:id="@+id/but_pays"-->
+            <!--style="@style/setting_text"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:background="@null" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_all_pays"-->
+            <!--style="@style/title_second_text"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_toEndOf="@+id/lin_catefood_foot_lefts"-->
+            <!--android:layout_toRightOf="@+id/lin_catefood_foot_lefts"-->
+            <!--android:text="购物车是空的" />-->
+
+    <!--</RelativeLayout>-->
 
 </RelativeLayout>

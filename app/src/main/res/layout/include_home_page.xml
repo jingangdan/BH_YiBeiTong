@@ -62,6 +62,13 @@
         android:gravity="center"
         android:background="#fff">
 
+        <com.bh.yibeitong.refresh.MyGridView
+            android:numColumns="4"
+            android:id="@+id/mgv_test_homepage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_goods_classify"
             android:layout_width="match_parent"
@@ -239,9 +246,7 @@
     <!---->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_adv001"
@@ -361,9 +366,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_adv002"
@@ -375,6 +378,7 @@
 
     <!--实时推荐-->
     <RelativeLayout
+        android:id="@+id/rel_gointo_shop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"

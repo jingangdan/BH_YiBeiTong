@@ -5,7 +5,79 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--无网络连接或网络状态不佳-->
     <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/lin_hp_nonetwork"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_nonetwork"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ccc"
+            android:layout_margin="10dp"/>
+
+        <LinearLayout
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="可能原因:  "
+                android:gravity="right"
+                android:layout_marginRight="5dp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:text="网络不稳定\n尚未接入互联网\n安全软件禁止访问网络"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/but_hp_refresh"
+                android:background="@drawable/button_main_shape"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:text="刷新"
+                android:textColor="#a2cb34"/>
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/but_hp_setting"
+                android:textColor="#a2cb34"
+                android:background="@drawable/button_main_shape"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:text="设置"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="visible"
+        android:id="@+id/lin_hp_network"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top"
@@ -50,32 +122,6 @@
                         </com.bh.yibeitong.refresh.MyGridView>
 
                     </LinearLayout>
-
-                    <!--<LinearLayout-->
-                    <!--android:id="@+id/lin_no_network"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_centerHorizontal="true"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:gravity="center"-->
-                    <!--android:orientation="vertical"-->
-                    <!--android:visibility="gone">-->
-
-                    <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="网络出现问题了！" />-->
-
-                    <!--<Button-->
-                    <!--android:id="@+id/but_load_again"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="重新加载" />-->
-
-                    <!--&lt;!&ndash;&ndash;&gt;-->
-
-                    <!--</LinearLayout>-->
-
 
                 </LinearLayout>
 

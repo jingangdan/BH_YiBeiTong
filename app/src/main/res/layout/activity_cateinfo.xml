@@ -93,57 +93,59 @@
             android:layout_height="10dp"
             android:background="#E6E6E6" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center_vertical"
-            android:padding="5dp">
+        <include layout="@layout/include_shopcart_test" />
 
-            <FrameLayout
-                android:id="@+id/lin_cateinfo_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:background="@mipmap/ic_yuan">
+        <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:padding="5dp">-->
 
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:src="@mipmap/ic_shopcart_white" />
+        <!--<FrameLayout-->
+        <!--android:id="@+id/lin_cateinfo_left"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:background="@mipmap/ic_yuan">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="0"
-                    android:visibility="gone" />
+        <!--<ImageView-->
+        <!--android:layout_width="28dp"-->
+        <!--android:layout_height="28dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:src="@mipmap/ic_shopcart_white" />-->
 
-            </FrameLayout>
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:text="0"-->
+        <!--android:visibility="gone" />-->
 
-            <TextView
-                android:id="@+id/tv_cateinfo_price_all"
-                style="@style/title_second_text"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/lin_cateinfo_left"
-                android:text="购物车是空的" />
+        <!--</FrameLayout>-->
 
-            <Button
-                android:id="@+id/but_cateinfo_pay"
-                style="@style/button_style_red"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_margin="5dp"
-                android:background="@null"
-                android:text="还差9.00元"
-                android:textColor="#666" />
+        <!--<TextView-->
+        <!--android:id="@+id/tv_cateinfo_price_all"-->
+        <!--style="@style/title_second_text"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_toRightOf="@+id/lin_cateinfo_left"-->
+        <!--android:text="购物车是空的" />-->
 
-        </RelativeLayout>
+        <!--<Button-->
+        <!--android:id="@+id/but_cateinfo_pay"-->
+        <!--style="@style/button_style_red"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:background="@null"-->
+        <!--android:text="还差9.00元"-->
+        <!--android:textColor="#666" />-->
+
+        <!--</RelativeLayout>-->
 
     </RelativeLayout>
 

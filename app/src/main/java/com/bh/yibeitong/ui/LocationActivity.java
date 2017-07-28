@@ -63,7 +63,9 @@ public class LocationActivity extends BaseTextActivity implements
     private int page = 1;
 
     /*经纬度*/
-    private String latitude, longitude;
+    /*接收页面传值*/
+    private Intent intent;
+    private String latitude = "", longitude = "";
 
     private List<String> ls_lat;
     private List<String> ls_lng;
@@ -116,6 +118,10 @@ public class LocationActivity extends BaseTextActivity implements
      */
     public void initData() {
         userInfo = new UserInfo(getApplication());
+
+        intent = getIntent();
+        latitude = intent.getStringExtra("lat");
+        longitude = intent.getStringExtra("lng");
 
         listView = (ListView) findViewById(R.id.lv_location_address);
         lin_location = (LinearLayout) findViewById(R.id.lin_location);
@@ -379,7 +385,7 @@ public class LocationActivity extends BaseTextActivity implements
                 sb.append("\ncitycode : ");// 城市编码
                 sb.append(location.getCityCode());
                 sb.append("\ncity : ");// 城市
-                city_name = location.getCity();
+                city_name = "临沂";
 
                 sb.append(location.getCity());
                 sb.append("\nDistrict : ");// 区
@@ -435,6 +441,8 @@ public class LocationActivity extends BaseTextActivity implements
                     sb.append("\ndescribe : ");
                     sb.append("无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机");
                 }
+
+                System.out.println("定位返回"+sb.toString());
 
                 //logMsg(sb.toString());
 

@@ -48,6 +48,8 @@ public class CustomProgress extends Dialog {
         customProgressDialog.setContentView(R.layout.progress_custom);
         customProgressDialog.getWindow().getAttributes().gravity = Gravity.CENTER;
 
+        customProgressDialog.setCanceledOnTouchOutside(false);
+
         return customProgressDialog;
     }
 

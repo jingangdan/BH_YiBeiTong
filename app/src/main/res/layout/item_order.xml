@@ -22,6 +22,7 @@
             android:src="@mipmap/ic_shop002" />
 
         <TextView
+            android:textSize="14dp"
             android:id="@+id/tv_item_order_shopname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,6 +48,7 @@
 
     <!---->
     <LinearLayout
+        android:padding="5dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -54,19 +56,21 @@
 
 
         <ImageView
+            android:src="@mipmap/ic_adai"
             android:layout_margin="5dp"
             android:id="@+id/iv_item_order_img"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <LinearLayout
+            android:layout_marginLeft="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:orientation="vertical">
 
             <TextView
+                style="@style/text_cost"
                 android:id="@+id/tv_item_order_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,6 +78,7 @@
                 android:textColor="#a2cb34" />
 
             <TextView
+                android:textSize="12dp"
                 android:id="@+id/tv_item_order_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,6 +87,7 @@
                 android:text="下单时间" />
 
             <TextView
+                android:textSize="12dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="由商家提供优质服务" />

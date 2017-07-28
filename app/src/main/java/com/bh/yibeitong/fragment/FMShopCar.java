@@ -10,18 +10,14 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bh.yibeitong.R;
-import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.base.BaseFragment;
 import com.bh.yibeitong.bean.ShopCart;
-import com.bh.yibeitong.bean.ShopCartReturn;
 import com.bh.yibeitong.refresh.MyListView;
 import com.bh.yibeitong.refresh.PullToRefreshView;
 import com.bh.yibeitong.ui.LoginRegisterActivity;
@@ -30,7 +26,6 @@ import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.CustomDialog;
 import com.bh.yibeitong.view.UserInfo;
-import com.lidroid.xutils.BitmapUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,9 +46,8 @@ import java.util.List;
  */
 public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeaderRefreshListener,
         PullToRefreshView.OnFooterRefreshListener, View.OnClickListener {
+    public static final int SHOPCART_RESULT_CODE = 0x03;
     private View view;
-    // 标志位，标志已经初始化完成。
-    private boolean isPrepared;
 
     private TextView subtitle;//编辑
 
@@ -61,19 +55,17 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
     private MyListView myListView;
     private ShopCartAdapter shopCartAdapter;
 
+    /*购物车UI*/
     private Button but_pay;
     private TextView tv_all_pay, tv_shopcart_num;
 
     private double totalPrice = 0; // 商品总价
-    private int sumCount = 0;//商品总数量
+    public static int cartNum = 0;//商品总数量
     private double add = 0;
 
     /**/
     private int count = 0;
     private int sc_count = 0;
-
-    //接收主页传值
-    private String login;
 
     /*本地存储*/
     UserInfo userInfo;
@@ -113,53 +105,21 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
         }
 
-
-        /*Bundle bundle = getArguments();
-        //从activity传过来的Bundle
-        if (bundle != null) {
-            login = bundle.getString("login");
-            if (!(login == null)) {
-                getShopCart(shopid);
-            } else {
-                Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-                dialog();
-            }
-
-        }*/
-
         jingang = userInfo.getLogin();
-        /*if (jingang.equals("")) {
-            //没有登录
-            //System.out.println("购物车 空" + jingang + "未登录");
-            //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-        } else if (jingang.equals("0")) {
-            //没有登录
-            //System.out.println("购物车" + jingang + "未登录");
-            //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-        } else if (jingang.equals("1")) {
-            //已登录
-            //System.out.println("购物车" + jingang + "已登录");
 
-        }*/
         getShopCart(shopid);
 
         puToRefreshView.setOnHeaderRefreshListener(this);
         puToRefreshView.setOnFooterRefreshListener(this);
         puToRefreshView.setLastUpdated(new Date().toLocaleString());
 
-
-        //lazyLoad();
-
         return view;
     }
-
 
     /**
      * 组件初始化
      */
     public void initData() {
-
-
         userInfo = new UserInfo(getActivity().getApplication());
         df = new DecimalFormat("###.00");
 
@@ -176,7 +136,6 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
         tv_all_pay = (TextView) view.findViewById(R.id.tv_all_pay);
         tv_shopcart_num = (TextView) view.findViewById(R.id.tv_shopcart_num);
 
-
     }
 
     @Override
@@ -191,6 +150,13 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
         } else {
             System.out.println("刷新FMShopCart");
+
+            tv_all_pay.setText("0.00");
+
+            but_pay.setText("");
+
+            tv_shopcart_num.setText("0");
+
 
             userInfo = new UserInfo(getActivity().getApplication());
 
@@ -208,37 +174,6 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
             }else{
 
             }
-
-
-//            //**Bundle bundle = getArguments();
-//            //从activity传过来的Bundle
-//            if (bundle != null) {
-//                login = bundle.getString("login");
-//                if (!(login == null)) {
-//                    getShopCart(shopid);
-//                } else {
-//                    Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-//                }
-//
-//            }*/
-
-//            jingang = userInfo.getLogin();
-//            if (jingang.equals("")) {
-//                //没有登录
-//                //System.out.println("购物车 空" + jingang + "未登录");
-//                //dialog();
-//                //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-//            } else if (jingang.equals("0")) {
-//                //没有登录
-//                //System.out.println("购物车" + jingang + "未登录");
-//                //dialog();
-//                //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-//            } else if (jingang.equals("1")) {
-//                //已登录
-//                //System.out.println("购物车" + jingang + "已登录");
-//
-//            }
-
 
             getShopCart(shopid);
 
@@ -281,7 +216,6 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
             @Override
             public void run() {
                 puToRefreshView.onFooterRefreshComplete();
-                //Toast.makeText(getActivity(), "加载更多数据", Toast.LENGTH_SHORT).show();
             }
 
         }, 1000);
@@ -302,10 +236,7 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                 if (jingang.equals("1")) {
                     getShopCart(shopid);
                 } else {
-                    Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
                 }
-
-                //Toast.makeText(getActivity(), "刷新成功!", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -328,18 +259,25 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                     } else if (jingang.equals("1")) {
                         //已登录
                         Intent intent = new Intent(getActivity(), OrderActivity.class);
-                        startActivity(intent);
+                        startActivityForResult(intent, SHOPCART_RESULT_CODE);
                     }
-
-
                 }
-
                 break;
-
             default:
                 break;
         }
 
+    }
+
+    /*支付按钮状态*/
+    public void goPay() {
+        but_pay.setTextColor(Color.WHITE);
+        but_pay.setBackgroundColor(Color.rgb(162, 203, 52));
+    }
+
+    public void noGoPay() {
+        but_pay.setTextColor(Color.GRAY);
+        but_pay.setBackgroundColor(Color.rgb(204, 204, 204));
     }
 
     /**
@@ -353,90 +291,94 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
         } else {
             listBean.clear();
         }
-        String Path = HttpPath.PATH + HttpPath.GETCART + "shopid=" + shopid;
+        PATH = HttpPath.PATH + HttpPath.GETCART + "shopid=" + shopid;
 
-        System.out.println("购物车 = " + Path);
+        System.out.println("购物车 = " + PATH);
 
-        RequestParams params = new RequestParams(Path);
+        RequestParams params = new RequestParams(PATH);
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
                         System.out.println("购物车 = " + result);
                         totalPrice = 0;
-                        /**/
-                        //System.out.println("222222222");
-
                         try {
                             JSONObject response = new JSONObject(result);
 
                             if(response.get("msg").toString().equals("[]")){
                                 System.out.println("没有数据");
+                                but_pay.setText("购物车为空");
+                                noGoPay();
                             }else{
                                 ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
 
                                 listBean = shopCart.getMsg().getList();
 
-                                //System.out.println("11111111111111");
-
                                 totalPrice = shopCart.getMsg().getSurecost();
 
-                                sumCount = shopCart.getMsg().getSumcount();
+                                cartNum = shopCart.getMsg().getSumcount();
                                 //显示购物车数量
-                                tv_shopcart_num.setText("" + sumCount);
+                                tv_shopcart_num.setText("" + cartNum);
 
-                        /*判断快递情况*/
+                                /*判断快递情况*/
                                 if (shopCart.getMsg().isOnlynewtype() == true) {
                                     System.out.println("只有快递");
 
-
                                     //判断总计小于1的情况
                                     if (totalPrice < 1) {
-                                        tv_all_pay.setText("合计：￥" + "0" + df.format(totalPrice) + "元");
+                                        tv_all_pay.setText("￥" + "0" + df.format(totalPrice) + "元");
                                     } else {
-                                        tv_all_pay.setText("合计：￥" + df.format(totalPrice) + "元");
+                                        tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
                                     }
 
-                                    but_pay.setVisibility(View.VISIBLE);
                                     but_pay.setText("去支付");
-                                    but_pay.setTextColor(Color.RED);
+//                                    but_pay.setTextColor(Color.WHITE);
+//                                    but_pay.setBackgroundColor(Color.rgb(162,203,52));
+
+                                    goPay();
 
                                 } else {
                                     System.out.println("不是只有快递");
 
                                     if (shopCart.getMsg().getList().size() == 0) {
                                         tv_shopcart_num.setText("" + 0);
-                                        tv_all_pay.setText("购物车为空");
-                                        but_pay.setVisibility(View.INVISIBLE);
+                                        tv_all_pay.setText("￥0.00");
+                                        but_pay.setText("购物车为空");
+
+                                        noGoPay();
 
                                     } else if (shopCart.getMsg().getList().size() > 0) {
 
-                                        but_pay.setVisibility(View.VISIBLE);
-                                        //listBean = shopCart.getMsg().getList();
-
-                                        //
                                         if (limitcost == 0) {
                                             but_pay.setText("去支付");
-                                            but_pay.setTextColor(Color.RED);
+//                                            but_pay.setTextColor(Color.WHITE);
+//                                            but_pay.setBackgroundColor(Color.rgb(162,203,52));
+                                            goPay();
                                         } else if (totalPrice >= limitcost) {
                                             but_pay.setText("去支付");
-                                            but_pay.setTextColor(Color.RED);
+//                                            but_pay.setTextColor(Color.WHITE);
+//                                            but_pay.setBackgroundColor(Color.rgb(162,203,52));
+                                            goPay();
                                         } else if (totalPrice > 0 && totalPrice < limitcost) {
                                             double add = limitcost - totalPrice;
                                             but_pay.setText("还差" + df.format(add) + "元");
-                                            but_pay.setTextColor(Color.GRAY);
+//                                            but_pay.setTextColor(Color.GRAY);
+//                                            but_pay.setBackgroundColor(Color.rgb(204,204,204));
+                                            noGoPay();
+
                                         } else if (totalPrice == 0) {
                                             but_pay.setText("购物车为空");
-                                            but_pay.setTextColor(Color.GRAY);
+                                            //but_pay.setTextColor(Color.GRAY);
+                                            noGoPay();
                                         } else {
 
                                         }
                                         //判断总计小于1的情况
                                         System.out.println("totalPrice=" + totalPrice);
                                         if (totalPrice < 1) {
-                                            tv_all_pay.setText("合计：￥" + "0" + df.format(totalPrice) + "元");
+                                            tv_all_pay.setText("￥" + "0" + df.format(totalPrice) + "元");
                                         } else {
-                                            tv_all_pay.setText("合计：￥" + df.format(totalPrice) + "元");
+                                            tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
                                         }
                                     }
 
@@ -448,9 +390,6 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                             e.printStackTrace();
                         }
 
-
-
-
                     }
 
                     @Override
@@ -461,7 +400,6 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
                         tv_shopcart_num.setText("" + 0);
                         tv_all_pay.setText("购物车为空");
-                        but_pay.setVisibility(View.INVISIBLE);
 
                     }
 
@@ -480,20 +418,14 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
     }
 
-
-    private FMHomePage fmHomePage;
-    MainActivity mActivity;
     /**
-     * 试一试 当前写adapter
+     * 试一试 当前写adapter(购物车适配器)
      */
-    public class ShopCartAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+    public class ShopCartAdapter extends BaseAdapter {
 
         private Context mContext;
-        private List<ShopCart> shopCarts = new ArrayList<>();
 
         private List<ShopCart.MsgBean.ListBean> listBean = new ArrayList<>();
-
-        //ViewHolder vh = new ViewHolder();
 
         public ShopCartAdapter(Context mContext, List<ShopCart.MsgBean.ListBean> listBean) {
             this.mContext = mContext;
@@ -549,17 +481,13 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
             if (img.equals("")) {
                 vh.img.setImageResource(R.mipmap.yibeitong001);
             } else {
-                BitmapUtils bitmapUtils = new BitmapUtils(mContext);
-                bitmapUtils.configDiskCacheEnabled(true);
-                bitmapUtils.configMemoryCacheEnabled(false);
-
-                bitmapUtils.display(vh.img, "http://www.ybt9.com/" + img);
+                x.image().bind(vh.img, "http://www.ybt9.com/" + img);
+                //XUtilsImageUtils.display(vh.img, "http://www.ybt9.com/" + img, 0);
             }
 
             vh.gname.setText(gname);
             vh.cost.setText("￥" + cost);
             vh.count.setText("" + count);
-
 
             /**
              * 添加购物车
@@ -581,12 +509,6 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                             new Callback.CommonCallback<String>() {
                                 @Override
                                 public void onSuccess(String result) {
-
-                                    ShopCartReturn shopCartReturn =
-                                            GsonUtil.gsonIntance().gsonToBean(result, ShopCartReturn.class);
-
-                                    System.out.println("1111111111" + shopCartReturn.getMsg().isResult());
-
                                     vh.add.setClickable(true);
                                     System.out.println("购物车操作" + result);
 
@@ -600,37 +522,38 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                                     //
                                     if (limitcost == 0) {
                                         but_pay.setText("去支付");
-                                        but_pay.setTextColor(Color.RED);
+//                                        but_pay.setTextColor(Color.WHITE);
+//                                        but_pay.setBackgroundColor(Color.rgb(162,203,52));
+                                        goPay();
 
                                     } else if (totalPrice >= limitcost) {
                                         but_pay.setText("去支付");
-                                        but_pay.setTextColor(Color.RED);
+//                                        but_pay.setTextColor(Color.WHITE);
+//                                        but_pay.setBackgroundColor(Color.rgb(162,203,52));
+                                        goPay();
 
                                     } else if (totalPrice > 0 && totalPrice < limitcost) {
                                         add = limitcost - totalPrice;
                                         but_pay.setText("还差" + df.format(add) + "元");
-                                        but_pay.setTextColor(Color.GRAY);
+                                        //but_pay.setTextColor(Color.GRAY);
+                                        noGoPay();
                                     } else if (totalPrice == 0) {
                                         but_pay.setText("购物车为空");
-                                        but_pay.setTextColor(Color.GRAY);
+                                        //but_pay.setTextColor(Color.GRAY);
+                                        noGoPay();
                                     } else {
                                         toast("错误");
                                     }
 
-                                    System.out.println("totalPrice = " + totalPrice);
-                                    tv_all_pay.setText("合计：￥" + df.format(totalPrice) + "元");
+                                    tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
 
                                     vh.count.setText("" + count);
 
                                     tv_shopcart_num.setText("" + sc_count);
 
-                                    /*fmHomePage = new FMHomePage();
-                                    fmHomePage.onHiddenChanged(false);*/
                                     Intent intent = new Intent("jerry");
                                     intent.putExtra("change", "yes");
                                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-                                    //mActivity.popFragment();
-
 
                                 }
 
@@ -663,13 +586,10 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                     String str_num = vh.count.getText().toString();
                     count = Integer.valueOf(str_num);
 
-                    System.out.println("count=" + count);
-
                     String sc_num = tv_shopcart_num.getText().toString();
                     sc_count = Integer.parseInt(sc_num);
 
                     if (count > 0) {
-                        //addShopCart(shopid, -1, str_id);
                         String PATH = HttpPath.PATH + HttpPath.ADD_SHOPCART + "&shopid=" + shopid + "&num=-1" + "&gid=" + str_id;
                         RequestParams params = new RequestParams(PATH);
                         x.http().post(params,
@@ -686,21 +606,24 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
                                         sc_count--;
 
-                                        //
                                         if (limitcost == 0) {
                                             but_pay.setText("去支付");
-                                            but_pay.setTextColor(Color.RED);
+                                            //but_pay.setTextColor(Color.WHITE);
+                                            goPay();
 
                                         } else if (totalPrice >= limitcost) {
                                             but_pay.setText("去支付");
-                                            but_pay.setTextColor(Color.RED);
+                                            //but_pay.setTextColor(Color.WHITE);
+                                            goPay();
                                         } else if (totalPrice > 0 && totalPrice < limitcost) {
                                             double add = limitcost - totalPrice;
                                             but_pay.setText("还差" + df.format(add) + "元");
-                                            but_pay.setTextColor(Color.GRAY);
+                                            //but_pay.setTextColor(Color.GRAY);
+                                            noGoPay();
                                         } else if (totalPrice == 0) {
                                             but_pay.setText("购物车为空");
-                                            but_pay.setTextColor(Color.GRAY);
+                                            //but_pay.setTextColor(Color.GRAY);
+                                            noGoPay();
                                         } else {
                                             toast("错误");
                                         }
@@ -708,9 +631,9 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                                         //判断总计小于1的情况
                                         System.out.println("totalPrice=" + totalPrice);
                                         if (totalPrice < 1) {
-                                            tv_all_pay.setText("合计：￥" + "0" + df.format(totalPrice) + "元");
+                                            tv_all_pay.setText("￥" + "0" + df.format(totalPrice) + "元");
                                         } else {
-                                            tv_all_pay.setText("合计：￥" + df.format(totalPrice) + "元");
+                                            tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
                                         }
 
                                         vh.count.setText("" + count);
@@ -749,14 +672,6 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
             return c_view;
         }
 
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            com.bh.yibeitong.adapter.ShopCartAdapter.ViewHolder holder = (com.bh.yibeitong.adapter.ShopCartAdapter.ViewHolder) view.getTag();
-
-        }
-
-
         public class ViewHolder {
             private TextView gname, cost;
             private ImageView img;
@@ -765,57 +680,15 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
         }
 
-
-        /**
-         * 购物车操作
-         * num = 1 为添加
-         * num = -1 为减少
-         *
-         * @param shopid
-         * @param num
-         * @param gid
-         */
-
-        /*public void addShopCart(String shopid, final int num, String gid) {
-            //final ViewHolder vh = new ViewHolder();
-
-            String PATH = HttpPath.PATH + HttpPath.ADD_SHOPCART + "&shopid=" + shopid + "&num=" + num + "&gid=" + gid;
-            RequestParams params = new RequestParams(PATH);
-            x.http().post(params,
-                    new Callback.CommonCallback<String>() {
-                        @Override
-                        public void onSuccess(String result) {
-                            vh.add.setClickable(true);
-                            System.out.println("购物车操作" + result);
-                            *//*if (num == 1) {
-                                Toast.makeText(mContext, "添加购物车成功", Toast.LENGTH_SHORT).show();
-                            } else if (num == -1) {
-                                Toast.makeText(mContext, "减少购物车成功", Toast.LENGTH_SHORT).show();
-                            }*//*
-                        }
-
-                        @Override
-                        public void onError(Throwable ex, boolean isOnCallback) {
-                            *//*if (num == 1) {
-                                Toast.makeText(mContext, "添加购物车失败", Toast.LENGTH_SHORT).show();
-                            } else if (num == -1) {
-                                Toast.makeText(mContext, "减少购物车失败", Toast.LENGTH_SHORT).show();
-                            }*//*
-                        }
-
-                        @Override
-                        public void onCancelled(CancelledException cex) {
-
-                        }
-
-                        @Override
-                        public void onFinished() {
-
-                        }
-                    });
-
-        }*/
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == SHOPCART_RESULT_CODE && requestCode == OrderActivity.SHOPCART_REQUEST_CODE) {
+            listBean.clear();
+            shopCartAdapter.notifyDataSetChanged();
 
+        }
+    }
 }

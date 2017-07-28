@@ -19,10 +19,9 @@
 
             <ImageView
                 android:id="@+id/iv_item_ss"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:src="@mipmap/yibeitong001" />
+                android:layout_gravity="center" />
 
         </LinearLayout>
 

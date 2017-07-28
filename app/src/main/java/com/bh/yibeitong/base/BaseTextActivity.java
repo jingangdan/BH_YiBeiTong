@@ -42,15 +42,15 @@ public class BaseTextActivity extends AppCompatActivity implements View.OnClickL
     /*Toast*/
     private Toast mToast;
 
-    private CatchExcep application;
+    //private CatchExcep application;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        application = (CatchExcep)getApplication();
-        application.init();
-        application.addActivity(this);
+//        application = (CatchExcep)getApplication();
+//        application.init();
+//        application.addActivity(this);
 
         x.Ext.init(this.getApplication());
         x.Ext.setDebug(BuildConfig.DEBUG);
