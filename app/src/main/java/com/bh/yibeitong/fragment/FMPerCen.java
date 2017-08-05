@@ -837,7 +837,8 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
                         toast("已是最新版本");
 
                     } else {
-                        final Dialog dialog = new AlertDialog.Builder(getActivity()).create();
+                        final Dialog dialog = new AlertDialog.Builder(getActivity(),
+                                R.style.CustomProgressDialog).create();
                         final File file = new File(SDCardUtils.getRootDirectory() + "/ybt_updateVersion/ybt.apk");
                         dialog.setCancelable(true);// 可以用“返回键”取消
                         dialog.setCanceledOnTouchOutside(false);//

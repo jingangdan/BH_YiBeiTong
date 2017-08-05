@@ -35,7 +35,6 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
 
-
     <!--扫一哈子-->
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -43,7 +42,6 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
 
     <!-- 【必须】 信鸽SDK所需权限   -->
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
@@ -56,8 +54,9 @@
 
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
-
     <uses-permission android:name="android.permission.WRITE_APN_SETTINGS"/>
+
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
     <application
         android:allowBackup="true"
@@ -447,25 +446,25 @@
         <activity android:name=".seller.activity.SellerActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-
         </activity>
 
         <!--购物车-->
         <activity android:name=".ui.ShopCarActivity"></activity>
 
         <!--订单管理（商家端）-->
-        <activity android:name=".seller.activity.SOrderManageActivity"></activity>
+        <activity android:name=".seller.ui.SOrderManageActivity"></activity>
 
         <!--订单详情（商家端）-->
         <activity android:name=".seller.activity.SellerAppOneActivity"></activity>
 
         <!--货物采购（商家端）-->
         <activity android:name=".seller.activity.GoodsProActivity"></activity>
+
+        <!--店铺信息（商家端）-->
+        <activity android:name=".seller.ui.SAppShopActivity" />
+
+        <!--商家结算列表（商家端）-->
+        <activity android:name=".seller.ui.SShopcostlogActivity" />
 
         <!--开启服务下载新版本-->
         <service android:name="com.bh.yibeitong.updateversion.UpdateVersionService"></service>

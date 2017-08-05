@@ -927,12 +927,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     System.out.println("旧的" + verCode.getMsg());
                     //doNewVersionUpdate(verCode.getMsg().getUrl(), verCode.getMsg().getMsg());
 
-
                     if ((verCoder + 100) >= Integer.parseInt(verCode.getMsg().getVersion())) {
                         //toast(verCode.getMsg().getMsg().toString());
                         System.out.println("最新" + verCode.getMsg());
                     } else {
-                        final Dialog dialog = new AlertDialog.Builder(MainActivity.this).create();
+                        final Dialog dialog = new AlertDialog.Builder(MainActivity.this,
+                                R.style.CustomProgressDialog).create();
                         final File file = new File(SDCardUtils.getRootDirectory() + "/ybt_updateVersion/ybt.apk");
                         dialog.setCancelable(true);// 可以用“返回键”取消
                         dialog.setCanceledOnTouchOutside(false);//
@@ -965,16 +965,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                                 ApkUpdateUtils.download(MainActivity.this, "http://www.ybt9.com/app/ybt.apk", getResources().getString(R.string.app_name));
 
-//新版本已经下载
-//                                if (file.exists() && file.getName().equals("ybt.apk")) {
-//                                    Intent intent = ApkUtils.getInstallIntent(file);
-//                                    startActivity(intent);
-//                                } else {
-//                                    //没有下载，则开启服务下载新版本
-//                                    Intent intent = new Intent(MainActivity.this, UpdateVersionService.class);
-//                                    intent.putExtra("downloadUrl", "http://www.ybt9.com/app/ybt.apk");
-//                                    startService(intent);
-//                                }
                             }
                         }
                     });
@@ -1282,14 +1272,3 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //    }
 
 }
-
-
-
-/*
-* 0x01
-* 0x02首页商品详情
-* 0x03 购物车
-* 0x04 购物车下单
-*
-*
-* */

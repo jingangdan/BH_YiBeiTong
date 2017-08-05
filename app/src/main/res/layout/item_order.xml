@@ -54,13 +54,12 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-
         <ImageView
             android:src="@mipmap/ic_adai"
-            android:layout_margin="5dp"
             android:id="@+id/iv_item_order_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_margin="5dp"/>
 
         <LinearLayout
             android:layout_marginLeft="5dp"

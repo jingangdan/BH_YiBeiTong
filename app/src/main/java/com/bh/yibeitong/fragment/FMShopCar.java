@@ -22,6 +22,7 @@ import com.bh.yibeitong.refresh.MyListView;
 import com.bh.yibeitong.refresh.PullToRefreshView;
 import com.bh.yibeitong.ui.LoginRegisterActivity;
 import com.bh.yibeitong.ui.OrderActivity;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.CustomDialog;
@@ -46,7 +47,6 @@ import java.util.List;
  */
 public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeaderRefreshListener,
         PullToRefreshView.OnFooterRefreshListener, View.OnClickListener {
-    public static final int SHOPCART_RESULT_CODE = 0x03;
     private View view;
 
     private TextView subtitle;//编辑
@@ -259,7 +259,7 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                     } else if (jingang.equals("1")) {
                         //已登录
                         Intent intent = new Intent(getActivity(), OrderActivity.class);
-                        startActivityForResult(intent, SHOPCART_RESULT_CODE);
+                        startActivityForResult(intent, CodeUtils.REQUEST_CODE_SHOPPING);
                     }
                 }
                 break;
@@ -542,7 +542,8 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                                         //but_pay.setTextColor(Color.GRAY);
                                         noGoPay();
                                     } else {
-                                        toast("错误");
+                                        //toast("错误");
+                                        tv_all_pay.setText("￥0.00");
                                     }
 
                                     tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
@@ -685,10 +686,13 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == SHOPCART_RESULT_CODE && requestCode == OrderActivity.SHOPCART_REQUEST_CODE) {
-            listBean.clear();
-            shopCartAdapter.notifyDataSetChanged();
+        if (requestCode == CodeUtils.REQUEST_CODE_SHOPPING) {
+            if (resultCode == CodeUtils.REQUEST_CODE_ORDER) {
 
+                System.out.println("bbbbbbbbbbbbbbbbbbbb");
+                listBean.clear();
+                shopCartAdapter.notifyDataSetChanged();
+            }
         }
     }
 }

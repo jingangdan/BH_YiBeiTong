@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:padding="5dp">
+    android:gravity="center">
 
     <LinearLayout
         style="@style/lin_white"
@@ -11,19 +10,16 @@
         android:layout_width="75dp"
         android:layout_height="30dp"
         android:gravity="center"
-        android:padding="5dp">
+        android:layout_margin="5dp">
 
         <TextView
             android:id="@+id/tv_item_good_classily_second"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="二级分类"
             android:gravity="center"
             android:textColor="#a2cb34"
             style="@style/text_cost"/>
 
     </LinearLayout>
-
-
 
 </LinearLayout>

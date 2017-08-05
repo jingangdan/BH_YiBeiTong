@@ -64,33 +64,45 @@ public class GoodsClassilySecondAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_good_classily_second, null);
 
             vh.name = (TextView) convertView.findViewById(R.id.tv_item_good_classily_second);
-
-            vh.lin_item_good_classily_second = (LinearLayout) convertView.findViewById(R.id.lin_item_good_classily_second);
-
+            vh.linearLayout = (LinearLayout) convertView.findViewById(R.id.lin_item_good_classily_second);
 
             convertView.setTag(vh);
         }else{
             vh = (ViewHolder) convertView.getTag();
         }
 
-        //ListView点击改变背景 文字
-        if(mSelect == position){
+        if (mSelect == position) {
             vh.name.setTextColor(Color.rgb(255, 255, 255));
-            vh.lin_item_good_classily_second.setBackgroundResource(R.drawable.linstyle_green);
-        }else{
+            vh.linearLayout.setBackgroundResource(R.drawable.linstyle_green);
+        } else {
             vh.name.setTextColor(Color.rgb(153, 153, 153));
-            vh.lin_item_good_classily_second.setBackgroundResource(R.drawable.linstyle_white);
+            vh.linearLayout.setBackgroundResource(R.drawable.linstyle_white);
         }
 
-        String name = childBeen.get(position).getName();
-        vh.name.setText(name);
+        System.out.println("aaaaa"+childBeen.get(position).getName());
+        vh.name.setText(childBeen.get(position).getName());
 
+//        if (!childBeen.get(position).getDet().toString().equals("[]")) {
+//            //vh.linearLayout.setVisibility(View.VISIBLE);
+//
+//            //ListView点击改变背景 文字
+//            if (mSelect == position) {
+//                vh.name.setTextColor(Color.rgb(255, 255, 255));
+//                vh.linearLayout.setBackgroundResource(R.drawable.linstyle_green);
+//            } else {
+//                vh.name.setTextColor(Color.rgb(153, 153, 153));
+//                vh.linearLayout.setBackgroundResource(R.drawable.linstyle_white);
+//            }
+//            vh.name.setText(childBeen.get(position).getName());
+//        }else{
+//            //vh.linearLayout.setVisibility(View.GONE);
+//        }
 
         return convertView;
     }
 
     public class ViewHolder{
         TextView name;
-        LinearLayout lin_item_good_classily_second;
+        LinearLayout linearLayout;
     }
 }

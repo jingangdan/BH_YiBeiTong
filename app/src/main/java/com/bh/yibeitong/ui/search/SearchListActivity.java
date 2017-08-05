@@ -359,7 +359,6 @@ public class SearchListActivity extends BaseTextActivity implements
                 vh.price = (TextView) view.findViewById(R.id.tv_item_goods_price);
                 vh.but_go = (Button) view.findViewById(R.id.but_item_goods_go);
 
-
                 view.setTag(vh);
             } else {
                 vh = (ViewHolder) view.getTag();
@@ -399,8 +398,6 @@ public class SearchListActivity extends BaseTextActivity implements
                     String foodPoint = goodslistBeenList.get(i).getPoint();
                     String foodCost = goodslistBeenList.get(i).getCost();
                     String foodGoodattr = goodslistBeenList.get(i).getGoodattr();
-
-
 
                     Intent intent = new Intent(mContext, CateFoodDetailsActivity.class);
                     intent.putExtra("id", str_id);//商品id

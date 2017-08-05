@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,6 +68,7 @@ import com.bh.yibeitong.ui.homepage.SpecialActivity;
 import com.bh.yibeitong.ui.percen.JiFenActivity;
 import com.bh.yibeitong.ui.percen.YuEActivity;
 import com.bh.yibeitong.ui.search.SearchActivity;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.utils.MD5Util;
@@ -209,6 +211,7 @@ public class FMHomePage extends BaseFragment implements
         public void run() {
             Log.i("移除", printCurTime());
             handler.removeCallbacks(runnable);
+            mLocationClient.stop();
         }
 
     };
@@ -239,6 +242,8 @@ public class FMHomePage extends BaseFragment implements
     /*自定义ScrollView*/
     private MyScrollView myScrollView;
 
+    /**/
+    private RecyclerView rv_horizontal;
 
     @Nullable
     @Override
@@ -272,7 +277,6 @@ public class FMHomePage extends BaseFragment implements
         } else {
             System.out.println("未登录");
         }
-
 
         return view;
     }
@@ -359,6 +363,13 @@ public class FMHomePage extends BaseFragment implements
         /*滑动控件*/
         myScrollView = (MyScrollView) view.findViewById(R.id.sv_home_page);
 
+        /*横向的RecyclerView*/
+        rv_horizontal = (RecyclerView) view.findViewById(R.id.rv_classify_horizontal);
+        //设置布局管理器
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rv_horizontal.setLayoutManager(linearLayoutManager);
+
 
         mPullToRefreshView.setOnHeaderRefreshListener(this);
         mPullToRefreshView.setOnFooterRefreshListener(this);
@@ -386,7 +397,7 @@ public class FMHomePage extends BaseFragment implements
                 intent.putExtra("id", ceFoodList.get(i).getId());//商品id
                 intent.putExtra("instro", ceFoodList.get(i).getInstro());
 
-                startActivityForResult(intent, 0x02);
+                startActivityForResult(intent, CodeUtils.REQUEST_CODE_HOMEPAGE);
             }
         });
 
@@ -442,6 +453,15 @@ public class FMHomePage extends BaseFragment implements
 
             et_new_address.setTextColor(Color.BLACK);
             et_new_address.setBackgroundColor(Color.WHITE);
+        }
+    }
+
+    @Override
+    public void onJingang(boolean isToJingang) {
+        if(isToJingang){
+            rv_horizontal.setVisibility(View.VISIBLE);
+        }else{
+            rv_horizontal.setVisibility(View.GONE);
         }
     }
 
@@ -1251,8 +1271,6 @@ public class FMHomePage extends BaseFragment implements
 
             //isLocation = true;
 
-            mLocationClient.stop();
-
             handler.postDelayed(runRemove, 0);//过6秒后执行
 
             //获取定位结果
@@ -1350,6 +1368,8 @@ public class FMHomePage extends BaseFragment implements
                 }
             }
 
+            mLocationClient.stop();
+
             Log.i("描述：", sb.toString());
 
             logMsg("");
@@ -1439,6 +1459,8 @@ public class FMHomePage extends BaseFragment implements
 
                         recyclerView.setLayoutManager(llmv);
                         recyclerView.setAdapter(homeAdapter);
+
+                        rv_horizontal.setAdapter(homeAdapter);
 
                         homeAdapter.setOnItemClickListener(new com.bh.yibeitong.Interface.OnItemClickListener() {
                             @Override
@@ -1663,7 +1685,8 @@ public class FMHomePage extends BaseFragment implements
                     intent.putExtra("lat", latitude);
                     intent.putExtra("lng", longtitude);
 
-                    startActivity(intent);
+                    //startActivity(intent);
+                    startActivityForResult(intent, CodeUtils.REQUEST_CODE_HOMEPAGE);
                 } else {
                     toast("无网络连接");
                 }
@@ -1845,39 +1868,53 @@ public class FMHomePage extends BaseFragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        System.out.println("data = " + data);
-
         if (requestCode == 10 && resultCode == 2) {
             Bundle bundle = data.getExtras();
             String strResult = bundle.getString("selectAddress");
             latitude = bundle.getString("lat");
             longtitude = bundle.getString("lng");
-
-            System.out.println("strResult" + strResult);
-
             ceFoodList.clear();
-
             myScrollView.scrollTo(0, 0);
-
             getShopGoods(latitude, longtitude, 1);
 
-        } else if (requestCode == 0x02 && resultCode == 2) {
-            Bundle bundle = data.getExtras();
-            String gid = bundle.getString("gid");
-            int cartnum = bundle.getInt("cartnum");
+        } else if (requestCode == CodeUtils.REQUEST_CODE_HOMEPAGE) {
+            if (resultCode == CodeUtils.REQUEST_CODE_CATEFOOD || resultCode == CodeUtils.REQUEST_CODE_NEWSHOP) {
+                Bundle bundle = data.getExtras();
+                String gid = bundle.getString("gid");
+                int cartNum = bundle.getInt("cartNum");
 
-            System.out.println("gid=" + gid + "  cartnum=" + cartnum);
+                System.out.println("gid=" + gid + "  cartum=" + cartNum);
 
-            for (int i = 0; i < ceFoodList.size(); i++) {
-                if (gid.equals(ceFoodList.get(i).getId())) {
-                    ceFoodList.get(i).setCartnum(cartnum);
+                for (int i = 0; i < ceFoodList.size(); i++) {
+                    if (gid.equals(ceFoodList.get(i).getId())) {
+                        ceFoodList.get(i).setCartnum(cartNum);
+                    } else if (gid.equals("000")) {
+                        ceFoodList.get(i).setCartnum(cartNum);
+                    }
                 }
+
+                gridViewAdapter.notifyDataSetChanged();
             }
-
-            gridViewAdapter.notifyDataSetChanged();
-
         }
+
+//        else if (requestCode == CodeUtils.REQUEST_CODE_HOMEPAGE && resultCode == CodeUtils.REQUEST_CODE_CATEFOOD) {
+//            Bundle bundle = data.getExtras();
+//            String gid = bundle.getString("gid");
+//            int cartNum = bundle.getInt("cartNum");
+//
+//            System.out.println("gid=" + gid + "  cartum=" + cartNum);
+//
+//            for (int i = 0; i < ceFoodList.size(); i++) {
+//                if (gid.equals(ceFoodList.get(i).getId())) {
+//                    ceFoodList.get(i).setCartnum(cartNum);
+//                }else if(gid.equals("000")){
+//                    ceFoodList.get(i).setCartnum(cartNum);
+//                }
+//            }
+//
+//            gridViewAdapter.notifyDataSetChanged();
+//
+//        }
 
     }
 

@@ -1,10 +1,10 @@
 package com.bh.yibeitong.ui;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,7 @@ import com.bh.yibeitong.bean.ShopCart;
 import com.bh.yibeitong.bean.ShopCartReturn;
 import com.bh.yibeitong.bean.shopbean.CateInfo;
 import com.bh.yibeitong.bean.shopbean.CateInfoGoods;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.CustomDialog;
@@ -46,6 +47,7 @@ import java.util.List;
  * 店铺优选 分类
  */
 public class CateInfoActivity extends BaseTextActivity {
+    public static final int CATEINFO_REQUEST_CODE = 0x05;
     /*接收页面传值*/
     private Intent intent;
     String shopid, cateid, name, param;
@@ -242,7 +244,8 @@ public class CateInfoActivity extends BaseTextActivity {
                 //跳转到购物车
                 intent = new Intent(CateInfoActivity.this, ShopCarActivity.class);
                 intent.putExtra("shopid", shopid);
-                startActivity(intent);
+                //startActivity(intent);
+                startActivityForResult(intent, CodeUtils.REQUEST_CODE_CATEINFO);
                 break;
 
             default:
@@ -257,7 +260,7 @@ public class CateInfoActivity extends BaseTextActivity {
         but_pay.setBackgroundColor(Color.rgb(162, 203, 52));
     }
 
-    /*未达到支付要求状态*/
+    /*未达到支付要求按钮状态*/
     public void noGoPay() {
         but_pay.setTextColor(Color.GRAY);
         but_pay.setBackgroundColor(Color.rgb(204, 204, 204));
@@ -265,7 +268,7 @@ public class CateInfoActivity extends BaseTextActivity {
 
 
     /**
-     * 提示框
+     * 未登录提示框
      */
     protected void dialog() {
         CustomDialog.Builder builder = new CustomDialog.Builder(this);
@@ -500,6 +503,37 @@ public class CateInfoActivity extends BaseTextActivity {
                         cateInfoGoodsAdapter = new CateInfoGoodsAdapter(CateInfoActivity.this, goodslistBeen);
                         //mgv_cateinfo.setAdapter(cateInfoGoodsAdapter);
                         gridView.setAdapter(cateInfoGoodsAdapter);
+
+                        /*查看商品详情*/
+                        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                                /*id 详情图片 名称 已售 评价 单价 单位 购物车数量*/
+                                final String str_id = goodslistBeen.get(position).getId();
+                                final String instro = goodslistBeen.get(position).getInstro();
+                                final String foodName = goodslistBeen.get(position).getName();
+                                final int str_foodSellCount = goodslistBeen.get(position).getSellcount();
+                                final String foodPoint = goodslistBeen.get(position).getPoint();
+                                final String foodCost = goodslistBeen.get(position).getCost();
+                                final String foodGoodattr = goodslistBeen.get(position).getGoodattr();
+                                final int str_cartNum = goodslistBeen.get(position).getCartnum();
+
+                                Intent intent = new Intent(CateInfoActivity.this, CateFoodDetailsActivity.class);
+                                intent.putExtra("id", str_id);//商品id
+
+                                intent.putExtra("instro", instro);
+                                intent.putExtra("foodName", foodName);
+                                intent.putExtra("foodSellCount", String.valueOf(str_foodSellCount));
+                                intent.putExtra("foodPoint", foodPoint);
+                                intent.putExtra("foodCost", foodCost);
+                                intent.putExtra("foodGoodattr", foodGoodattr);
+
+                                intent.putExtra("cartNum", String.valueOf(str_cartNum));
+
+                                startActivityForResult(intent, CodeUtils.REQUEST_CODE_CATEINFO);
+                            }
+                        });
                     }
 
                     @Override
@@ -517,6 +551,47 @@ public class CateInfoActivity extends BaseTextActivity {
 
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == CodeUtils.REQUEST_CODE_CATEINFO){
+            if(resultCode == CodeUtils.REQUEST_CODE_CATEFOOD || resultCode == CodeUtils.REQUEST_CODE_SHOPCART){
+                Bundle bundle = data.getExtras();
+                String gid = bundle.getString("gid");
+                int cartNum = bundle.getInt("cartNum");
+                int cartnum = bundle.getInt("cartnum");
+
+                tv_shopcart_num.setText(""+cartnum);
+
+                for (int i = 0; i < goodslistBeen.size(); i++){
+                    if(gid.equals(goodslistBeen.get(i).getId())){
+                        goodslistBeen.get(i).setCartnum(cartNum);
+                    }
+                }
+                cateInfoGoodsAdapter.notifyDataSetChanged();
+            }
+        }
+
+//        if (requestCode == CodeUtils.REQUEST_CODE_CATEINFO
+//                && resultCode == CodeUtils.REQUEST_CODE_CATEFOOD){
+//            Bundle bundle = data.getExtras();
+//            String gid = bundle.getString("gid");
+//            int cartNum = bundle.getInt("cartNum");
+//            int cartnum = bundle.getInt("cartnum");
+//
+//            tv_shopcart_num.setText(""+cartnum);
+//
+//            for (int i = 0; i < goodslistBeen.size(); i++){
+//                if(gid.equals(goodslistBeen.get(i).getId())){
+//                    goodslistBeen.get(i).setCartnum(cartNum);
+//                }
+//            }
+//            cateInfoGoodsAdapter.notifyDataSetChanged();
+//        }
+
     }
 
     /**
@@ -664,40 +739,7 @@ public class CateInfoActivity extends BaseTextActivity {
             final String cost = goodslistBeanList.get(position).getCost();
             String sellcount = String.valueOf(goodslistBeanList.get(position).getSellcount());
             final String shopid = goodslistBeanList.get(position).getShopid();
-
             final int cartNum = goodslistBeanList.get(position).getCartnum();
-
-            /*id 详情图片 名称 已售 评价 单价 单位 购物车数量*/
-            final String str_id = goodslistBeanList.get(position).getId();
-            final String instro = goodslistBeanList.get(position).getInstro();
-            final String foodName = goodslistBeanList.get(position).getName();
-            final int str_foodSellCount = goodslistBeanList.get(position).getSellcount();
-            final String foodPoint = goodslistBeanList.get(position).getPoint();
-            final String foodCost = goodslistBeanList.get(position).getCost();
-            final String foodGoodattr = goodslistBeanList.get(position).getGoodattr();
-            final int str_cartNum = goodslistBeanList.get(position).getCartnum();
-
-        /*点击图片查看商品详细信息*/
-            vh.imager.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    System.out.println("点击" + position);
-
-                    Intent intent = new Intent(mContext, CateFoodDetailsActivity.class);
-                    intent.putExtra("id", str_id);//商品id
-
-                    intent.putExtra("instro", instro);
-                    intent.putExtra("foodName", foodName);
-                    intent.putExtra("foodSellCount", String.valueOf(str_foodSellCount));
-                    intent.putExtra("foodPoint", foodPoint);
-                    intent.putExtra("foodCost", foodCost);
-                    intent.putExtra("foodGoodattr", foodGoodattr);
-
-                    intent.putExtra("cartNum", String.valueOf(str_cartNum));
-
-                    mContext.startActivity(intent);
-                }
-            });
 
             if (imgPath.equals("")) {
                 vh.imager.setImageResource(R.mipmap.yibeitong001);

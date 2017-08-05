@@ -22,6 +22,9 @@ import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.bean.seller.NewShoptj;
 import com.bh.yibeitong.bean.seller.SellerLogin;
 import com.bh.yibeitong.refresh.MyGridView;
+import com.bh.yibeitong.seller.ui.SAppShopActivity;
+import com.bh.yibeitong.seller.ui.SOrderManageActivity;
+import com.bh.yibeitong.seller.ui.SShopcostlogActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.SlideMenuView;
@@ -154,44 +157,6 @@ public class SellerActivity extends Activity implements View.OnClickListener {
             System.out.println("账号注册失败！！！！！！！！！");
         }
 
-        /*if (!(userAccount == null)) {
-            XGPushManager.registerPush(this, userAccount);
-
-            XGPushManager.registerPush(this, userAccount,
-                    new XGIOperateCallback() {
-                        @Override
-                        public void onSuccess(Object data, int flag) {
-                            //Log.d("TPush", "注册成功，设备token为：" + data);
-                            System.out.println("绑定账号 成功 = " + userAccount);
-                            System.out.println("绑定账号注册成功，设备token为：" + data);
-                        }
-
-                        @Override
-                        public void onFail(Object data, int errCode, String msg) {
-                            System.out.println("绑定账号 失败 = " + userAccount);
-                            //Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
-                            System.out.println("绑定账号注册失败，错误码：" + errCode + ",错误信息：" + msg);
-                        }
-                    });
-        } else {
-            XGPushManager.registerPush(this, new XGIOperateCallback() {
-                @Override
-                public void onSuccess(Object data, int flag) {
-                    Log.d("TPush", "注册成功，设备token为：" + data);
-                    //str_data = String.valueOf(data);
-                }
-
-                @Override
-                public void onFail(Object data, int errCode, String msg) {
-                    Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
-                }
-            });
-        }*/
-
-        /*Context context = getApplicationContext();
-        Intent service = new Intent(context, XGPushActivity.class);
-        context.startService(service);*/
-
         initData();
 
     }
@@ -205,20 +170,6 @@ public class SellerActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onResume() {
-        super.onResume();
-//        XGPushClickedResult click = XGPushManager.onActivityStarted(this);
-//
-//        System.out.println("aaaaaaaaaaaaaaa = " + click);
-//        if (click != null) {
-//            // 判断是否来自信鸽的打开方式
-//            // 根据实际情况处理...
-//            // 如获取自定义key-value
-//            System.out.println("aaaaaaaaaaaaa");
-//        } else {
-//            System.out.println("bbbbbbbbbbbb");
-//        }
-
-
         super.onResume();
         // 如果由信鸽通知调起的 Activity（发送推送的时候，如果要走这个逻辑必须是指定启动界面为：com.cjwsc.activity. HomeActivity ）
         XGPushClickedResult result = XGPushManager.onActivityStarted(this);
@@ -258,8 +209,6 @@ public class SellerActivity extends Activity implements View.OnClickListener {
 
 
     }
-
-    //同理，XGPushManager.onActivityStoped(this)由onStop()改为onPause()内调用，即：
 
     @Override
     protected void onPause() {
@@ -341,7 +290,23 @@ public class SellerActivity extends Activity implements View.OnClickListener {
                     //订单管理
                     startActivity(new Intent(SellerActivity.this, SOrderManageActivity.class));
 
-                } else if (i == 7) {
+                }else if(i == 1){
+                    //商店管理
+
+                }else if(i == 2){
+                    //店铺管理
+                    intent = new Intent(SellerActivity.this, SAppShopActivity.class );
+                    intent.putExtra("uid", uid);
+                    intent.putExtra("pwd", pwd);
+                    startActivity(intent);
+
+                } else if(i == 4){
+                    //商家结算
+                    intent = new Intent(SellerActivity.this, SShopcostlogActivity.class );
+                    intent.putExtra("uid", uid);
+                    intent.putExtra("pwd", pwd);
+                    startActivity(intent);
+                }else if (i == 7) {
                     //货物采购
                     startActivity(new Intent(SellerActivity.this, GoodsProActivity.class));
 

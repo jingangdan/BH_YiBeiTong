@@ -134,9 +134,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top">
+        android:layout_gravity="top"
+        android:orientation="vertical">
 
         <include layout="@layout/include_homa_page_header"></include>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_classify_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+        </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
 

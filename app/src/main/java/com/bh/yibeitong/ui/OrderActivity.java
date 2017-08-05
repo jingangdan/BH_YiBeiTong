@@ -33,6 +33,7 @@ import com.bh.yibeitong.fragment.FMHomePage;
 import com.bh.yibeitong.refresh.MyListView;
 import com.bh.yibeitong.ui.address.AddAddressActivity;
 import com.bh.yibeitong.ui.address.ManageAddressActivity;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.UserInfo;
@@ -57,15 +58,12 @@ import java.util.List;
  * 支付 购物车下单
  */
 public class OrderActivity extends BaseTextActivity {
-    /*requestCode*/
-    public static final int SHOPCART_REQUEST_CODE = 0x04;
     /**
      * 我的收货地址
      */
     private RelativeLayout rel_my_address;
 
     /*优惠券*/
-
     private RelativeLayout rel_quan;
     private TextView tv_quan;
     private List<String> ls_yhquan;
@@ -366,9 +364,11 @@ public class OrderActivity extends BaseTextActivity {
                 if (null == ls_yhquan) {
                     //tv_quan.setText("木有可用优惠券");
                     toast("木有优惠券");
+                    //tv_order_quan.setText("无");
                 } else if (ls_yhquan.size() == 0) {
                     //tv_quan.setText("木有可用优惠券");
                     toast("木有优惠券");
+                    //tv_order_quan.setText("无");
                 } else {
 
                     listView.setAdapter(new ArrayAdapter<String>(OrderActivity.this,
@@ -469,16 +469,16 @@ public class OrderActivity extends BaseTextActivity {
                             }
                         }
 
-                        System.out.println("shopid=" + shopid + "ids=" + ids + "idscount=" + idscount +
-                                "payline=" + payline + "mobile=" + mobile + "address=" + UTF_address +
-                                "contactname=" + UTF_contactname + "pstime=" + pstime + "uid=" + uid + "pwd=" + pwd
-                        );
-
-                        System.out.println("yhjid=" + yhjid);
-
-                        System.out.println("lat=" + lat + "  lng=" + lng);
-
-                        System.out.println("pstype = " + pstype);
+//                        System.out.println("shopid=" + shopid + "ids=" + ids + "idscount=" + idscount +
+//                                "payline=" + payline + "mobile=" + mobile + "address=" + UTF_address +
+//                                "contactname=" + UTF_contactname + "pstime=" + pstime + "uid=" + uid + "pwd=" + pwd
+//                        );
+//
+//                        System.out.println("yhjid=" + yhjid);
+//
+//                        System.out.println("lat=" + lat + "  lng=" + lng);
+//
+//                        System.out.println("pstype = " + pstype);
 
                         if (userInfo.getCode().toString().equals("0")) {
                             postOrder(shopid, lat, lng, ids, idscount, pids, pnum, payline,
@@ -648,7 +648,6 @@ public class OrderActivity extends BaseTextActivity {
 
                             }
                             tv_quan.setText(j + "张可用");
-
 
                         }
 
@@ -985,8 +984,6 @@ public class OrderActivity extends BaseTextActivity {
                             if (payline.equals("0")) {
                                 //货到付款 跳到订单详情
                                 OrderActivity.this.finish();
-
-
                             } else if (payline.equals("1")) {
                                 //跳到支付界面
                                 Intent intent = new Intent(OrderActivity.this, PayActivity.class);
@@ -1004,12 +1001,11 @@ public class OrderActivity extends BaseTextActivity {
                                 intent.putExtra("type", "order");
 
                                 startActivity(intent);
-
                                 OrderActivity.this.finish();
 
-                                intent = new Intent();
-                                setResult(SHOPCART_REQUEST_CODE);
                             }
+                            intent = new Intent();
+                            setResult(CodeUtils.REQUEST_CODE_ORDER);
                         }
 
                     }

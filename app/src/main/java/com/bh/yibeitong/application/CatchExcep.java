@@ -11,6 +11,34 @@ import java.util.ArrayList;
 
 public class CatchExcep extends Application {
 
+    private String gid;
+    private int cartnum;
+    private int cartNum;
+
+    public String getGid() {
+        return gid;
+    }
+
+    public void setGid(String gid) {
+        this.gid = gid;
+    }
+
+    public int getCartnum() {
+        return cartnum;
+    }
+
+    public void setCartnum(int cartnum) {
+        this.cartnum = cartnum;
+    }
+
+    public int getCartNum() {
+        return cartNum;
+    }
+
+    public void setCartNum(int cartNum) {
+        this.cartNum = cartNum;
+    }
+
     ArrayList<Activity> list = new ArrayList<Activity>();
 
     public void init(){

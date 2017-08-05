@@ -22,7 +22,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bh.yibeitong.Interface.CallbackCart;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.adapter.GoodsClassilyAdapter;
 import com.bh.yibeitong.adapter.GoodsClassilySecondAdapter;
@@ -32,16 +31,15 @@ import com.bh.yibeitong.bean.ShopCartReturn;
 import com.bh.yibeitong.bean.ShopNew;
 import com.bh.yibeitong.refresh.MyGridView;
 import com.bh.yibeitong.ui.search.SearchActivity;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.utils.MD5Util;
 import com.bh.yibeitong.view.CustomDialog;
 import com.bh.yibeitong.view.HorizontalListView;
 import com.bh.yibeitong.view.UserInfo;
-import com.bh.yibeitong.zxing.decoding.Intents;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lidroid.xutils.BitmapUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,7 +63,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
     private ShopNewAdapter snAdapter;
 
     int index_msg = 0;
-    int index_child = 0;
+    //int index_child = 0;
 
     /**
      * 一级分类
@@ -94,7 +92,6 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
     //购物车
     private double totalPrice = 0;
 
-
 //    private TextView tv_sg_all_price;
 //    private Button but_sg_pay;
 
@@ -121,6 +118,8 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
     /*返回上一层  搜索*/
     private ImageView iv_back, iv_search;
+
+    private List<ShopNew.MsgBean.ChildBean.DetBean> foodList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,7 +209,6 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
         tv_shop_mapphone = (TextView) findViewById(R.id.tv_shop_mapphone);
         tv_shop_address = (TextView) findViewById(R.id.tv_shop_address);
 
-
         tv_shop_name.setText("" + shopname);
         tv_shop_starttime.setText("营业时间：" + startTime);
         tv_shop_mapphone.setText("店铺电话：" + mapphone);
@@ -249,9 +247,19 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
         but_pay.setBackgroundColor(Color.rgb(162, 203, 52));
     }
 
+    /*未达到支付要求按钮状态*/
     public void noGoPay() {
         but_pay.setTextColor(Color.GRAY);
         but_pay.setBackgroundColor(Color.rgb(204, 204, 204));
+    }
+
+    /*数据改变时向上一层传递信息*/
+    public void setResult(String gid, int cartNum, int cartnum) {
+        intent = new Intent();
+        intent.putExtra("gid", gid);
+        intent.putExtra("cartNum", cartNum);
+        intent.putExtra("cartnum", cartnum);
+        setResult(CodeUtils.REQUEST_CODE_NEWSHOP, intent);
     }
 
     /**
@@ -270,7 +278,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void onSuccess(String result) {
 
-                        System.out.println("店铺" + result);
+                        System.out.println("购物车" + result);
 
                         JSONObject response = null;
                             try {
@@ -357,19 +365,20 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
         RequestParams params = new RequestParams(PATH);
 
+        System.out.println("商店 商品" + PATH);
+
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
-
-                        System.out.println("" + PATH);
-
                         System.out.println("商店 商品" + result);
                         pd.dismiss();
 
                         String results = MD5Util.getUnicode(result);
 
                         final ShopNew shopnew = GsonUtil.gsonIntance().gsonToBean(results, ShopNew.class);
+
+                        foodList = shopnew.getMsg().get(index_msg).getChild().get(0).getDet();
 
                         shopNewUtils.saveMeetings(new Gson().toJson(shopnew.getMsg()));//缓存本地
 
@@ -378,18 +387,12 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                         lv_shop_goods.setAdapter(gcAdapter);
 
                         //二级分类
-
                         gcsAdapter = new GoodsClassilySecondAdapter(ShopNewActivity.this, shopnew.getMsg().get(0).getChild());
                         hlv_shop_goods_second.setAdapter(gcsAdapter);
 
-
                         //默认第一条数据 主要内容
-                        snAdapter = new ShopNewAdapter(ShopNewActivity.this, shopnew.getMsg().get(0).getChild().get(0).getDet(), new CallbackCart() {
-                            @Override
-                            public void click(int position, int index) {
-
-                            }
-                        });
+                        snAdapter = new ShopNewAdapter(ShopNewActivity.this,
+                                shopnew.getMsg().get(0).getChild().get(0).getDet());
                         myGridView.setAdapter(snAdapter);
 
                         //点击一级分类
@@ -398,23 +401,22 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 gcAdapter.changeSelected(position);//刷新
 
+                                //index_child = 0;
+
                                 index_msg = position;
+                                foodList = shopnew.getMsg().get(position).getChild().get(0).getDet();
 
                                 sv_goods.scrollTo(0, 0);
 
                                 //二级分类
-                                gcsAdapter = new GoodsClassilySecondAdapter(ShopNewActivity.this, shopnew.getMsg().get(position).getChild());
+                                gcsAdapter = new GoodsClassilySecondAdapter(ShopNewActivity.this,
+                                        shopnew.getMsg().get(position).getChild());
                                 hlv_shop_goods_second.setAdapter(gcsAdapter);
 
                                 //默认第一条数据 主要内容
-                                snAdapter = new ShopNewAdapter(ShopNewActivity.this, shopnew.getMsg().get(position).getChild().get(0).getDet(), new CallbackCart() {
-                                    @Override
-                                    public void click(int position, int index) {
-
-                                    }
-                                });
+                                snAdapter = new ShopNewAdapter(ShopNewActivity.this,
+                                        shopnew.getMsg().get(position).getChild().get(0).getDet());
                                 myGridView.setAdapter(snAdapter);
-
 
                             }
                         });
@@ -424,39 +426,51 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 gcsAdapter.changeSelected(position);
 
-                                index_child = position;
+                                //index_child = position;
+
+                                foodList = shopnew.getMsg().get(index_msg).getChild().get(position).getDet();
 
                                 sv_goods.scrollTo(0, 0);
 
                                 //默认第一条数据 主要内容
-                                snAdapter = new ShopNewAdapter(ShopNewActivity.this, shopnew.getMsg().get(index_msg).getChild().get(position).getDet(), new CallbackCart() {
-                                    @Override
-                                    public void click(int position, int index) {
-
-                                    }
-                                });
+                                snAdapter = new ShopNewAdapter(ShopNewActivity.this,
+                                        shopnew.getMsg().get(index_msg).getChild().get(position).getDet());
                                 myGridView.setAdapter(snAdapter);
 
                             }
                         });
 
+
                         //点击 主要内容
                         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                ShopNew.MsgBean.ChildBean.DetBean detBean = shopnew.getMsg().get(index_msg).
-                                        getChild().get(index_child).getDet().get(position);
+
+//                                ShopNew.MsgBean.ChildBean.DetBean detBean = shopnew.getMsg().get(index_msg).
+//                                        getChild().get(index_child).getDet().get(position);
+
+                                foodList = shopnew.getMsg().get(index_msg).getChild().get(position).getDet();
 
                                 //传值
-                                String str_id = detBean.getId();
-                                String str_instro = detBean.getInstro();
-                                String str_foodName = detBean.getName();
-                                String str_foodSellCount = detBean.getSellcount();
-                                String str_foodPoint = detBean.getPoint();
-                                String str_foodCost = detBean.getCost();
+                                String str_id = foodList.get(position).getId();
+                                String str_instro = foodList.get(position).getInstro();
+                                String str_foodName = foodList.get(position).getName();
+                                String str_foodSellCount = foodList.get(position).getSellcount();
+                                String str_foodPoint = foodList.get(position).getPoint();
+                                String str_foodCost = foodList.get(position).getCost();
 
-                                int cartNum = detBean.getCartnum();
+                                int cartNum = foodList.get(position).getCartnum();
                                 String str_cartNum = String.valueOf(cartNum);
+
+//                                String str_id = detBean.getId();
+//                                String str_instro = detBean.getInstro();
+//                                String str_foodName = detBean.getName();
+//                                String str_foodSellCount = detBean.getSellcount();
+//                                String str_foodPoint = detBean.getPoint();
+//                                String str_foodCost = detBean.getCost();
+//
+//                                int cartNum = detBean.getCartnum();
+//                                String str_cartNum = String.valueOf(cartNum);
 
                                 Intent intent = new Intent(ShopNewActivity.this, CateFoodDetailsActivity.class);
 
@@ -469,7 +483,8 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
                                 intent.putExtra("cartNum", str_cartNum);
 
-                                startActivity(intent);
+                                //startActivity(intent);
+                                startActivityForResult(intent, CodeUtils.REQUEST_CODE_NEWSHOP);
                             }
                         });
 
@@ -523,12 +538,8 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
 
             //默认第一条数据 主要内容
-            snAdapter = new ShopNewAdapter(ShopNewActivity.this, msgBeen.get(0).getChild().get(0).getDet(), new CallbackCart() {
-                @Override
-                public void click(int position, int index) {
-
-                }
-            });
+            snAdapter = new ShopNewAdapter(ShopNewActivity.this,
+                    msgBeen.get(0).getChild().get(0).getDet());
             myGridView.setAdapter(snAdapter);
 
             //点击一级分类
@@ -544,12 +555,8 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                     hlv_shop_goods_second.setAdapter(gcsAdapter);
 
                     //默认第一条数据 主要内容
-                    snAdapter = new ShopNewAdapter(ShopNewActivity.this, msgBeen.get(position).getChild().get(0).getDet(), new CallbackCart() {
-                        @Override
-                        public void click(int position, int index) {
-
-                        }
-                    });
+                    snAdapter = new ShopNewAdapter(ShopNewActivity.this,
+                            msgBeen.get(position).getChild().get(0).getDet());
                     myGridView.setAdapter(snAdapter);
 
 
@@ -563,12 +570,8 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                     gcsAdapter.changeSelected(position);
 
                     //默认第一条数据 主要内容
-                    snAdapter = new ShopNewAdapter(ShopNewActivity.this, msgBeen.get(index_msg).getChild().get(position).getDet(), new CallbackCart() {
-                        @Override
-                        public void click(int position, int index) {
-
-                        }
-                    });
+                    snAdapter = new ShopNewAdapter(ShopNewActivity.this,
+                            msgBeen.get(index_msg).getChild().get(position).getDet());
                     myGridView.setAdapter(snAdapter);
 
                 }
@@ -580,7 +583,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                     ShopNew.MsgBean.ChildBean.DetBean detBean = msgBeen.get(index_msg).
-                            getChild().get(index_child).getDet().get(position);
+                            getChild().get(position).getDet().get(position);
 
                     //传值
                     String str_id = "";
@@ -662,7 +665,8 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
             case R.id.fl_shopcart:
                 intent = new Intent(ShopNewActivity.this, ShopCarActivity.class);
                 intent.putExtra("shopid", shopid);
-                startActivity(intent);
+                //startActivity(intent);
+                startActivityForResult(intent, CodeUtils.REQUEST_CODE_NEWSHOP);
                 break;
 
             default:
@@ -698,14 +702,9 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
         private Context mContext;
         private List<ShopNew.MsgBean.ChildBean.DetBean> detBeen = new ArrayList<>();
 
-        private CallbackCart callbackCart;
-        //private int good_num;
-
-        public ShopNewAdapter(Context mContext, List<ShopNew.MsgBean.ChildBean.DetBean> detBeen,
-                              CallbackCart callbackCart) {
+        public ShopNewAdapter(Context mContext, List<ShopNew.MsgBean.ChildBean.DetBean> detBeen) {
             this.mContext = mContext;
             this.detBeen = detBeen;
-            this.callbackCart = callbackCart;
         }
 
         @Override
@@ -764,11 +763,12 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                 vh.imager.setImageResource(R.mipmap.yibeitong001);
 
             } else {
-                BitmapUtils bitmapUtils = new BitmapUtils(mContext);
-
-                bitmapUtils.configDiskCacheEnabled(true);
-                bitmapUtils.configMemoryCacheEnabled(false);
-                bitmapUtils.display(vh.imager, imgPath);
+//                BitmapUtils bitmapUtils = new BitmapUtils(mContext);
+//
+//                bitmapUtils.configDiskCacheEnabled(true);
+//                bitmapUtils.configMemoryCacheEnabled(false);
+//                bitmapUtils.display(vh.imager, imgPath);
+                x.image().bind(vh.imager, imgPath);
             }
             final int cartNum = detBeen.get(position).getCartnum();
 
@@ -861,10 +861,9 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                                             tv_shopcart_num.setText(""+cartnum);
                                             tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
 
-                                            //tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+                                            setResult(goodId, good_num, cartnum);
 
-                                            //响应按钮点击事件,调用子定义接口，并传入View
-                                            callbackCart.click(position, 2);
+                                            //tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
                                         } else {
                                             System.out.println("添加失败");
@@ -952,6 +951,8 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                                             tv_shopcart_num.setText(""+cartnum);
                                             tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
 
+                                            setResult(goodId, good_num, cartnum);
+
                                         } else if (shopCartReturn.getMsg().isResult() == false) {
                                             Toast.makeText(ShopNewActivity.this, "减少失败，库存不足", Toast.LENGTH_SHORT).show();
                                         }
@@ -1027,4 +1028,32 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
         builder.create().show();
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CodeUtils.REQUEST_CODE_NEWSHOP) {
+            if (resultCode == CodeUtils.REQUEST_CODE_CATEFOOD || resultCode == CodeUtils.REQUEST_CODE_SHOPCART) {
+                Bundle bundle = data.getExtras();
+                String gid = bundle.getString("gid");
+                int cartNum = bundle.getInt("cartNum");
+                int cartnum = bundle.getInt("cartnum");
+
+                tv_shopcart_num.setText("" + cartnum);
+
+                for (int i = 0; i < foodList.size(); i++) {
+                    if (gid.equals(foodList.get(i).getId())) {
+                        foodList.get(i).setCartnum(cartNum);
+                    } else if (gid.equals("000")) {
+                        foodList.get(i).setCartnum(cartNum);
+                    }
+                }
+                snAdapter.notifyDataSetChanged();
+
+                setResult(gid, cartNum, cartnum);
+            }
+        }
+
+    }
+
 }

@@ -19,7 +19,6 @@ import java.util.List;
  * Created by jingang on 2016/11/5.
  * shopnew 商品一级分类
  */
-
 public class GoodsClassilyAdapter extends BaseAdapter{
     private Context mContext;
     private List<ShopNew.MsgBean> msgBeen = new ArrayList<>();
@@ -63,10 +62,9 @@ public class GoodsClassilyAdapter extends BaseAdapter{
         if(convertView == null){
             vh = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_good_classily, null);
+
             vh.goodName = (TextView) convertView.findViewById(R.id.tv_item_good_classily);
-
             vh.lin_shop_good = (LinearLayout) convertView.findViewById(R.id.lin_shop_good);
-
 
             convertView.setTag(vh);
         }else{
@@ -74,13 +72,30 @@ public class GoodsClassilyAdapter extends BaseAdapter{
         }
 
         //点击改变背景
-        if(mSelect == position){
+        if (mSelect == position) {
             vh.lin_shop_good.setBackgroundColor(Color.WHITE);
-        }else{
-            vh.lin_shop_good.setBackgroundColor(Color.argb(225, 225, 225, 225));
+        } else {
+            vh.lin_shop_good.setBackgroundColor(Color.rgb(240, 240, 240));
         }
 
         vh.goodName.setText(msgBeen.get(position).getName());
+
+
+//        for (int i = 0; i < msgBeen.get(position).getChild().size(); i++){
+//            if (msgBeen.get(position).getChild().get(i).getDet().toString().equals("[]")) {
+//                vh.lin_shop_good.setVisibility(View.GONE);
+//            } else {
+//                vh.lin_shop_good.setVisibility(View.VISIBLE);
+//
+//                if (mSelect == position) {
+//                    vh.lin_shop_good.setBackgroundColor(Color.WHITE);
+//                } else {
+//                    vh.lin_shop_good.setBackgroundColor(Color.rgb(240, 240, 240));
+//                }
+//
+//                vh.goodName.setText(msgBeen.get(position).getName());
+//            }
+//        }
 
         return convertView;
     }

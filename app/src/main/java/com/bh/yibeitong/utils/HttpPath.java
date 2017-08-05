@@ -536,6 +536,14 @@ public class HttpPath {
      */
     public static String APP_ORDER_CONTROL = "action=ordercontrol&";
 
+    /*商家结算列表
+    * 参数
+    * 登录验证：uid, 密码
+    * */
+    public static String APP_SHOPCOSTLOG = "action=shopcostlog&";
+
+
+
     /**
      * shopid 店铺id
      * &count=1.23 筛选条件 1.23为默认

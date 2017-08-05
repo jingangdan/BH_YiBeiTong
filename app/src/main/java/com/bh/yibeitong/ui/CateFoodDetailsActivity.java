@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.bh.yibeitong.bean.AddShopCart;
 import com.bh.yibeitong.bean.GoodsDetails;
 import com.bh.yibeitong.bean.ShopCart;
 import com.bh.yibeitong.bean.ShopCartReturn;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.CustomDialog;
@@ -61,6 +63,8 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
     private List<GoodsDetails.MsgBean.GoodsBean.ImgBean> imgBeen = new ArrayList<>();
 
     private List<ShopCart.MsgBean.ListBean> listBean = new ArrayList<>();
+
+    private GoodsDetails.MsgBean.GoodsBean goodsBeen ;
 
     /**
      * ViewPager实现图片左右滑动查看
@@ -267,23 +271,8 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
 
                 intent = new Intent(CateFoodDetailsActivity.this, ShopCarActivity.class);
                 intent.putExtra("shopid", shopid);
-                startActivity(intent);
-
-                //判断登录状态
-//                if (jingang.equals("")) {
-//                    //没有登录
-//                    //Toast.makeText(getActivity(
-//                    dialog();
-//                } else if (jingang.equals("0")) {
-//                    //没有登录
-//                    //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-//                    dialog();
-//                } else if (jingang.equals("1")) {
-//                    //已登录
-//                    intent = new Intent(CateFoodDetailsActivity.this, ShopCarActivity.class);
-//                    intent.putExtra("shopid", shopid);
-//                    startActivity(intent);
-//                }
+                //startActivity(intent);
+                startActivityForResult(intent, CodeUtils.REQUEST_CODE_CATEFOOD);
 
                 break;
 
@@ -292,11 +281,19 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
         }
     }
 
-    public void setResult(String id, int cartnum){
-        Intent intent = new Intent();
-        intent.putExtra("cartnum", cartnum);
-        intent.putExtra("gid", id);
-        setResult(2, intent);
+    /*
+    * 参数：
+    * gid：商品id
+    * cartNum：该商品在购物车中的数量
+    * cartnum：购物车总数量
+    * */
+    public void setResult(String id, int cartNum, int cartnum){
+        intent = new Intent();
+        intent.putExtra("gid", id);//商品id
+        intent.putExtra("cartNum", cartNum);//该商品购物车数量
+        intent.putExtra("cartnum", cartnum);//购物车总数量
+
+        setResult(CodeUtils.REQUEST_CODE_CATEFOOD, intent);
     }
 
     /*支付按钮状态*/
@@ -306,6 +303,7 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
         but_pay.setBackgroundColor(Color.rgb(162, 203, 52));
     }
 
+    /*未达到支付要求按钮状态*/
     public void noGoPay() {
         but_pay.setTextColor(Color.GRAY);
         but_pay.setBackgroundColor(Color.rgb(204, 204, 204));
@@ -455,6 +453,8 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
         String Path = HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_GOOD_DETAILS + "goodsid=" + foodId;
         RequestParams params = new RequestParams(Path);
 
+        System.out.println(""+Path);
+
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
                     @Override
@@ -462,6 +462,10 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
                         System.out.println("商品详情" + result);
 
                         GoodsDetails goodsDetails = GsonUtil.gsonIntance().gsonToBean(result, GoodsDetails.class);
+
+                        goodsBeen = new GoodsDetails.MsgBean.GoodsBean();
+
+                        goodsBeen = goodsDetails.getMsg().getGoods();
 
                         /*UI显示*/
                         shopid = goodsDetails.getMsg().getShopinfo().getShopid();
@@ -473,6 +477,7 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
                         foodPoint = goodsDetails.getMsg().getGoods().getPoint();
                         foodCost = goodsDetails.getMsg().getGoods().getCost();
                         foodGoodattr = goodsDetails.getMsg().getGoods().getGoodattr();
+
 
                         tv_foodderails_name.setText(foodName);
                         tv_fooddetails_sellcount.setText("已售" + foodSellCount + "份");
@@ -505,6 +510,8 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
                         tv_shopcart_num.setText(""+cartNum);
 
                         getShopCart(shopid);
+
+                        //getWebHTML(goodsDetails.getMsg().getGoods().getInstro().toString());
 
                     }
 
@@ -691,7 +698,7 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
                             tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
                             //tv_catefood_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
-                            setResult(gid, cartNum);//向上一页面传值（告知数量以改变）
+                            setResult(gid, cartNum, cartnum);//向上一页面传值（告知数量以改变）
 
                         } else if (shopCartReturn.getMsg().isResult() == false) {
                             toast("添加失败，库存不足");
@@ -799,7 +806,7 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
 
                             //tv_catefood_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
-                            setResult(gid, cartNum);
+                            setResult(gid, cartNum, cartnum);
 
                         } else if (shopCartReturn.getMsg().isResult() == false) {
                             toast("减少失败， 库存不足");
@@ -860,4 +867,27 @@ public class CateFoodDetailsActivity extends BaseTextActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CodeUtils.REQUEST_CODE_CATEFOOD
+                && resultCode == CodeUtils.REQUEST_CODE_SHOPCART){
+            Bundle bundle = data.getExtras();
+            String gid = bundle.getString("gid");
+            int cartNum = bundle.getInt("cartNum");
+            int cartnum = bundle.getInt("cartnum");
+
+            tv_shopcart_num.setText(""+cartnum);
+
+            if(gid.equals(goodsBeen.getId())){
+                tv_catefood_num.setText("" + cartNum);;
+            }else if(gid.equals("000")){
+                tv_shopcart_num.setText(""+cartNum);
+            }
+
+            /*数据发生改变 在返回上层时即传输数据 改变上层数据*/
+            setResult(gid, cartNum, cartnum);
+
+        }
+    }
 }

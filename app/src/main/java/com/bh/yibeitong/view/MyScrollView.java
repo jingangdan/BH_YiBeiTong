@@ -25,6 +25,8 @@ public class MyScrollView extends ScrollView {
     private int downY;
     private int mTouchSlop;
 
+    public boolean isJingang = false;
+
 
     /**
      * 定义监听接口
@@ -33,6 +35,8 @@ public class MyScrollView extends ScrollView {
         void onScrolledToBottom(boolean isToButom);
 
         void onScrolledToTop(boolean isToTop);
+
+        void onJingang(boolean isToJingang);
     }
 
     public static void setScanScrollChangedListener(ISmartScrollChangedListener smartScrollChangedListener) {
@@ -70,9 +74,13 @@ public class MyScrollView extends ScrollView {
             isScrolledToBottom = true;
             isScrolledToTop = false;
             //System.out.println("onScrollChanged 底部:" + isScrolledToBottom);
-        } else {
+        } else if(getScrollY() > 600){
+            isJingang = true;
+        }else {
             isScrolledToTop = false;
             isScrolledToBottom = false;
+
+            isJingang = false;
         }
 
         notifyScrollChangedListeners();
@@ -92,6 +100,12 @@ public class MyScrollView extends ScrollView {
             //System.out.println("3333");
         }
         //}
+
+        if (mSmartScrollChangedListener != null) {
+            mSmartScrollChangedListener.onJingang(isJingang);
+        } else {
+            //System.out.println("3333");
+        }
     }
 
     public static void doSomeThing() {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import com.bh.yibeitong.ui.CateFoodDetailsActivity;
 import com.bh.yibeitong.ui.LoginRegisterActivity;
 import com.bh.yibeitong.ui.OrderActivity;
 import com.bh.yibeitong.ui.ShopCarActivity;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.CustomDialog;
@@ -42,12 +44,12 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
-
-import static com.bh.yibeitong.R.id.but_sg_pay;
 
 /**
  * Created by jingang on 2017/6/29.
+ * 特色服务
  */
 
 public class TeseCateInfoActivity extends BaseTextActivity {
@@ -90,6 +92,8 @@ public class TeseCateInfoActivity extends BaseTextActivity {
     //本地缓存
     UserInfo userInfo;
     private String jingang;
+
+    private List<TeseGoods.MsgBean.GoodslistBean> msgBeanList =new ArrayList<>();
 
     @Override
     protected void setRootView() {
@@ -172,7 +176,8 @@ public class TeseCateInfoActivity extends BaseTextActivity {
                 //跳转到购物车
                 intent = new Intent(TeseCateInfoActivity.this, ShopCarActivity.class);
                 intent.putExtra("shopid", shopid);
-                startActivity(intent);
+                //startActivity(intent);
+                startActivityForResult(intent, CodeUtils.REQUEST_CODE_TESE);
                 break;
 
             default:
@@ -309,6 +314,7 @@ public class TeseCateInfoActivity extends BaseTextActivity {
                     public void onSuccess(String result) {
                         System.out.println("获取分类信息和头部广告" + result);
                         final TeseCate teseCate = GsonUtil.gsonIntance().gsonToBean(result, TeseCate.class);
+
                         String img = teseCate.getMsg().getTimg();
 
                         if (img.equals("")) {
@@ -382,6 +388,8 @@ public class TeseCateInfoActivity extends BaseTextActivity {
                         System.out.println("获取商品列表" + result);
                         final TeseGoods teseGoods = GsonUtil.gsonIntance().gsonToBean(result, TeseGoods.class);
 
+                        msgBeanList = teseGoods.getMsg().getGoodslist();
+
                         teseCateInfoAdapter = new TeseCateInfoAdapter(TeseCateInfoActivity.this, teseGoods.getMsg().getGoodslist());
                         myGridView.setAdapter(teseCateInfoAdapter);
 
@@ -392,7 +400,8 @@ public class TeseCateInfoActivity extends BaseTextActivity {
                                 intent.putExtra("id", teseGoods.getMsg().getGoodslist().get(i).getId());//商品id
                                 intent.putExtra("instro", teseGoods.getMsg().getGoodslist().get(i).getInstro());
 
-                                startActivity(intent);
+                                //startActivity(intent);
+                                startActivityForResult(intent, CodeUtils.REQUEST_CODE_TESE);
                             }
                         });
 
@@ -441,6 +450,46 @@ public class TeseCateInfoActivity extends BaseTextActivity {
 
         builder.create().show();
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CodeUtils.REQUEST_CODE_TESE){
+            if(resultCode == CodeUtils.REQUEST_CODE_CATEFOOD || resultCode == CodeUtils.REQUEST_CODE_SHOPCART){
+                Bundle bundle = data.getExtras();
+                String gid = bundle.getString("gid");
+                int cartNum = bundle.getInt("cartNum");
+                int cartnum = bundle.getInt("cartnum");
+
+                System.out.println("啊啊啊啊啊啊啊啊啊啊啊啊gid = "+gid+"  cartNum = "+cartNum+"  cartnum = "+cartnum);
+
+                tv_shopcart_num.setText(""+cartnum);
+
+                for (int i = 0 ; i < msgBeanList.size(); i++){
+                    if(gid.equals(msgBeanList.get(i).getId())){
+                        msgBeanList.get(i).setCartnum(cartNum);
+                    }
+                }
+                teseCateInfoAdapter.notifyDataSetChanged();
+            }
+        }
+//        if(requestCode == CodeUtils.REQUEST_CODE_TESE
+//                && resultCode == CodeUtils.REQUEST_CODE_CATEFOOD){
+//            Bundle bundle = data.getExtras();
+//            String gid = bundle.getString("gid");
+//            int cartNum = bundle.getInt("cartNum");
+//            int cartnum = bundle.getInt("cartnum");
+//
+//            tv_shopcart_num.setText(""+cartnum);
+//
+//            for (int i = 0 ; i < msgBeanList.size(); i++){
+//                if(gid.equals(msgBeanList.get(i).getId())){
+//                    msgBeanList.get(i).setCartnum(cartNum);
+//                }
+//            }
+//            teseCateInfoAdapter.notifyDataSetChanged();
+//        }
     }
 
     private int good_num = 0;

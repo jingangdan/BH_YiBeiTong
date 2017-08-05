@@ -950,6 +950,11 @@ public class FMHomePageTest extends BaseFragment implements
 
     }
 
+    @Override
+    public void onJingang(boolean isToJingang) {
+
+    }
+
     /**/
     public class RecommedAdapter extends BaseAdapter {
         private Context mContext;

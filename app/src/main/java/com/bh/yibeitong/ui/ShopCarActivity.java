@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,17 +13,12 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bh.yibeitong.R;
-import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.base.BaseTextActivity;
 import com.bh.yibeitong.bean.ShopCart;
-import com.bh.yibeitong.bean.ShopCartReturn;
-import com.bh.yibeitong.fragment.FMHomePage;
-import com.bh.yibeitong.fragment.FMShopCar;
 import com.bh.yibeitong.refresh.MyListView;
-import com.bh.yibeitong.refresh.PullToRefreshView;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.CustomDialog;
@@ -159,14 +153,10 @@ public class ShopCarActivity extends BaseTextActivity{
                         dialog();
                     } else if (jingang.equals("1")) {
                         //已登录
-                        Intent intent = new Intent(ShopCarActivity.this, OrderActivity.class);
-                        startActivity(intent);
-                    }else if(jingang.equals("2")){
-                        toast("商家登录");
-                        Intent intent = new Intent(ShopCarActivity.this, OrderActivity.class);
-                        startActivity(intent);
+                        intent = new Intent(ShopCarActivity.this, OrderActivity.class);
+                        //startActivity(intent);
+                        startActivityForResult(intent, CodeUtils.REQUEST_CODE_SHOPCART);
                     }
-
 
 
                 }
@@ -178,8 +168,24 @@ public class ShopCarActivity extends BaseTextActivity{
         }
     }
 
+    /*
+   * 参数：
+   * gid：商品id
+   * cartNum：该商品在购物车中的数量
+   * cartnum：购物车总数量
+   * */
+    public void setResult(String id, int cartNum, int cartnum) {
+        intent = new Intent();
+        intent.putExtra("gid", id);//商品id
+        intent.putExtra("cartNum", cartNum);//该商品购物车数量
+        intent.putExtra("cartnum", cartnum);//购物车总数量
+
+        setResult(CodeUtils.REQUEST_CODE_SHOPCART, intent);
+    }
+
     /*支付按钮状态*/
     public void goPay() {
+        but_pay.setText("去支付");
         but_pay.setTextColor(Color.WHITE);
         but_pay.setBackgroundColor(Color.rgb(162, 203, 52));
     }
@@ -191,7 +197,7 @@ public class ShopCarActivity extends BaseTextActivity{
     }
 
     /**
-     * 提示框
+     * 未登录提示框
      */
     protected void dialog() {
         CustomDialog.Builder builder = new CustomDialog.Builder(this);
@@ -338,9 +344,19 @@ public class ShopCarActivity extends BaseTextActivity{
 
     }
 
-    /**
-     * 试一试 当前写adapter
-     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CodeUtils.REQUEST_CODE_SHOPCART){
+            if(resultCode == CodeUtils.REQUEST_CODE_ORDER){
+                listBean.clear();
+                shopCartAdapter.notifyDataSetChanged();
+                setResult("000", 0, 0);
+            }
+        }
+    }
+
+    /*购物车适配器（非首页）*/
     public class ShopCartAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
         private Context mContext;
@@ -394,7 +410,7 @@ public class ShopCarActivity extends BaseTextActivity{
 
             count = listBean.get(position).getCount();
 
-            int id = listBean.get(position).getId();
+            final int id = listBean.get(position).getId();
             final String str_id = String.valueOf(id);
 
             if (img.equals("")) {
@@ -419,11 +435,9 @@ public class ShopCarActivity extends BaseTextActivity{
                 public void onClick(View v) {
                     vh.add.setClickable(false);
 
-                    String str_num = vh.count.getText().toString();
-                    count = Integer.valueOf(str_num);
+                    count = Integer.valueOf(vh.count.getText().toString());
 
-                    String sc_num = tv_shopcart_num.getText().toString();
-                    sc_count = Integer.parseInt(sc_num);
+                    sc_count = Integer.parseInt(tv_shopcart_num.getText().toString());
 
                     String PATH = HttpPath.PATH + HttpPath.ADD_SHOPCART + "&shopid=" + shopid + "&num=1" + "&gid=" + str_id;
                     RequestParams params = new RequestParams(PATH);
@@ -473,10 +487,7 @@ public class ShopCarActivity extends BaseTextActivity{
 
                                     tv_shopcart_num.setText("" + sc_count);
 
-                                    Intent intent = new Intent("jerry");
-                                    intent.putExtra("change", "yes");
-                                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-
+                                    setResult(str_id, count, sc_count);
 
                                 }
 
@@ -568,6 +579,8 @@ public class ShopCarActivity extends BaseTextActivity{
                                             listBean.remove(position);
                                             shopCartAdapter.notifyDataSetChanged();
                                         }
+
+                                        setResult(str_id, count, sc_count);
                                     }
 
                                     @Override
