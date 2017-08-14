@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -9,17 +9,9 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/guide_vp"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"></android.support.v4.view.ViewPager>
+        android:layout_height="fill_parent">
 
-    <!--<LinearLayout-->
-        <!--android:id="@+id/guide_ll_point"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:visibility="gone"></LinearLayout>-->
+    </android.support.v4.view.ViewPager>
 
     <Button
         android:id="@+id/guide_ib_start"
@@ -27,4 +19,16 @@
         android:layout_height="fill_parent"
         android:background="@null"
         android:visibility="gone"/>
-</RelativeLayout>
+
+    <Button
+        android:id="@+id/but_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@null"
+        android:text="跳过"
+        android:textColor="#999"/>
+
+</FrameLayout>

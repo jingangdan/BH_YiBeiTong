@@ -27,6 +27,7 @@
 
         <!---->
         <LinearLayout
+            android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -43,6 +44,8 @@
 
         <!---->
         <LinearLayout
+            android:layout_marginBottom="5dp"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -56,16 +59,17 @@
 
         <!---->
         <LinearLayout
+            android:layout_marginBottom="5dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
+                style="@style/text_cost"
                 android:id="@+id/tv_zxing_cost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="￥100.00/包"
-                android:textColor="#F92621" />
+                android:text="￥100.00/包" />
 
         </LinearLayout>
 
@@ -85,7 +89,7 @@
             <TextView
                 android:id="@+id/tv_zxing_shopnew_num"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="19dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/iv_zxing_add"
@@ -118,68 +122,70 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
 
-            <View
-                android:id="@+id/view_zxing_goods_shopcar"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="#E6E6E6" />
+            <include layout="@layout/include_shopcart_test"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/view_zxing_goods_shopcar"
-                android:background="#CCC"></View>
+            <!--<View-->
+                <!--android:id="@+id/view_zxing_goods_shopcar"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="10dp"-->
+                <!--android:background="#E6E6E6" />-->
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:gravity="center_vertical"
-                android:padding="5dp">
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:layout_below="@+id/view_zxing_goods_shopcar"-->
+                <!--android:background="#CCC"></View>-->
 
-                <FrameLayout
-                    android:id="@+id/lin_zxing_catefood_foot_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:background="@mipmap/ic_yuan">
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:padding="5dp">-->
 
-                    <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_gravity="center"
-                        android:src="@mipmap/ic_shopcart_white" />
+                <!--<FrameLayout-->
+                    <!--android:id="@+id/lin_zxing_catefood_foot_left"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:background="@mipmap/ic_yuan">-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:text="0"
-                        android:visibility="gone" />
+                    <!--<ImageView-->
+                        <!--android:layout_width="28dp"-->
+                        <!--android:layout_height="28dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:src="@mipmap/ic_shopcart_white" />-->
 
-                </FrameLayout>
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="5dp"-->
+                        <!--android:text="0"-->
+                        <!--android:visibility="gone" />-->
 
-                <TextView
-                    android:id="@+id/tv_zxing_sg_all_price"
-                    style="@style/title_second_text"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/lin_zxing_catefood_foot_left"
-                    android:text="购物车是空的" />
+                <!--</FrameLayout>-->
 
-                <Button
-                    android:id="@+id/but_zxing_sg_pay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="5dp"
-                    android:background="@null"
-                    android:text="还差9.00元"
-                    android:textColor="#666" />
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_zxing_sg_all_price"-->
+                    <!--style="@style/title_second_text"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_toRightOf="@+id/lin_zxing_catefood_foot_left"-->
+                    <!--android:text="购物车是空的" />-->
 
-            </RelativeLayout>
+                <!--<Button-->
+                    <!--android:id="@+id/but_zxing_sg_pay"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_margin="5dp"-->
+                    <!--android:background="@null"-->
+                    <!--android:text="还差9.00元"-->
+                    <!--android:textColor="#666" />-->
+
+            <!--</RelativeLayout>-->
 
 
         </RelativeLayout>

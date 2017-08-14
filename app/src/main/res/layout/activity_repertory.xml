@@ -50,12 +50,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:padding="10dp"
             android:id="@+id/lin_sr_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lin_sr_top"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -91,7 +91,8 @@
             <ListView
                 android:id="@+id/lv_sr"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
 
             </ListView>
 

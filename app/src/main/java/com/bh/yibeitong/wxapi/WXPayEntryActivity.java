@@ -49,7 +49,6 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                 finish();
                 break;
             case -1:
-                //Toast.makeText(this, ""+code, Toast.LENGTH_SHORT).show();
                 Toast.makeText(this,
                         "签名错误、未注册APPID、" +
                                 "项目设置APPID不正确、" +
@@ -63,6 +62,8 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                 Toast.makeText(this, "用户取消支付", Toast.LENGTH_SHORT).show();
                 finish();
                 break;
+
+
         }
         //finish();
         //微信支付后续操作，失败，成功，取消

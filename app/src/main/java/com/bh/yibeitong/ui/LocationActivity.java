@@ -227,17 +227,6 @@ public class LocationActivity extends BaseTextActivity implements
 
 
         }
-        /*for (SuggestionResult.SuggestionInfo info : res.getAllSuggestions()) {
-            if (info.key != null)
-                //sugAdapter.add(info.key + " " + info.city + info.district);
-                sugAdapter.add(info.key + info.pt);
-
-            *//*System.out.println("lat = "+info.pt.latitude);
-            System.out.println("lng = "+info.pt.longitude);*//*
-        }*/
-
-        //System.out.println("lat = "+res.getAllSuggestions().get(0).pt.latitude);
-
         sugAdapter.notifyDataSetChanged();
     }
 
@@ -445,15 +434,6 @@ public class LocationActivity extends BaseTextActivity implements
                 System.out.println("定位返回"+sb.toString());
 
                 //logMsg(sb.toString());
-
-                /*Intent intent = new Intent();
-
-
-                intent.putExtra("lat", latitude);
-                intent.putExtra("lng", longitude);
-
-                setResult(2, intent);// 设置resultCode，onActivityResult()中能获取到
-                LocationActivity.this.finish();*/
 
             }
         }

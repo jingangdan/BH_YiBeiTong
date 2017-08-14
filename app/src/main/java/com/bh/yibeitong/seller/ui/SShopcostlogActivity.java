@@ -21,7 +21,8 @@ import org.xutils.x;
  * Created by jingang on 2017/8/5.
  * 商家结算列表
  */
-public class SShopcostlogActivity extends BaseTextActivity {
+public class SShopcostlogActivity extends BaseTextActivity implements
+        SwipeRefreshLayout.OnRefreshListener {
     /*接口地址*/
     private String PATH = "";
 
@@ -49,6 +50,7 @@ public class SShopcostlogActivity extends BaseTextActivity {
         initData();
     }
 
+    /*组件 初始化*/
     public void initData() {
         intent = getIntent();
         uid = intent.getStringExtra("uid");
@@ -57,6 +59,7 @@ public class SShopcostlogActivity extends BaseTextActivity {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.sr_s_shopcostlog);
         recyclerView = (RecyclerView) findViewById(R.id.rv_s_shopcostlog);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         getShopcostlog(uid, pwd);
 
@@ -85,6 +88,8 @@ public class SShopcostlogActivity extends BaseTextActivity {
                     public void onSuccess(String result) {
                         System.out.println("商家结算列表" + result);
 
+                        swipeRefreshLayout.setRefreshing(false);
+
                         AppShopCostLog appShopCostLog = GsonUtil.gsonIntance().gsonToBean(result, AppShopCostLog.class);
                         shopCostLogAdapter = new ShopCostLogAdapter(SShopcostlogActivity.this, appShopCostLog.getMsg());
 
@@ -107,5 +112,10 @@ public class SShopcostlogActivity extends BaseTextActivity {
                     }
                 });
 
+    }
+
+    @Override
+    public void onRefresh() {
+        getShopcostlog(uid, pwd);
     }
 }

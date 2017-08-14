@@ -544,7 +544,6 @@ public class PayActivity extends BaseTextActivity {
                             setZhifubao(wmrid, PARTNER, SELLER, RSA_PRIVATE, notfyUrl);
                         }
 
-
                     }
 
                     @Override

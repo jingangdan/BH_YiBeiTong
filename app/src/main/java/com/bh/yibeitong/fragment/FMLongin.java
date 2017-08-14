@@ -26,6 +26,7 @@ import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.ui.QuickLoginActivity;
 import com.bh.yibeitong.ui.loginregist.FindCodeActivity;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.view.UserInfo;
 
@@ -269,15 +270,26 @@ public class FMLongin extends Fragment implements View.OnClickListener, View.OnL
                     userInfo.saveCoder("0");
 
                     userInfo.saveScore(register.getMsg().getScore());//积分
+                    userInfo.saveUserInfo(result);
 
-                    //MainActivity.locationService.stop();//停止定位
-
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    intent.putExtra("login", result);
-                    intent.putExtra("islogin", "true");
-                    ActivityCollector.finishAll();
-                    startActivity(intent);
+                    Intent intent = new Intent();
+                    getActivity().setResult(CodeUtils.REQUEST_CODE_LOGIN, intent);
                     getActivity().finish();
+
+//                    Intent intent = new Intent(getActivity(), MainActivity.class);
+//                    ActivityCollector.finishAll();
+//                    startActivity(intent);
+//                    getActivity().finish();
+
+
+//                    Intent intent = new Intent(getActivity(), MainActivity.class);
+//                    intent.putExtra("login", result);
+//                    intent.putExtra("islogin", "true");
+//                    ActivityCollector.finishAll();
+//                    startActivity(intent);
+//                    getActivity().finish();
+
+
                 }
 
             }

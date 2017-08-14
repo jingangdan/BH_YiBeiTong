@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bh.yibeitong.Interface.OnItemClickListener;
@@ -43,7 +42,7 @@ public class ShopCostLogAdapter extends RecyclerView.Adapter<ShopCostLogAdapter.
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MyViewHolder vh = new MyViewHolder(LayoutInflater.from(
-                mContext).inflate(R.layout.item_shop, parent,
+                mContext).inflate(R.layout.item_seller_shopcostlog, parent,
                 false));
         return vh;
     }
@@ -73,22 +72,32 @@ public class ShopCostLogAdapter extends RecyclerView.Adapter<ShopCostLogAdapter.
         }
 
         String name = msgBeanList.get(position).getName();
+        String cost = msgBeanList.get(position).getCost();
+        String statusname = msgBeanList.get(position).getStatusname();
+        String adddate = msgBeanList.get(position).getAdddate();
+
+        holder.name.setText("" + name);
+        holder.cost.setText("" + cost);
+        holder.statusname.setText("" + statusname);
+        holder.adddata.setText("处理时间：" + adddate);
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return msgBeanList.size();
     }
 
     class MyViewHolder extends BaseRecyclerViewHolder {
-        ImageView shoplogo;
-        TextView shopname;
+
+        TextView name, cost, statusname, adddata;
 
         public MyViewHolder(View view) {
             super(view);
-            shoplogo = (ImageView) view.findViewById(R.id.iv_item_shop_image);
-            shopname = (TextView) view.findViewById(R.id.tv_item_shop_name);
+            name = (TextView) view.findViewById(R.id.tv_item_ss_name);
+            cost = (TextView) view.findViewById(R.id.tv_item_ss_cost);
+            statusname = (TextView) view.findViewById(R.id.tv_item_ss_statusname);
+            adddata = (TextView) view.findViewById(R.id.tv_item_ss_adddata);
 
         }
     }

@@ -1,14 +1,9 @@
 package com.bh.yibeitong.actitvity;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.WindowManager;
 
 import com.bh.yibeitong.R;
@@ -18,7 +13,7 @@ import com.bh.yibeitong.view.UserInfo;
 
 /**
  * Created by jingang on 2016/10/17.
- *
+ * 启动页
  */
 public class StartActivity extends BaseActivity {
     private SharedPreferences sharedPreferences;
@@ -62,6 +57,8 @@ public class StartActivity extends BaseActivity {
                     e.printStackTrace();
 
                 }
+
+                //startActivity(new Intent(StartActivity.this, GuideActivity.class));
 
                 if (user.equals("1")) {
                     //首次进入
@@ -115,8 +112,5 @@ public class StartActivity extends BaseActivity {
 //    protected void requestPermission(int code, String permissions) {
 //        ActivityCompat.requestPermissions(this, permissions, code);
 //    }
-
-
-
 
 }

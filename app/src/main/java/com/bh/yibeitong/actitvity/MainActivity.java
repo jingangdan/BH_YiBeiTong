@@ -88,8 +88,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public static String str_longtitude;//经度
 
     //接收注册/登录返回值
-    Intent getIntent;
-    String login;
+//    Intent getIntent;
+//    String login;
 
     private boolean isLogin = false;
 
@@ -134,7 +134,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         x.Ext.setDebug(BuildConfig.DEBUG);
 
         userInfo = new UserInfo(getApplication());
-
 
         initData();
         //m_appNameStr = "ybt.apk";
@@ -184,14 +183,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                 isNetworkUtil();//判断网络连接状况
 
-                getIntent = getIntent();
-                login = getIntent.getStringExtra("login");
-
-                if (login != null) {
-                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
-                    userInfo.saveUserInfo(login);
-
-                }
+//                getIntent = getIntent();
+//                login = getIntent.getStringExtra("login");
+//
+//                if (login != null) {
+//                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+//                    userInfo.saveUserInfo(login);
+//
+//                }
 
                 //fm = getFragmentManager();
                 fm = getSupportFragmentManager();
@@ -250,14 +249,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             isNetworkUtil();//判断网络连接状况
 
-            getIntent = getIntent();
-            login = getIntent.getStringExtra("login");
-
-            if (login != null) {
-                Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
-                userInfo.saveUserInfo(login);
-
-            }
+//            getIntent = getIntent();
+//            login = getIntent.getStringExtra("login");
+//
+//            if (login != null) {
+//                Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+//                userInfo.saveUserInfo(login);
+//
+//            }
 
             //fm = getFragmentManager();
             fm = getSupportFragmentManager();
@@ -373,7 +372,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void logMsg(String string) {
         //getShopAndGoods(str_latitude, str_longtitude);
     }
-
 
     /**
      * 根据传入的index参数来设置选中的tab页。
@@ -1189,14 +1187,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 //getLocation();
                 isNetworkUtil();//判断网络连接状况
 
-                getIntent = getIntent();
-                login = getIntent.getStringExtra("login");
-
-                if (login != null) {
-                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
-                    userInfo.saveUserInfo(login);
-
-                }
+//                getIntent = getIntent();
+//                login = getIntent.getStringExtra("login");
+//
+//                if (login != null) {
+//                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+//                    userInfo.saveUserInfo(login);
+//
+//                }
 
                 //fm = getFragmentManager();
                 fm = getSupportFragmentManager();
@@ -1206,14 +1204,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             } else {
                 isNetworkUtil();//判断网络连接状况
 
-                getIntent = getIntent();
-                login = getIntent.getStringExtra("login");
-
-                if (login != null) {
-                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
-                    userInfo.saveUserInfo(login);
-
-                }
+//                getIntent = getIntent();
+//                login = getIntent.getStringExtra("login");
+//
+//                if (login != null) {
+//                    Register register = GsonUtil.gsonIntance().gsonToBean(login, Register.class);
+//                    userInfo.saveUserInfo(login);
+//
+//                }
 
                 //fm = getFragmentManager();
                 fm = getSupportFragmentManager();

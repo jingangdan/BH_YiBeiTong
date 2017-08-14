@@ -1,71 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#EEEEEE"
-    android:orientation="vertical"
     android:descendantFocusability="blocksDescendants">
 
-    <include layout="@layout/content_header" />
+    <LinearLayout
+        android:id="@+id/lin_order_nologin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--android:id="@+id/sr_order"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
+        <include layout="@layout/activity_nologin" />
 
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/rv_order"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
+    </LinearLayout>
 
-        <!--</android.support.v7.widget.RecyclerView>-->
+    <LinearLayout
+        android:id="@+id/lin_order_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#EEEEEE"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
+        <include layout="@layout/content_header" />
 
-    <ListView
-        android:scrollbars="none"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/lv_order">
+        <ListView
+            android:id="@+id/lv_order"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollbars="none">
 
-    </ListView>
+        </ListView>
 
-        <!--<com.bh.yibeitong.refresh.MyListView-->
-            <!--android:id="@+id/myListView_order"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:divider="#EEEEEE"-->
-            <!--android:dividerHeight="10dp"/>-->
+    </LinearLayout>
 
-        <!--<com.bh.yibeitong.refresh.PullToRefreshView-->
-            <!--android:id="@+id/puToRefreshView_order"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_marginTop="4dip"-->
-            <!--android:layout_weight="1"-->
-            <!--android:background="#00000000">-->
 
-            <!--<ScrollView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:scrollbars="none">-->
-
-                <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:orientation="vertical">-->
-
-                    <!--<com.bh.yibeitong.refresh.MyListView-->
-                        <!--android:id="@+id/myListView_order"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:divider="#EEEEEE"-->
-                        <!--android:dividerHeight="10dp"/>-->
-
-                <!--</LinearLayout>-->
-
-            <!--</ScrollView>-->
-
-        <!--</com.bh.yibeitong.refresh.PullToRefreshView>-->
-
-</LinearLayout>
+</FrameLayout>

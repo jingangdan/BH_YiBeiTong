@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bh.yibeitong.R;
@@ -49,6 +50,9 @@ public class GuideActivity extends BaseActivity implements ViewPager.OnPageChang
     /*定义一个请求码*/
     private static final int REQUEST_CONTACTS = 1000;
 
+    /*立即体验*/
+    private Button but_start;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +64,7 @@ public class GuideActivity extends BaseActivity implements ViewPager.OnPageChang
         userInfo = new UserInfo(getApplication());
 
         ib_start = (Button) findViewById(R.id.guide_ib_start);
+        but_start = (Button) findViewById(R.id.but_start);
 
         ib_start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +105,13 @@ public class GuideActivity extends BaseActivity implements ViewPager.OnPageChang
 
 
 
+            }
+        });
+
+        but_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                init(view);
             }
         });
 
@@ -223,8 +235,11 @@ public class GuideActivity extends BaseActivity implements ViewPager.OnPageChang
         if (position == imageIdArray.length - 1) {
             ib_start.setVisibility(View.VISIBLE);
 
+            but_start.setVisibility(View.GONE);
+
         } else {
             ib_start.setVisibility(View.GONE);
+            but_start.setVisibility(View.VISIBLE);
         }
     }
 

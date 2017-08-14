@@ -112,6 +112,7 @@
                         <include layout="@layout/include_home_page"></include>
 
                         <com.bh.yibeitong.refresh.MyGridView
+                            android:listSelector="@android:color/transparent"
                             android:id="@+id/myGridView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

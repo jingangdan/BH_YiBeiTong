@@ -31,6 +31,7 @@
                     android:layout_height="75dp" />
 
                 <Button
+                    android:id="@+id/but_sas_photo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="选择文件" />
@@ -149,6 +150,5 @@
         </LinearLayout>
 
     </ScrollView>
-
 
 </LinearLayout>

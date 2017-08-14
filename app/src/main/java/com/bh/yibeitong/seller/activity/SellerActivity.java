@@ -1,6 +1,5 @@
 package com.bh.yibeitong.seller.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,10 +18,12 @@ import android.widget.Toast;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.actitvity.ActivityCollector;
 import com.bh.yibeitong.actitvity.MainActivity;
+import com.bh.yibeitong.base.BaseActivity;
+import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.bean.seller.NewShoptj;
-import com.bh.yibeitong.bean.seller.SellerLogin;
 import com.bh.yibeitong.refresh.MyGridView;
 import com.bh.yibeitong.seller.ui.SAppShopActivity;
+import com.bh.yibeitong.seller.ui.SManageCommtActivity;
 import com.bh.yibeitong.seller.ui.SOrderManageActivity;
 import com.bh.yibeitong.seller.ui.SShopcostlogActivity;
 import com.bh.yibeitong.utils.GsonUtil;
@@ -35,6 +36,7 @@ import com.tencent.android.tpush.XGPushManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.BuildConfig;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -46,9 +48,9 @@ import java.util.Map;
 
 /**
  * Created by jingang on 2017/3/14.
- * 商家界面
+ * 商家端界面
  */
-public class SellerActivity extends Activity implements View.OnClickListener {
+public class SellerActivity extends BaseActivity implements View.OnClickListener {
 
     /*侧边栏*/
     private SlideMenuView slideMenuView;
@@ -105,9 +107,15 @@ public class SellerActivity extends Activity implements View.OnClickListener {
     /*接口地址*/
     private String PATH = "";
 
+    /*是否绑定账号注册测成功*/
+    //private boolean isRegisterPush = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        x.Ext.init(this.getApplication());
+        x.Ext.setDebug(BuildConfig.DEBUG);
 
         // 判断是否从推送通知栏打开的
         XGPushClickedResult click = XGPushManager.onActivityStarted(this);
@@ -124,36 +132,55 @@ public class SellerActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_seller);
         userInfo = new UserInfo(getApplication());
 
-        str_userAccount = userInfo.getSellerUserAccount();
+        if (!(userInfo.getUserInfo().equals(""))) {
+            Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
+            uid = register.getMsg().getUid();
+            shopid = register.getMsg().getShopid();
+        }
 
+        pwd = userInfo.getPwd();
+
+        str_userAccount = userInfo.getSellerUserAccount();
 
         intent = getIntent();
         userAccount = intent.getStringExtra("UserAccount");
-        shopid = intent.getStringExtra("shopid");
+        //shopid = intent.getStringExtra("shopid");
 
-        XGPushManager.registerPush(this);
+        if (!str_userAccount.equals("")) {
 
-        if(!str_userAccount.equals("")){
-            XGPushManager.registerPush(this, str_userAccount);
+            if (userInfo.getRegisterPush().equals("false")) {
+                System.out.println("没有注册过");
 
-            XGPushManager.registerPush(this, str_userAccount,
-                    new XGIOperateCallback() {
-                        @Override
-                        public void onSuccess(Object data, int flag) {
-                            //Log.d("TPush", "注册成功，设备token为：" + data);
-                            System.out.println("绑定账号 成功 = " + str_userAccount);
-                            System.out.println("绑定账号注册成功，设备token为：" + data);
-                        }
+//                XGPushManager.registerPush(this);
+//                XGPushManager.registerPush(this, str_userAccount);
 
-                        @Override
-                        public void onFail(Object data, int errCode, String msg) {
-                            Toast.makeText(SellerActivity.this,"账号注册失败，请重新启动！",Toast.LENGTH_SHORT).show();
-                            System.out.println("绑定账号 失败 = " + str_userAccount);
-                            //Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
-                            System.out.println("绑定账号注册失败，错误码：" + errCode + ",错误信息：" + msg);
-                        }
-                    });
-        }else{
+                XGPushManager.registerPush(this, str_userAccount,
+                        new XGIOperateCallback() {
+                            @Override
+                            public void onSuccess(Object data, int flag) {
+                                //Log.d("TPush", "注册成功，设备token为：" + data);
+                                System.out.println("绑定账号 成功 = " + str_userAccount);
+                                System.out.println("绑定账号注册成功，设备token为：" + data);
+                                //isRegisterPush = true;
+
+                                userInfo.saveRegisterPush("true");
+                            }
+
+                            @Override
+                            public void onFail(Object data, int errCode, String msg) {
+                                Toast.makeText(SellerActivity.this, "账号注册失败，请重新启动！", Toast.LENGTH_SHORT).show();
+                                System.out.println("绑定账号 失败 = " + str_userAccount);
+                                //Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
+                                System.out.println("绑定账号注册失败，错误码：" + errCode + ",错误信息：" + msg);
+                                //isRegisterPush = false;
+                                userInfo.saveRegisterPush("false");
+                            }
+                        });
+
+            }else{
+                System.out.println("已经注册过了");
+            }
+        } else {
             System.out.println("账号注册失败！！！！！！！！！");
         }
 
@@ -202,11 +229,9 @@ public class SellerActivity extends Activity implements View.OnClickListener {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }else{
-            System.out.println("aaaaaaaaaa"+result);
+        } else {
+            System.out.println("aaaaaaaaaa" + result);
         }
-
-
 
     }
 
@@ -216,6 +241,10 @@ public class SellerActivity extends Activity implements View.OnClickListener {
         XGPushManager.onActivityStoped(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     /**
      * 初始化商品信息
@@ -275,10 +304,10 @@ public class SellerActivity extends Activity implements View.OnClickListener {
 
 
          /*获取订单数和营业额*/
-        SellerLogin sellerLogin = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), SellerLogin.class);
-
-        uid = sellerLogin.getMsg().getUid();
-        pwd = userInfo.getPwd();
+//        SellerLogin sellerLogin = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), SellerLogin.class);
+//
+//        uid = sellerLogin.getMsg().getUid();
+//        pwd = userInfo.getPwd();
 
         newShoptj(uid, pwd);
 
@@ -290,23 +319,30 @@ public class SellerActivity extends Activity implements View.OnClickListener {
                     //订单管理
                     startActivity(new Intent(SellerActivity.this, SOrderManageActivity.class));
 
-                }else if(i == 1){
+                } else if (i == 1) {
                     //商店管理
 
-                }else if(i == 2){
+                } else if (i == 2) {
                     //店铺管理
-                    intent = new Intent(SellerActivity.this, SAppShopActivity.class );
+                    intent = new Intent(SellerActivity.this, SAppShopActivity.class);
                     intent.putExtra("uid", uid);
                     intent.putExtra("pwd", pwd);
                     startActivity(intent);
 
-                } else if(i == 4){
+                } else if (i == 4) {
                     //商家结算
-                    intent = new Intent(SellerActivity.this, SShopcostlogActivity.class );
+                    intent = new Intent(SellerActivity.this, SShopcostlogActivity.class);
                     intent.putExtra("uid", uid);
                     intent.putExtra("pwd", pwd);
                     startActivity(intent);
-                }else if (i == 7) {
+                }else if(i == 6){
+                    //评价留言
+                    intent = new Intent(SellerActivity.this, SManageCommtActivity.class);
+                    intent.putExtra("uid", uid);
+                    intent.putExtra("pwd", pwd);
+                    startActivity(intent);
+                    //startActivity(new Intent(SellerActivity.this, SManageCommtActivity.class));
+                } else if (i == 7) {
                     //货物采购
                     startActivity(new Intent(SellerActivity.this, GoodsProActivity.class));
 
@@ -318,8 +354,6 @@ public class SellerActivity extends Activity implements View.OnClickListener {
                 }
             }
         });
-
-
 
     }
 
@@ -374,23 +408,22 @@ public class SellerActivity extends Activity implements View.OnClickListener {
                 break;
 
             case R.id.tv_sm_without:
+                //退出账号
+
                 userInfo.saveLogin("0");//退出登录保存数字0
                 userInfo.saveSellerUserAccoun("");
                 userInfo.saveUserInfo("");
                 userInfo.savePwd("");
 
                 XGPushManager.unregisterPush(this);//设备解绑
-
                 XGPushManager.registerPush(SellerActivity.this, "*");//账号解绑
+                userInfo.saveRegisterPush("false");
 
                 Intent intent = new Intent(SellerActivity.this, MainActivity.class);
                 intent.putExtra("islogin", false);
                 ActivityCollector.finishAll();
                 startActivity(intent);
                 SellerActivity.this.finish();
-
-
-                //推出账号
 
                 break;
 
@@ -423,8 +456,8 @@ public class SellerActivity extends Activity implements View.OnClickListener {
                         allcount = newShoptj.getMsg().getAllcount();
 
                         /*订单数和营业额*/
-                        tv_turnover.setText(""+allcost);
-                        tv_order_num.setText(""+allcount);
+                        tv_turnover.setText("" + allcost);
+                        tv_order_num.setText("" + allcount);
 
                     }
 

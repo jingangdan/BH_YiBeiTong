@@ -9,6 +9,7 @@ import com.bh.yibeitong.R;
 import com.bh.yibeitong.actitvity.ActivityCollector;
 import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.base.BaseTextActivity;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.view.UserInfo;
 
 public class SettingActivity extends BaseTextActivity{
@@ -71,11 +72,16 @@ public class SettingActivity extends BaseTextActivity{
 
                 userInfo.saveScore("");//积分
 
-                Intent intent = new Intent(SettingActivity.this, MainActivity.class);
-                intent.putExtra("islogin", false);
-                ActivityCollector.finishAll();
-                startActivity(intent);
-                SettingActivity.this.finish();
+                Intent intent = new Intent();
+                setResult(CodeUtils.REQUEST_CODE_SETTING, intent);
+                this.finish();
+
+
+//                Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+//                intent.putExtra("islogin", false);
+//                ActivityCollector.finishAll();
+//                startActivity(intent);
+//                SettingActivity.this.finish();
 
                 break;
 

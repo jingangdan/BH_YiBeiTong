@@ -149,6 +149,7 @@ public class FMOrderState extends Fragment implements PullToRefreshView.OnHeader
                                     intent.putExtra("dno", dno);
                                     intent.putExtra("shopcost", shopcost);
                                     intent.putExtra("orderid", orderids);
+                                    intent.putExtra("type", "order");
 
                                     startActivity(intent);
                                 }

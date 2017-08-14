@@ -76,7 +76,7 @@
         <TextView
             android:id="@+id/tv_order_price"
             style="@style/title_second_text"
-            android:textColor="#F92621" />
+            android:textColor="#FF9D07" />
 
     </LinearLayout>
 

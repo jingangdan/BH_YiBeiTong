@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -58,14 +59,15 @@ public class ZXingResultActivity extends BaseTextActivity {
     String jingang;//登录状态
     private double limitcost = 0;
 
-    private TextView tv_all_price;
+    /*购物车*/
+    private TextView tv_all_price, tv_shopcart_num;
     private Button but_pay;
+    private FrameLayout fl_shopcart;
 
     /*商品id*/
     private String gid;
 
     private RelativeLayout linearLayout;
-
 
     @Override
     protected void setRootView() {
@@ -111,8 +113,11 @@ public class ZXingResultActivity extends BaseTextActivity {
         iv_add.setOnClickListener(this);
 
 
-        tv_all_price = (TextView) findViewById(R.id.tv_zxing_sg_all_price);
-        but_pay = (Button) findViewById(R.id.but_zxing_sg_pay);
+        but_pay = (Button) findViewById(R.id.but_pay);
+        tv_all_price = (TextView) findViewById(R.id.tv_all_pay);
+        tv_shopcart_num = (TextView) findViewById(R.id.tv_shopcart_num);
+        fl_shopcart = (FrameLayout) findViewById(R.id.fl_shopcart);
+
         but_pay.setOnClickListener(this);
 
         linearLayout = (RelativeLayout) findViewById(R.id.lin_zxing_catefood_foot);
@@ -121,7 +126,6 @@ public class ZXingResultActivity extends BaseTextActivity {
         //getGoods(str_dno, shopid);
 
         ScanninGoodIndex goods = GsonUtil.gsonIntance().gsonToBean(result, ScanninGoodIndex.class);
-
 
         String img = goods.getMsg().getImg();
         String name = goods.getMsg().getName();
@@ -144,11 +148,23 @@ public class ZXingResultActivity extends BaseTextActivity {
         tv_sellcout.setText("月售" + sellcount + "笔");
 
         tv_cost.setText("" + cost + "/" + goodattr);
-        //v_cartNum.setText("" + newtype);
 
         getShopCart(shopid);
 
 
+    }
+
+    /*支付按钮状态*/
+    public void goPay() {
+        but_pay.setText("去支付");
+        but_pay.setTextColor(Color.WHITE);
+        but_pay.setBackgroundColor(Color.rgb(162, 203, 52));
+    }
+
+    /*未达到支付要求按钮状态*/
+    public void noGoPay() {
+        but_pay.setTextColor(Color.GRAY);
+        but_pay.setBackgroundColor(Color.rgb(204, 204, 204));
     }
 
     @Override
@@ -167,7 +183,7 @@ public class ZXingResultActivity extends BaseTextActivity {
 
                 break;
 
-            case R.id.lin_zxing_catefood_foot:
+            case R.id.fl_shopcart:
                 //跳转到购物车
                 System.out.println("跳到购物车");
 
@@ -189,7 +205,7 @@ public class ZXingResultActivity extends BaseTextActivity {
 
                 break;
 
-            case R.id.but_zxing_sg_pay:
+            case R.id.but_pay:
                 //去支付
                 if (but_pay.getText().toString().equals("去支付")) {
 
@@ -221,7 +237,7 @@ public class ZXingResultActivity extends BaseTextActivity {
     }
 
     /**
-     * 提示框 （登录）
+     * 提示框（未登录）
      */
     protected void dialog() {
         CustomDialog.Builder builder = new CustomDialog.Builder(this);
@@ -284,7 +300,7 @@ public class ZXingResultActivity extends BaseTextActivity {
                         tv_sellcout.setText("月售" + sellcount + "笔");
 
                         tv_cost.setText("" + cost + "/" + goodattr);
-                        tv_cartNum.setText("" + newtype);
+                        tv_cartNum.setText("" + sellcount);
 
 
                     }
@@ -340,24 +356,43 @@ public class ZXingResultActivity extends BaseTextActivity {
                             count += count;
                         }
                         System.out.println("totalPrice = " + totalPrice);
+
+//                        if (limitcost == 0) {
+//                            but_pay.setText("去支付");
+//                            but_pay.setTextColor(Color.RED);
+//                        } else if (totalPrice >= limitcost) {
+//                            but_pay.setText("去支付");
+//                            but_pay.setTextColor(Color.RED);
+//                        } else if (totalPrice > 0 && totalPrice < limitcost) {
+//                            double add = limitcost - totalPrice;
+//                            but_pay.setText("还差" + df.format(add) + "元");
+//                            but_pay.setTextColor(Color.GRAY);
+//                        } else if (totalPrice == 0) {
+//                            but_pay.setText("购物车为空");
+//                            but_pay.setTextColor(Color.GRAY);
+//                        } else {
+//                            Toast.makeText(ZXingResultActivity.this, "错误", Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        tv_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+
                         if (limitcost == 0) {
-                            but_pay.setText("去支付");
-                            but_pay.setTextColor(Color.RED);
+                            goPay();
                         } else if (totalPrice >= limitcost) {
-                            but_pay.setText("去支付");
-                            but_pay.setTextColor(Color.RED);
+                            goPay();
                         } else if (totalPrice > 0 && totalPrice < limitcost) {
                             double add = limitcost - totalPrice;
                             but_pay.setText("还差" + df.format(add) + "元");
-                            but_pay.setTextColor(Color.GRAY);
+                            noGoPay();
                         } else if (totalPrice == 0) {
                             but_pay.setText("购物车为空");
-                            but_pay.setTextColor(Color.GRAY);
+                            noGoPay();
                         } else {
-                            Toast.makeText(ZXingResultActivity.this, "错误", Toast.LENGTH_SHORT).show();
                         }
 
-                        tv_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+                        tv_all_price.setText("￥" + df.format(totalPrice) + "元");
+                        tv_shopcart_num.setText("" + count);
+
                     }
 
                     @Override
@@ -399,42 +434,49 @@ public class ZXingResultActivity extends BaseTextActivity {
                                 GsonUtil.gsonIntance().gsonToBean(result, ShopCartReturn.class);
 
                         if (shopCartReturn.getMsg().isResult() == true) {
-                            System.out.println("111111111");
-
-                            System.out.println("111111111");
                             AddShopCart addShopCart = GsonUtil.gsonIntance().gsonToBean(result, AddShopCart.class);
-
-                            System.out.println("22222222");
 
                             double d_cost = Double.parseDouble(cost);
 
-                            System.out.println("33333333");
-
                             if (addShopCart.isError() == false) {
-                                System.out.println("44444444");
                                 System.out.println("添加成功" + addShopCart.getMsg());
                                 if (good_num >= 0 && good_num < 100) {
                                     good_num++;
                                     totalPrice += d_cost;
                                 }
+
                                 if (limitcost == 0) {
-                                    but_pay.setText("去支付");
-                                    but_pay.setTextColor(Color.RED);
+                                    goPay();
                                 } else if (totalPrice >= limitcost) {
-                                    but_pay.setText("去支付");
-                                    but_pay.setTextColor(Color.RED);
+                                    goPay();
                                 } else if (totalPrice > 0 && totalPrice < limitcost) {
                                     double add = limitcost - totalPrice;
                                     but_pay.setText("还差" + df.format(add) + "元");
-                                    but_pay.setTextColor(Color.GRAY);
+                                    noGoPay();
                                 } else if (totalPrice == 0) {
                                     but_pay.setText("购物车为空");
-                                    but_pay.setTextColor(Color.GRAY);
+                                    noGoPay();
                                 } else {
-                                    Toast.makeText(ZXingResultActivity.this, "错误", Toast.LENGTH_SHORT).show();
                                 }
+//                                if (limitcost == 0) {
+//                                    but_pay.setText("去支付");
+//                                    but_pay.setTextColor(Color.RED);
+//                                } else if (totalPrice >= limitcost) {
+//                                    but_pay.setText("去支付");
+//                                    but_pay.setTextColor(Color.RED);
+//                                } else if (totalPrice > 0 && totalPrice < limitcost) {
+//                                    double add = limitcost - totalPrice;
+//                                    but_pay.setText("还差" + df.format(add) + "元");
+//                                    but_pay.setTextColor(Color.GRAY);
+//                                } else if (totalPrice == 0) {
+//                                    but_pay.setText("购物车为空");
+//                                    but_pay.setTextColor(Color.GRAY);
+//                                } else {
+//                                    Toast.makeText(ZXingResultActivity.this, "错误", Toast.LENGTH_SHORT).show();
+//                                }
 
                                 tv_cartNum.setText("" + good_num);
+
                                 tv_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
 
@@ -466,12 +508,10 @@ public class ZXingResultActivity extends BaseTextActivity {
     //减少购物车
 
     public void subCart(String shopid, String gid) {
-        //vh.shopCart_sub.setClickable(false);
         //减少购物车  请求接口 成功则减少 反之 不减少
         String str_num = tv_cartNum.getText().toString();
         good_num = Integer.valueOf(str_num);
         if (good_num > 0) {
-            //addShopCart(shopid, -1, str_id);
             String PATH = HttpPath.PATH + HttpPath.ADD_SHOPCART + "" +
                     "&shopid=" + shopid + "&num=-1" + "&gid=" + gid;
             RequestParams params = new RequestParams(PATH);
@@ -479,7 +519,6 @@ public class ZXingResultActivity extends BaseTextActivity {
                     new Callback.CommonCallback<String>() {
                         @Override
                         public void onSuccess(String result) {
-                            //vh.shopCart_sub.setClickable(true);
                             iv_sub.setClickable(true);
                             System.out.println("购物车操作" + result);
 
@@ -493,36 +532,43 @@ public class ZXingResultActivity extends BaseTextActivity {
                                 good_num--;
 
                                 if (limitcost == 0) {
-                                    but_pay.setText("去支付");
-                                    but_pay.setTextColor(Color.RED);
+                                    goPay();
                                 } else if (totalPrice >= limitcost) {
-                                    but_pay.setText("去支付");
-                                    but_pay.setTextColor(Color.RED);
+                                    goPay();
                                 } else if (totalPrice > 0 && totalPrice < limitcost) {
                                     double add = limitcost - totalPrice;
                                     but_pay.setText("还差" + df.format(add) + "元");
-                                    but_pay.setTextColor(Color.GRAY);
+                                    noGoPay();
                                 } else if (totalPrice == 0) {
                                     but_pay.setText("购物车为空");
-                                    but_pay.setTextColor(Color.GRAY);
+                                    noGoPay();
                                 } else {
-                                    Toast.makeText(ZXingResultActivity.this, "错误", Toast.LENGTH_SHORT).show();
                                 }
+
+//                                if (limitcost == 0) {
+//                                    but_pay.setText("去支付");
+//                                    but_pay.setTextColor(Color.RED);
+//                                } else if (totalPrice >= limitcost) {
+//                                    but_pay.setText("去支付");
+//                                    but_pay.setTextColor(Color.RED);
+//                                } else if (totalPrice > 0 && totalPrice < limitcost) {
+//                                    double add = limitcost - totalPrice;
+//                                    but_pay.setText("还差" + df.format(add) + "元");
+//                                    but_pay.setTextColor(Color.GRAY);
+//                                } else if (totalPrice == 0) {
+//                                    but_pay.setText("购物车为空");
+//                                    but_pay.setTextColor(Color.GRAY);
+//                                } else {
+//                                    Toast.makeText(ZXingResultActivity.this, "错误", Toast.LENGTH_SHORT).show();
+//                                }
 
                                 tv_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
-
-                                System.out.println("count=" + good_num);
                                 tv_cartNum.setText("" + good_num);
 
-                                //tv_shopcart_num.setText(""+sc_count);
 
-                                if (good_num == 0) {
-
-                                }
                             } else if (shopCartReturn.getMsg().isResult() == false) {
                                 Toast.makeText(ZXingResultActivity.this, "减少失败，库存不足", Toast.LENGTH_SHORT).show();
                             }
-
 
                         }
 
@@ -543,11 +589,8 @@ public class ZXingResultActivity extends BaseTextActivity {
 
 
         } else if (good_num == 0) {
-            //vh.shopCart_sub.setClickable(true);
             iv_sub.setClickable(true);
         }
-
     }
-
 
 }

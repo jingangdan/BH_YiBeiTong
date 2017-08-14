@@ -466,6 +466,9 @@
         <!--商家结算列表（商家端）-->
         <activity android:name=".seller.ui.SShopcostlogActivity" />
 
+        <!--评价留言（商家端）-->
+        <activity android:name=".seller.ui.SManageCommtActivity"/>
+
         <!--开启服务下载新版本-->
         <service android:name="com.bh.yibeitong.updateversion.UpdateVersionService"></service>
 

@@ -1,765 +1,785 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/lin_percen_nologin"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none">
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <LinearLayout
+        <include layout="@layout/activity_nologin" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lin_percen_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:scrollbars="none">
 
-            <!--头部-->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#a2cb34"
-                android:padding="20dp">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:src="@mipmap/message001"
-                    android:visibility="gone" />
-
-                <LinearLayout
-                    android:id="@+id/lin_personal_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <!--圆形图片 -->
-
-                    <com.bh.yibeitong.view.RoundImageView
-                        android:id="@+id/roundImageView"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@mipmap/ic_launcher" />
-
-                    <TextView
-                        android:id="@+id/tv_username"
-                        style="@style/title_text_witht"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:textSize="14dp" />
-
-                </LinearLayout>
-
-                <!--设置-->
-                <ImageView
-                    android:id="@+id/iv_percen_setting"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:src="@mipmap/setting001" />
-
-            </RelativeLayout>
-
-            <!--<View
-                android:layout_width="match_parent"
-                android:layout_height="0.8dp"
-                android:background="#999" />-->
-
-            <!--收藏-->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#a2cb34"
-                android:orientation="horizontal">
-                <!--android:background="#8EAF34"-->
-
-                <!--账户余额-->
-                <LinearLayout
-                    android:id="@+id/lin_collect_goods"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:id="@+id/tv_percen_yue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#fff" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="账户余额"
-                        android:textColor="#fff" />
-
-
-                </LinearLayout>
-
-                <!--优惠券-->
-                <LinearLayout
-                    android:id="@+id/lin_collect_seller"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:id="@+id/tv_percen_yohuiquan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#fff" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="优惠券"
-                        android:textColor="#fff" />
-
-                </LinearLayout>
-
-                <!--积分-->
-                <LinearLayout
-                    android:id="@+id/lin_collect_shopcart"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:id="@+id/tv_percen_jifen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#fff" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="积分"
-                        android:textColor="#fff" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <!--<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="#EEEEEE"></View>
-
-                &lt;!&ndash;管理收货地址&ndash;&gt;
+                <!--头部-->
                 <RelativeLayout
-                    android:id="@+id/rel_percen_maddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#fff"
-                    android:padding="10dp">
+                    android:background="#a2cb34"
+                    android:padding="20dp">
 
                     <ImageView
-                        android:id="@+id/imageView001"
-                        android:layout_width="wrap_content"
+                        android:layout_width="30dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:src="@mipmap/pc_dizhi" />
-
-                    <TextView
-                        style="@style/setting_text"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/imageView001"
-                        android:text="管理收货地址" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/ic_next001" />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="#EEEEEE"></View>
-
-                &lt;!&ndash;我的收藏&ndash;&gt;
-                <RelativeLayout
-                    android:id="@+id/rel_percen_collect"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#fff"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:id="@+id/imageView002"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:src="@mipmap/pc_shoucang" />
-
-                    <TextView
-                        style="@style/setting_text"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/imageView002"
-                        android:text="我的收藏" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/ic_next001" />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="#EEEEEE"></View>
-
-                &lt;!&ndash;兑换礼品&ndash;&gt;
-                <RelativeLayout
-                    android:id="@+id/rel_percen_exchange"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#fff"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:id="@+id/imageView003"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:src="@mipmap/pc_duihuan" />
-
-                    <TextView
-                        style="@style/setting_text"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/imageView003"
-                        android:text="兑换礼品" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/ic_next001" />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="#EEEEEE"></View>
-
-                &lt;!&ndash;邀请好友送礼包&ndash;&gt;
-                <RelativeLayout
-                    android:id="@+id/rel_percen_invite"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#fff"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:id="@+id/imageView004"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:src="@mipmap/pc_yaoqing" />
-
-                    <TextView
-                        style="@style/setting_text"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/imageView004"
-                        android:text="我要充值" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/ic_next001" />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="#EEEEEE"></View>
-
-                &lt;!&ndash;我要签到&ndash;&gt;
-                <RelativeLayout
-                    android:id="@+id/rel_percen_sign"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#fff"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:id="@+id/imageView006"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:src="@mipmap/pc_ruzhu" />
-
-                    <TextView
-                        style="@style/setting_text"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/imageView006"
-                        android:text="我要签到" />
-
-                    <TextView
-                        android:id="@+id/tv_percen_sign"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:layout_toLeftOf="@+id/iv_percen_sign_right"
-                        android:text="签到" />
-
-                    <ImageView
-                        android:id="@+id/iv_percen_sign_right"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/ic_next001" />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="#EEEEEE"></View>
-
-
-                &lt;!&ndash;关于我们&ndash;&gt;
-                <RelativeLayout
-                    android:id="@+id/rel_percen_about"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#fff"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:id="@+id/imageView005"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:src="@mipmap/pc_about" />
-
-                    <TextView
-                        style="@style/setting_text"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/imageView005"
-                        android:text="关于我们" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/ic_next001" />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="#EEEEEE"></View>
-
-                &lt;!&ndash;检查版本更新&ndash;&gt;
-                <RelativeLayout
-                    android:id="@+id/rel_percen_updata"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#fff"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:id="@+id/iv_percen_updata"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"
-                        android:src="@mipmap/pc_updata" />
-
-                    <TextView
-                        style="@style/setting_text"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/iv_percen_updata"
-                        android:text="检查版本更新" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/ic_next001" />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="#EEEEEE"></View>
-
-            </LinearLayout>-->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="5dp">
-
-                <LinearLayout
-                    android:id="@+id/lin_percen001"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:src="@mipmap/icon_percen001" />
-
+                        android:src="@mipmap/message001"
+                        android:visibility="gone" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:id="@+id/lin_personal_header"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
                         android:gravity="center"
                         android:orientation="vertical">
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
+                        <!--圆形图片 -->
+
+                        <com.bh.yibeitong.view.RoundImageView
+                            android:id="@+id/roundImageView"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:src="@mipmap/ic_launcher" />
+
+                        <TextView
+                            android:id="@+id/tv_username"
+                            style="@style/title_text_witht"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="5"
-                            android:padding="15dp">
+                            android:layout_margin="5dp"
+                            android:textSize="14dp" />
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:src="@mipmap/icon_more" />
+                    </LinearLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:text="管理收货地址" />
+                    <!--设置-->
+                    <ImageView
+                        android:id="@+id/iv_percen_setting"
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/setting001" />
 
-                        </RelativeLayout>
+                </RelativeLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.8dp"
-                            android:layout_gravity="bottom"
-                            android:background="#E1E1E1" />
+                <!--<View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:background="#999" />-->
+
+                <!--收藏-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#a2cb34"
+                    android:orientation="horizontal">
+                    <!--android:background="#8EAF34"-->
+
+                    <!--账户余额-->
+                    <LinearLayout
+                        android:id="@+id/lin_collect_goods"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/tv_percen_yue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="#fff" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="账户余额"
+                            android:textColor="#fff" />
+
+
+                    </LinearLayout>
+
+                    <!--优惠券-->
+                    <LinearLayout
+                        android:id="@+id/lin_collect_seller"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/tv_percen_yohuiquan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="#fff" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="优惠券"
+                            android:textColor="#fff" />
+
+                    </LinearLayout>
+
+                    <!--积分-->
+                    <LinearLayout
+                        android:id="@+id/lin_collect_shopcart"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/tv_percen_jifen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="#fff" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="积分"
+                            android:textColor="#fff" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/lin_percen002"
+
+                <!--<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:src="@mipmap/icon_percen002" />
+                    android:orientation="vertical">
 
 
-                    <LinearLayout
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="#EEEEEE"></View>
+
+                    &lt;!&ndash;管理收货地址&ndash;&gt;
+                    <RelativeLayout
+                        android:id="@+id/rel_percen_maddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:background="#fff"
+                        android:padding="10dp">
 
-                        <RelativeLayout
+                        <ImageView
+                            android:id="@+id/imageView001"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5dp"
+                            android:src="@mipmap/pc_dizhi" />
+
+                        <TextView
+                            style="@style/setting_text"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/imageView001"
+                            android:text="管理收货地址" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/ic_next001" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="#EEEEEE"></View>
+
+                    &lt;!&ndash;我的收藏&ndash;&gt;
+                    <RelativeLayout
+                        android:id="@+id/rel_percen_collect"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#fff"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageView002"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5dp"
+                            android:src="@mipmap/pc_shoucang" />
+
+                        <TextView
+                            style="@style/setting_text"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/imageView002"
+                            android:text="我的收藏" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/ic_next001" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="#EEEEEE"></View>
+
+                    &lt;!&ndash;兑换礼品&ndash;&gt;
+                    <RelativeLayout
+                        android:id="@+id/rel_percen_exchange"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#fff"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageView003"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5dp"
+                            android:src="@mipmap/pc_duihuan" />
+
+                        <TextView
+                            style="@style/setting_text"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/imageView003"
+                            android:text="兑换礼品" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/ic_next001" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="#EEEEEE"></View>
+
+                    &lt;!&ndash;邀请好友送礼包&ndash;&gt;
+                    <RelativeLayout
+                        android:id="@+id/rel_percen_invite"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#fff"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageView004"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5dp"
+                            android:src="@mipmap/pc_yaoqing" />
+
+                        <TextView
+                            style="@style/setting_text"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/imageView004"
+                            android:text="我要充值" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/ic_next001" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="#EEEEEE"></View>
+
+                    &lt;!&ndash;我要签到&ndash;&gt;
+                    <RelativeLayout
+                        android:id="@+id/rel_percen_sign"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#fff"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageView006"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5dp"
+                            android:src="@mipmap/pc_ruzhu" />
+
+                        <TextView
+                            style="@style/setting_text"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/imageView006"
+                            android:text="我要签到" />
+
+                        <TextView
+                            android:id="@+id/tv_percen_sign"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@+id/iv_percen_sign_right"
+                            android:text="签到" />
+
+                        <ImageView
+                            android:id="@+id/iv_percen_sign_right"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/ic_next001" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="#EEEEEE"></View>
+
+
+                    &lt;!&ndash;关于我们&ndash;&gt;
+                    <RelativeLayout
+                        android:id="@+id/rel_percen_about"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#fff"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageView005"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5dp"
+                            android:src="@mipmap/pc_about" />
+
+                        <TextView
+                            style="@style/setting_text"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/imageView005"
+                            android:text="关于我们" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/ic_next001" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="#EEEEEE"></View>
+
+                    &lt;!&ndash;检查版本更新&ndash;&gt;
+                    <RelativeLayout
+                        android:id="@+id/rel_percen_updata"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#fff"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:id="@+id/iv_percen_updata"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5dp"
+                            android:src="@mipmap/pc_updata" />
+
+                        <TextView
+                            style="@style/setting_text"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/iv_percen_updata"
+                            android:text="检查版本更新" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/ic_next001" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="#EEEEEE"></View>
+
+                </LinearLayout>-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="5dp">
+
+                    <LinearLayout
+                        android:id="@+id/lin_percen001"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:src="@mipmap/icon_percen001" />
+
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="5"
-                            android:padding="15dp">
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:src="@mipmap/icon_more" />
+                                android:layout_weight="5"
+                                android:padding="15dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:text="我的收藏" />
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@mipmap/icon_more" />
 
-                        </RelativeLayout>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="管理收货地址" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.8dp"
-                            android:layout_gravity="bottom"
-                            android:background="#E1E1E1" />
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.8dp"
+                                android:layout_gravity="bottom"
+                                android:background="#E1E1E1" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/lin_percen003"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:src="@mipmap/icon_percen003" />
-
-
                     <LinearLayout
+                        android:id="@+id/lin_percen002"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:gravity="center">
 
-                        <RelativeLayout
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:src="@mipmap/icon_percen002" />
+
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="5"
-                            android:padding="15dp">
+                            android:orientation="vertical">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:src="@mipmap/icon_more" />
+                                android:layout_weight="5"
+                                android:padding="15dp">
 
-                            <TextView
-                                android:id="@+id/textView5"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:text="兑换礼品" />
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@mipmap/icon_more" />
 
-                        </RelativeLayout>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="我的收藏" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.8dp"
-                            android:layout_gravity="bottom"
-                            android:background="#E1E1E1" />
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.8dp"
+                                android:layout_gravity="bottom"
+                                android:background="#E1E1E1" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/lin_percen004"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:src="@mipmap/icon_percen004" />
-
-
                     <LinearLayout
+                        android:id="@+id/lin_percen003"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:gravity="center">
 
-                        <RelativeLayout
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:src="@mipmap/icon_percen003" />
+
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="5"
-                            android:padding="15dp">
+                            android:orientation="vertical">
 
-                            <ImageView
-                                android:id="@+id/iv_percen_sign"
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:src="@mipmap/icon_more" />
+                                android:layout_weight="5"
+                                android:padding="15dp">
 
-                            <TextView
-                                android:id="@+id/textView4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentTop="true"
-                                android:layout_centerVertical="true"
-                                android:text="每日签到" />
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@mipmap/icon_more" />
 
-                            <TextView
-                                android:id="@+id/tv_percen_sign"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
-                                android:layout_toLeftOf="@+id/iv_percen_sign"
-                                android:text="未签到" />
+                                <TextView
+                                    android:id="@+id/textView5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="兑换礼品" />
 
-                        </RelativeLayout>
+                            </RelativeLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.8dp"
-                            android:layout_gravity="bottom"
-                            android:background="#E1E1E1" />
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.8dp"
+                                android:layout_gravity="bottom"
+                                android:background="#E1E1E1" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/lin_percen005"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:src="@mipmap/icon_percen005" />
-
-
                     <LinearLayout
+                        android:id="@+id/lin_percen004"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:gravity="center">
 
-                        <RelativeLayout
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:src="@mipmap/icon_percen004" />
+
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="5"
-                            android:padding="15dp">
+                            android:orientation="vertical">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:src="@mipmap/icon_more" />
+                                android:layout_weight="5"
+                                android:padding="15dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:text="关于我们" />
+                                <ImageView
+                                    android:id="@+id/iv_percen_sign"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@mipmap/icon_more" />
 
-                        </RelativeLayout>
+                                <TextView
+                                    android:id="@+id/textView4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="每日签到" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.8dp"
-                            android:layout_gravity="bottom"
-                            android:background="#E1E1E1" />
+                                <TextView
+                                    android:id="@+id/tv_percen_sign"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_toLeftOf="@+id/iv_percen_sign"
+                                    android:text="未签到" />
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.8dp"
+                                android:layout_gravity="bottom"
+                                android:background="#E1E1E1" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/lin_percen006"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:src="@mipmap/icon_percen006" />
-
-
                     <LinearLayout
+                        android:id="@+id/lin_percen005"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:gravity="center">
 
-                        <RelativeLayout
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:src="@mipmap/icon_percen005" />
+
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="5"
-                            android:padding="15dp">
+                            android:orientation="vertical">
 
-                            <ImageView
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:src="@mipmap/icon_more" />
+                                android:layout_weight="5"
+                                android:padding="15dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:text="检查版本更新" />
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@mipmap/icon_more" />
 
-                        </RelativeLayout>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="关于我们" />
 
-                        <View
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.8dp"
+                                android:layout_gravity="bottom"
+                                android:background="#E1E1E1" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lin_percen006"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:src="@mipmap/icon_percen006" />
+
+
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0.8dp"
-                            android:layout_gravity="bottom"
-                            android:background="#E1E1E1" />
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="5"
+                                android:padding="15dp">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@mipmap/icon_more" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="检查版本更新" />
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.8dp"
+                                android:layout_gravity="bottom"
+                                android:background="#E1E1E1" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -767,8 +787,8 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
+    </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

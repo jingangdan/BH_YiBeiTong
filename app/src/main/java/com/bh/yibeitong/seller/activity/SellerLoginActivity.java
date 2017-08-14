@@ -83,7 +83,7 @@ public class SellerLoginActivity extends BaseTextActivity {
         XGPushConfig.enableDebug(this, true);
 
         //绑定设备注册
-        XGPushManager.registerPush(this);
+        //XGPushManager.registerPush(getApplicationContext());
 
         XGPushManager.registerPush(this, new XGIOperateCallback() {
             @Override
@@ -180,20 +180,20 @@ public class SellerLoginActivity extends BaseTextActivity {
             case R.id.but_sl_login:
 
                 //绑定设备注册
-                XGPushManager.registerPush(this);
+                //XGPushManager.registerPush(this);
 
-                XGPushManager.registerPush(this, new XGIOperateCallback() {
-                    @Override
-                    public void onSuccess(Object data, int flag) {
-                        Log.d("TPush", "注册成功，设备token为：" + data);
-                        str_data = String.valueOf(data);
-                    }
-
-                    @Override
-                    public void onFail(Object data, int errCode, String msg) {
-                        Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
-                    }
-                });
+//                XGPushManager.registerPush(this, new XGIOperateCallback() {
+//                    @Override
+//                    public void onSuccess(Object data, int flag) {
+//                        Log.d("TPush", "注册成功，设备token为：" + data);
+//                        str_data = String.valueOf(data);
+//                    }
+//
+//                    @Override
+//                    public void onFail(Object data, int errCode, String msg) {
+//                        Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
+//                    }
+//                });
 
                 //登录
                 user = et_username.getText().toString();
@@ -235,10 +235,6 @@ public class SellerLoginActivity extends BaseTextActivity {
                 break;
 
         }
-
-    }
-
-    private void getToken() {
 
     }
 

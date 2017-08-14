@@ -1,7 +1,6 @@
 package com.bh.yibeitong.fragment;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,7 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +37,6 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.location.Poi;
 import com.bh.yibeitong.Interface.OnItemLongClickListener;
 import com.bh.yibeitong.R;
-import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.adapter.CatefoodslistAdapter;
 import com.bh.yibeitong.base.BaseFragment;
 import com.bh.yibeitong.bean.Error;
@@ -76,6 +73,7 @@ import com.bh.yibeitong.utils.NetworkUtils;
 import com.bh.yibeitong.view.CustomDialog;
 import com.bh.yibeitong.view.MarqueeView;
 import com.bh.yibeitong.view.MyScrollView;
+import com.bh.yibeitong.view.NoDoubleClickListener;
 import com.bh.yibeitong.view.UserInfo;
 import com.bh.yibeitong.zxing.ZXingCaptureActivity;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -154,7 +152,7 @@ public class FMHomePage extends BaseFragment implements
     UserInfo userInfo;
     private String jingang = "";//是否登录  “空”未登录  0未登录  1登录
 
-    private ProgressDialog pd;
+    //private ProgressDialog pd;
 
     /*界面修改*/
     private RelativeLayout rel_new_header;//背景
@@ -216,7 +214,8 @@ public class FMHomePage extends BaseFragment implements
 
     };
 
-    private String printCurTime() {//获取当前时间
+    private String printCurTime() {
+        //获取当前时间
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");//格式样式
         Date date = new Date(System.currentTimeMillis());//建立当前日期
         //format.format(date)格式化日期时间
@@ -281,6 +280,7 @@ public class FMHomePage extends BaseFragment implements
         return view;
     }
 
+    /*开始dialog*/
     private void startProgressDialog() {
         if (progressDialog == null) {
             progressDialog = CustomProgress.createDialog(getActivity());
@@ -290,6 +290,7 @@ public class FMHomePage extends BaseFragment implements
         progressDialog.show();
     }
 
+    /*结束dialog*/
     private void stopProgressDialog() {
         if (progressDialog != null) {
             progressDialog.dismiss();
@@ -389,19 +390,33 @@ public class FMHomePage extends BaseFragment implements
         MyScrollView.doSomeThing();
 
         /*商品列表点击事件*/
-        myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                intent = new Intent(getActivity(), CateFoodDetailsActivity.class);
-                intent.putExtra("id", ceFoodList.get(i).getId());//商品id
-                intent.putExtra("instro", ceFoodList.get(i).getInstro());
-
-                startActivityForResult(intent, CodeUtils.REQUEST_CODE_HOMEPAGE);
-            }
-        });
+//        myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//                intent = new Intent(getActivity(), CateFoodDetailsActivity.class);
+//                intent.putExtra("id", ceFoodList.get(i).getId());//商品id
+//                intent.putExtra("instro", ceFoodList.get(i).getInstro());
+//
+//                startActivityForResult(intent, CodeUtils.REQUEST_CODE_HOMEPAGE);
+//            }
+//        });
 
     }
+
+    /*防止多次点击造成多次事件*/
+    public NoDoubleClickListener mListener = new NoDoubleClickListener() {
+        @Override
+        protected void onNoDoubleClick(int postion, View v) {
+            //System.out.println("啊  我被点了");
+            intent = new Intent(getActivity(), CateFoodDetailsActivity.class);
+            intent.putExtra("id", ceFoodList.get(postion).getId());//商品id
+            intent.putExtra("instro", ceFoodList.get(postion).getInstro());
+
+            startActivityForResult(intent, CodeUtils.REQUEST_CODE_HOMEPAGE);
+        }
+
+    };
 
     @Override
     public void onScrolledToBottom(boolean isToButtom) {
@@ -468,16 +483,13 @@ public class FMHomePage extends BaseFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
+        if (mLocationClient != null && myListener != null) {
+            mLocationClient.unRegisterLocationListener(myListener);
+        }
 
-    MainActivity mActivity;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mActivity = (MainActivity) getActivity();
-        //注册广播
-        //registerReceiver();
+        if (mLocationClient.isStarted()) {
+            mLocationClient.stop();
+        }
     }
 
     private List<WxADV.MsgBean> advList = new ArrayList<>();
@@ -491,7 +503,6 @@ public class FMHomePage extends BaseFragment implements
                     if (cycleViewPager.isCycle()) {
                         //toast("positon = "+position);
                         //此处position是从1开始 故需要 - 1 操作
-
                         if (isNetworkUtils()) {
                             intent = new Intent(getActivity(), JoinActivity.class);
                             intent.putExtra("title", advList.get(position - 1).getTitle());
@@ -859,11 +870,14 @@ public class FMHomePage extends BaseFragment implements
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+
         if (hidden) {
             System.out.println("离开FMShopCart");
 
         } else {
             System.out.println("刷新FMShopCart");
+
+            jingang = userInfo.getLogin();
 
             /*执行局部刷新 更改购物车数量cartNum*/
 
@@ -887,7 +901,7 @@ public class FMHomePage extends BaseFragment implements
     private String str_id2 = "";//记录购物车商品数量
 
     /**
-     * 获取购物车
+     * 获取购物车 （用于首页和购物车数据共享）
      *
      * @param shopid
      */
@@ -1060,7 +1074,7 @@ public class FMHomePage extends BaseFragment implements
                             //获取信息列表
                             ceFoodList.addAll(goodsIndex.getMsg().getCatefoodslist());
 
-                            gridViewAdapter.setCatefoodslistBeanList(getActivity(), ceFoodList);
+                            gridViewAdapter.setCatefoodslistBeanList(getActivity(), ceFoodList, mListener);
 
                             myGridView.setAdapter(gridViewAdapter);
 
@@ -1147,7 +1161,6 @@ public class FMHomePage extends BaseFragment implements
      * 显示请求字符串
      */
     public void logMsg(String string) {
-        //et_address.setText(address);
 
         getShopGoods(latitude, longtitude, page);
 
@@ -1216,11 +1229,9 @@ public class FMHomePage extends BaseFragment implements
 
     /*设置location*/
     private void startLocate() {
-//        pdStyle();
+
         mLocationClient = new LocationClient(getActivity().getApplicationContext());
         //声明LocationClient类
-        mLocationClient.registerLocationListener(myListener);
-        //注册监听函数
 
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
@@ -1258,6 +1269,9 @@ public class FMHomePage extends BaseFragment implements
 
         mLocationClient.setLocOption(option);
 
+        mLocationClient.registerLocationListener(myListener);
+        //注册监听函数
+
         mLocationClient.start();
         System.out.println("location start");
     }
@@ -1267,9 +1281,6 @@ public class FMHomePage extends BaseFragment implements
 
         @Override
         public void onReceiveLocation(BDLocation location) {
-            //stopProgressDialog();
-
-            //isLocation = true;
 
             handler.postDelayed(runRemove, 0);//过6秒后执行
 
@@ -1876,6 +1887,8 @@ public class FMHomePage extends BaseFragment implements
             ceFoodList.clear();
             myScrollView.scrollTo(0, 0);
             getShopGoods(latitude, longtitude, 1);
+
+            rv_horizontal.setVisibility(View.GONE);
 
         } else if (requestCode == CodeUtils.REQUEST_CODE_HOMEPAGE) {
             if (resultCode == CodeUtils.REQUEST_CODE_CATEFOOD || resultCode == CodeUtils.REQUEST_CODE_NEWSHOP) {

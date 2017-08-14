@@ -225,4 +225,18 @@ public class UserInfo {
         return sp.edit().putString("score", info).commit();
     }
 
+    /*商家端 通知注册*/
+    public String getRegisterPush(){
+        //取
+        SharedPreferences sp = app.getSharedPreferences("registerPushList", 0);
+
+        return sp.getString("registerPush", "");
+    }
+
+    public boolean saveRegisterPush(String info){
+        //存
+        SharedPreferences sp = app.getSharedPreferences("registerPushList", 0);
+        return sp.edit().putString("registerPush", info).commit();
+    }
+
 }

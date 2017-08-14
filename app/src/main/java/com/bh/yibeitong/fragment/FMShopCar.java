@@ -151,18 +151,13 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
         } else {
             System.out.println("刷新FMShopCart");
 
+            jingang = userInfo.getLogin();
+
             tv_all_pay.setText("0.00");
 
             but_pay.setText("");
 
             tv_shopcart_num.setText("0");
-
-
-            userInfo = new UserInfo(getActivity().getApplication());
-
-            System.out.println("a ="+userInfo.getShopDet());
-
-            //initData();
 
             //店铺id
             shopid = userInfo.getShopInfo();

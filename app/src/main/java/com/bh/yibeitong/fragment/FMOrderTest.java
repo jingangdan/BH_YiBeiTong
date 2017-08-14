@@ -32,14 +32,13 @@ import com.bh.yibeitong.seller.activity.SellerLoginActivity;
 import com.bh.yibeitong.ui.LoginRegisterActivity;
 import com.bh.yibeitong.ui.OrderCommentActivity;
 import com.bh.yibeitong.ui.OrderDetaileActivity;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
-import com.bh.yibeitong.utils.XUtilsImageUtils;
 import com.bh.yibeitong.view.CustomDialog;
 import com.bh.yibeitong.view.UserInfo;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lidroid.xutils.BitmapUtils;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -83,34 +82,44 @@ public class FMOrderTest extends BaseFragment {
     private Button but_login;
     private TextView tv_nologin_title;
 
+    /*判断是否登录*/
+    private LinearLayout lin_login, lin_nologin;
+
+    private Intent intent;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         System.out.println("订单页 加载");
 
-        userInfo = new UserInfo(getActivity().getApplication());
+        view = inflater.inflate(R.layout.fragment_orders, container, false);
 
-        jingang = userInfo.getLogin();
+        initData();
+        initDatas();
 
-        /*判断是否已登录*/
-        if (jingang.equals("")) {
-
-            view = inflater.inflate(R.layout.activity_nologin, container, false);
-
-            initDatas();
-
-        } else if (jingang.equals("0")) {
-            view = inflater.inflate(R.layout.activity_nologin, container, false);
-
-            initDatas();
-
-        } else if (jingang.equals("1")) {
-            view = inflater.inflate(R.layout.fragment_orders, container, false);
-
-            initData();
-
-        }
+//        userInfo = new UserInfo(getActivity().getApplication());
+//
+//        jingang = userInfo.getLogin();
+//
+//        /*判断是否已登录*/
+//        if (jingang.equals("")) {
+//
+//            view = inflater.inflate(R.layout.activity_nologin, container, false);
+//
+//            initDatas();
+//
+//        } else if (jingang.equals("0")) {
+//            view = inflater.inflate(R.layout.activity_nologin, container, false);
+//
+//            initDatas();
+//
+//        } else if (jingang.equals("1")) {
+//            view = inflater.inflate(R.layout.fragment_orders, container, false);
+//
+//            initData();
+//
+//        }
 
         return view;
     }
@@ -119,6 +128,9 @@ public class FMOrderTest extends BaseFragment {
      * 组件初始化 登录状态下
      */
     public void initData() {
+
+        userInfo = new UserInfo(getActivity().getApplication());
+        jingang = userInfo.getLogin();
 
         tv_header_title = (TextView) view.findViewById(R.id.tv_header_title);
         iv_header_left = (ImageView) view.findViewById(R.id.iv_header_left);
@@ -129,32 +141,19 @@ public class FMOrderTest extends BaseFragment {
 
         lv_order = (ListView) view.findViewById(R.id.lv_order);
 
-        gson = new Gson();
-        Type listType = new TypeToken<List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean>>() {
-        }.getType();
+        /**/
+        lin_login = (LinearLayout) view.findViewById(R.id.lin_order_login);
+        lin_nologin = (LinearLayout) view.findViewById(R.id.lin_order_nologin);
 
-        final List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean> catefoodslist =
-                gson.fromJson(userInfo.getPostData(), listType);
+        isLogin();
 
-        //验证登录方式
-        if (!(userInfo.getUserInfo().equals(""))) {
-            Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
-            uid = register.getMsg().getUid();
-            phone = register.getMsg().getPhone();
-            if (!(userInfo.getPwd().equals(""))) {
-                pwd = userInfo.getPwd();
+//        gson = new Gson();
+//        Type listType = new TypeToken<List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean>>() {
+//        }.getType();
+//
+//        final List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean> catefoodslist =
+//                gson.fromJson(userInfo.getPostData(), listType);
 
-                if (userInfo.getCode().equals("0")) {
-                    System.out.println("我的验证码" + userInfo.getCode());
-                    getOrder(uid, pwd);
-                } else {
-                    System.out.println("我的手机号" + phone);
-                    getOrder("phone", phone);
-                }
-
-            }
-
-        }
     }
 
     PopupWindow pop;
@@ -205,7 +204,9 @@ public class FMOrderTest extends BaseFragment {
                 but_user.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
+                        intent = new Intent(getActivity(), LoginRegisterActivity.class);
+                        startActivityForResult(intent, CodeUtils.REQUEST_CODE_HOME_ORDER);
+                        //startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
                         pop.dismiss();
                         parent.clearAnimation();
                     }
@@ -245,18 +246,12 @@ public class FMOrderTest extends BaseFragment {
 
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (hidden) {
-            System.out.println("离开FMOrder");
-            //离开Fragment
+    public void isLogin(){
+        userInfo = new UserInfo(getActivity().getApplication());
+        jingang = userInfo.getLogin();
 
-        } else {
-            //相当于Fragment的onPause
-            System.out.println("加载FMOrder");
-            //重新刷新
-
+        if(jingang.equals("1")){
+            //验证登录方式
             if (!(userInfo.getUserInfo().equals(""))) {
                 Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
                 uid = register.getMsg().getUid();
@@ -271,10 +266,53 @@ public class FMOrderTest extends BaseFragment {
                         System.out.println("我的手机号" + phone);
                         getOrder("phone", phone);
                     }
+
                 }
-            } else {
 
             }
+
+            lin_login.setVisibility(View.VISIBLE);
+            lin_nologin.setVisibility(View.GONE);
+        }else{
+            lin_login.setVisibility(View.GONE);
+            lin_nologin.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            System.out.println("离开FMOrder");
+            //离开Fragment
+
+        } else {
+            //相当于Fragment的onPause
+            System.out.println("加载FMOrder");
+            //重新刷新
+
+            jingang = userInfo.getLogin();
+
+            isLogin();
+
+//            if (!(userInfo.getUserInfo().equals(""))) {
+//                Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
+//                uid = register.getMsg().getUid();
+//                phone = register.getMsg().getPhone();
+//                if (!(userInfo.getPwd().equals(""))) {
+//                    pwd = userInfo.getPwd();
+//
+//                    if (userInfo.getCode().equals("0")) {
+//                        System.out.println("我的验证码" + userInfo.getCode());
+//                        getOrder(uid, pwd);
+//                    } else {
+//                        System.out.println("我的手机号" + phone);
+//                        getOrder("phone", phone);
+//                    }
+//                }
+//            } else {
+//
+//            }
 
 
         }
@@ -343,7 +381,7 @@ public class FMOrderTest extends BaseFragment {
     }
 
     /**
-     * 提示框
+     * 提示框(未登录)
      */
     protected void dialog() {
         CustomDialog.Builder builder = new CustomDialog.Builder(getActivity());
@@ -378,6 +416,16 @@ public class FMOrderTest extends BaseFragment {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CodeUtils.REQUEST_CODE_HOME_ORDER){
+            if(resultCode == CodeUtils.REQUEST_CODE_LOGIN){
+                isLogin();
+            }
+        }
+
+    }
 
     /**
      * 将适配器嵌套在Activity中 更好的操作Activity中的控件变化
@@ -448,16 +496,7 @@ public class FMOrderTest extends BaseFragment {
                 vh.img.setImageResource(R.mipmap.yibeitong001);
 
             } else {
-//                BitmapUtils bitmapUtils = new BitmapUtils(mContext);
-//
-//                bitmapUtils.configDiskCacheEnabled(true);
-//                bitmapUtils.configMemoryCacheEnabled(false);
-//
-//                bitmapUtils.display(vh.img, imgPath);
-
                 x.image().bind(vh.img, imgPath);
-
-                //XUtilsImageUtils.display(vh.img, imgPath, 0);
             }
 
             vh.shopname.setText(shopname);
@@ -640,5 +679,3 @@ public class FMOrderTest extends BaseFragment {
     }
 
 }
-
-

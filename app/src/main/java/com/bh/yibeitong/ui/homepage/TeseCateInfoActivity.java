@@ -187,6 +187,7 @@ public class TeseCateInfoActivity extends BaseTextActivity {
 
     /*支付按钮状态*/
     public void goPay() {
+        but_pay.setText("去支付");
         but_pay.setTextColor(Color.WHITE);
         but_pay.setBackgroundColor(Color.rgb(162, 203, 52));
     }
@@ -471,6 +472,29 @@ public class TeseCateInfoActivity extends BaseTextActivity {
                         msgBeanList.get(i).setCartnum(cartNum);
                     }
                 }
+
+                totalPrice = bundle.getDouble("allpay");
+
+
+                if (limitcost == 0) {
+                    goPay();
+
+                } else if (totalPrice >= limitcost) {
+                    goPay();
+                } else if (totalPrice > 0 && totalPrice < limitcost) {
+                    double add = limitcost - totalPrice;
+
+                    but_pay.setText("还差" + df.format(add) + "元");
+                    noGoPay();
+                } else if (totalPrice == 0) {
+                    but_pay.setText("购物车为空");
+                    noGoPay();
+                } else {
+                    //toast("错误");
+                }
+
+                tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
+
                 teseCateInfoAdapter.notifyDataSetChanged();
             }
         }

@@ -21,26 +21,40 @@
     </LinearLayout>
 
     <!---->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:orientation="vertical">
 
-        <TextView
-            style="@style/title_text"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="还未登录"
-            android:layout_marginBottom="10dp"/>
+            android:layout_above="@+id/tv_login"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/icon_nologin" />
+
+        <TextView
+            android:id="@+id/tv_login"
+            style="@style/title_second_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/but_login"
+            android:padding="10dp"
+            android:text="您尚未登录，请登陆后查看"
+            android:textSize="14dp" />
 
         <Button
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:id="@+id/but_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/button_style"
-            android:text="登录/注册"/>
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="登录/注册" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

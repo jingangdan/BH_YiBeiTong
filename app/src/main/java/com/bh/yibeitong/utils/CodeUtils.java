@@ -30,4 +30,20 @@ public class CodeUtils {
     /*购物车*/
     public static final int REQUEST_CODE_SHOPCART = 0x08;
 
+    /*登录*/
+    public static final int REQUEST_CODE_LOGIN = 0x09;
+
+    /*注册*/
+    public static final int REQUEST_CODE_REGIST = 0x10;
+
+    /*订单页*/
+    public static final int REQUEST_CODE_HOME_ORDER = 0x11;
+
+    /*个人中心页*/
+    public static final int REQUEST_CODE_PERCEN = 0x12;
+
+    /*设置*/
+    public static final int REQUEST_CODE_SETTING = 0x13;
+
+
 }

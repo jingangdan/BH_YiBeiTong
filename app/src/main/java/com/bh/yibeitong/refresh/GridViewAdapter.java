@@ -1,6 +1,7 @@
 package com.bh.yibeitong.refresh;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,11 @@ import com.bh.yibeitong.R;
 import com.bh.yibeitong.bean.AddShopCart;
 import com.bh.yibeitong.bean.GoodsIndex;
 import com.bh.yibeitong.bean.ShopCartReturn;
+import com.bh.yibeitong.ui.CateFoodDetailsActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.utils.XUtilsImageUtils;
+import com.bh.yibeitong.view.NoDoubleClickListener;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -30,10 +33,14 @@ public class GridViewAdapter extends BaseAdapter {
     private int good_num;
 
     private List<GoodsIndex.MsgBean.CatefoodslistBean> foodList = new ArrayList<>();
+    private NoDoubleClickListener mListener;
 
-    public void setCatefoodslistBeanList(Context mContext, List<GoodsIndex.MsgBean.CatefoodslistBean> foodList) {
+    public void setCatefoodslistBeanList(Context mContext,
+                                         List<GoodsIndex.MsgBean.CatefoodslistBean> foodList,
+                                         NoDoubleClickListener mListener) {
         this.context = mContext;
         this.foodList = foodList;
+        this.mListener = mListener;
     }
 
     @Override
@@ -119,6 +126,9 @@ public class GridViewAdapter extends BaseAdapter {
         vh.price.setText("￥" + foodCost);
 
         vh.num.setText("月售" + str_foodSellCount + "笔");
+
+        vh.imager.setOnClickListener(mListener);
+        vh.imager.setTag(position);//记录位置
 
         //增加
         vh.iv_add_button.setOnClickListener(new View.OnClickListener() {
@@ -285,5 +295,24 @@ public class GridViewAdapter extends BaseAdapter {
         private ImageView iv_add_button, iv_sub_botton;
         private TextView tv_shop_num;
     }
+
+    /**
+     * 用于回调的抽象类
+     *
+     * @author jingang
+     *         2017-08-14
+     */
+//    public static abstract class MyClickListener implements View.OnClickListener {
+//        /**
+//         * 基类的onClick方法
+//         */
+//        @Override
+//        public void onClick(View v) {
+//            myOnClick((Integer) v.getTag(), v);
+//        }
+//
+//        public abstract void myOnClick(int position, View v);
+//    }
+
 
 }

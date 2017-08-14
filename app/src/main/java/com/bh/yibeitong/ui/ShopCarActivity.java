@@ -174,12 +174,12 @@ public class ShopCarActivity extends BaseTextActivity{
    * cartNum：该商品在购物车中的数量
    * cartnum：购物车总数量
    * */
-    public void setResult(String id, int cartNum, int cartnum) {
+    public void setResult(String id, int cartNum, int cartnum, double allpay) {
         intent = new Intent();
         intent.putExtra("gid", id);//商品id
         intent.putExtra("cartNum", cartNum);//该商品购物车数量
         intent.putExtra("cartnum", cartnum);//购物车总数量
-
+        intent.putExtra("allpay", allpay);
         setResult(CodeUtils.REQUEST_CODE_SHOPCART, intent);
     }
 
@@ -351,7 +351,7 @@ public class ShopCarActivity extends BaseTextActivity{
             if(resultCode == CodeUtils.REQUEST_CODE_ORDER){
                 listBean.clear();
                 shopCartAdapter.notifyDataSetChanged();
-                setResult("000", 0, 0);
+                setResult("000", 0, 0, 0.00);
             }
         }
     }
@@ -487,7 +487,7 @@ public class ShopCarActivity extends BaseTextActivity{
 
                                     tv_shopcart_num.setText("" + sc_count);
 
-                                    setResult(str_id, count, sc_count);
+                                    setResult(str_id, count, sc_count, totalPrice);
 
                                 }
 
@@ -580,7 +580,7 @@ public class ShopCarActivity extends BaseTextActivity{
                                             shopCartAdapter.notifyDataSetChanged();
                                         }
 
-                                        setResult(str_id, count, sc_count);
+                                        setResult(str_id, count, sc_count, totalPrice);
                                     }
 
                                     @Override

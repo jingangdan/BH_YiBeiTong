@@ -44,6 +44,7 @@ import com.bh.yibeitong.ui.percen.JiFenActivity;
 import com.bh.yibeitong.ui.percen.YouHuiQuanActivity;
 import com.bh.yibeitong.ui.percen.YuEActivity;
 import com.bh.yibeitong.updateversion.SDCardUtils;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.utils.UpdataUtils;
@@ -111,38 +112,49 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
     /*接口地址*/
     private String PATH = "";
 
+    /*登录和未登录时的界面*/
+    private LinearLayout lin_login, lin_nologin;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         System.out.println("个人中心页 加载");
-        userInfo = new UserInfo(getActivity().getApplication());
+        view = inflater.inflate(R.layout.fragment_personal_center, container, false);
 
-        jingang = userInfo.getLogin();
 
-        /*判断是否已登录*/
-        if (jingang.equals("")) {
+        initData();
 
-            System.out.println("未登录 空 = " + jingang);
-            view = inflater.inflate(R.layout.activity_nologin, container, false);
+        initDatas();
 
-            initDatas();
+        initVariable();
 
-        } else if (jingang.equals("0")) {
-            System.out.println("未登录 0 = " + jingang);
-            view = inflater.inflate(R.layout.activity_nologin, container, false);
-
-            initDatas();
-
-        } else if (jingang.equals("1")) {
-            System.out.println("已登录 1 = " + jingang);
-            view = inflater.inflate(R.layout.fragment_personal_center, container, false);
-
-            initData();
-
-            initVariable();
-
-        }
+//        userInfo = new UserInfo(getActivity().getApplication());
+//
+//        jingang = userInfo.getLogin();
+//
+//        /*判断是否已登录*/
+//        if (jingang.equals("")) {
+//
+//            System.out.println("未登录 空 = " + jingang);
+//            view = inflater.inflate(R.layout.activity_nologin, container, false);
+//
+//            initDatas();
+//
+//        } else if (jingang.equals("0")) {
+//            System.out.println("未登录 0 = " + jingang);
+//            view = inflater.inflate(R.layout.activity_nologin, container, false);
+//
+//            initDatas();
+//
+//        } else if (jingang.equals("1")) {
+//            System.out.println("已登录 1 = " + jingang);
+//            view = inflater.inflate(R.layout.fragment_personal_center, container, false);
+//
+//            initData();
+//
+//            initVariable();
+//
+//        }
 
         return view;
     }
@@ -195,7 +207,9 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
                 but_user.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
+                        intent = new Intent(getActivity(), LoginRegisterActivity.class);
+                        startActivityForResult(intent, CodeUtils.REQUEST_CODE_PERCEN);
+                        //startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
                         pop.dismiss();
                         parent.clearAnimation();
                     }
@@ -228,7 +242,6 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
         tv_nologin_title.setText("个人中心");
     }
 
-
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -245,6 +258,7 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
      * 组件 初始化
      */
     public void initData() {
+
         tv_username = (TextView) view.findViewById(R.id.tv_username);
 
         lin_personal_header = (LinearLayout) view.findViewById(R.id.lin_personal_header);
@@ -291,23 +305,46 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
 
         tv_sign = (TextView) view.findViewById(R.id.tv_percen_sign);
 
-        if (!(userInfo.getUserInfo().equals(""))) {
-            Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
-            uid = register.getMsg().getUid();
-            phone = register.getMsg().getPhone();
+        /**/
+        lin_login = (LinearLayout) view.findViewById(R.id.lin_percen_login);
+        lin_nologin = (LinearLayout) view.findViewById(R.id.lin_percen_nologin);
 
+        isLogin();
+
+
+
+    }
+
+    /*判断是否登录*/
+    public void isLogin(){
+        userInfo = new UserInfo(getActivity().getApplication());
+        jingang = userInfo.getLogin();
+
+        if(jingang.equals("1")){
+
+            if (!(userInfo.getUserInfo().equals(""))) {
+                Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
+                uid = register.getMsg().getUid();
+                phone = register.getMsg().getPhone();
+
+            }
+
+            pwd = userInfo.getPwd();
+
+            if (userInfo.getCode().toString().equals("0")) {
+                getAppMem(uid, pwd);
+                getSignToDay(uid, pwd);
+            } else {
+                getAppMem("phone", phone);
+                getSignToDay("phone", phone);
+            }
+
+            lin_login.setVisibility(View.VISIBLE);
+            lin_nologin.setVisibility(View.GONE);
+        }else{
+            lin_login.setVisibility(View.GONE);
+            lin_nologin.setVisibility(View.VISIBLE);
         }
-
-        pwd = userInfo.getPwd();
-
-        if (userInfo.getCode().toString().equals("0")) {
-            getAppMem(uid, pwd);
-            getSignToDay(uid, pwd);
-        } else {
-            getAppMem("phone", phone);
-            getSignToDay("phone", phone);
-        }
-
     }
 
     @Override
@@ -338,7 +375,8 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
                 intent.putExtra("username", username);
                 intent.putExtra("phone", phone);
                 intent.putExtra("member", member);
-                startActivity(intent);
+                startActivityForResult(intent, CodeUtils.REQUEST_CODE_PERCEN);
+                //startActivity(intent);
 
                 break;
 
@@ -1063,6 +1101,7 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
     /**
      * 安装程序
      */
+
 //    void updates() {
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
 //        intent.setDataAndType(Uri.fromFile(new File(Environment
@@ -1080,6 +1119,12 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
 
                 System.out.println("FMPerCen jifen = " + paytype);
                 System.out.println("FMPerCen giftscore = " + giftscore);
+
+            }
+        } else if (requestCode == CodeUtils.REQUEST_CODE_PERCEN) {
+            if (resultCode == CodeUtils.REQUEST_CODE_LOGIN ||
+                    resultCode == CodeUtils.REQUEST_CODE_SETTING) {
+                isLogin();
 
 
             }

@@ -2,15 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/parent">
+    android:id="@+id/parent"
+    android:padding="10dp">
 
     <LinearLayout
+        android:background="@drawable/button_white_shape"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:orientation="vertical"
-        android:id="@+id/ll_popup"
-        android:background="#CCC">
+        android:id="@+id/ll_popup">
 
         <Button
             android:id="@+id/btn_take_photo"
@@ -21,7 +23,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.8dp"
-            android:background="#999"></View>
+            android:background="#EEEEEE"></View>
 
         <Button
             android:id="@+id/btn_pick_photo"
@@ -33,7 +35,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.8dp"
-            android:background="#999"></View>
+            android:background="#EEEEEE"></View>
 
         <Button
             android:id="@+id/btn_cancel"

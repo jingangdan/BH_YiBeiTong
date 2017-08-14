@@ -542,6 +542,16 @@ public class HttpPath {
     * */
     public static String APP_SHOPCOSTLOG = "action=shopcostlog&";
 
+    /*
+    * 评价管理（商家端）
+    * 参数：
+    * page=0
+    * &pagesize=1000
+    * &uid=2874
+    * &pwd=123456
+    * */
+    public static String APP_MANAGESCOMMT = "action=managescommt&";
+
 
 
     /**

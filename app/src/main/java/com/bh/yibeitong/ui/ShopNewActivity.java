@@ -63,7 +63,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
     private ShopNewAdapter snAdapter;
 
     int index_msg = 0;
-    //int index_child = 0;
+    int index_child = 0;
 
     /**
      * 一级分类
@@ -243,6 +243,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
     /*支付按钮状态*/
     public void goPay() {
+        but_pay.setText("去支付");
         but_pay.setTextColor(Color.WHITE);
         but_pay.setBackgroundColor(Color.rgb(162, 203, 52));
     }
@@ -254,11 +255,13 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
     }
 
     /*数据改变时向上一层传递信息*/
-    public void setResult(String gid, int cartNum, int cartnum) {
+    public void setResult(String gid, int cartNum, int cartnum, double allpay) {
         intent = new Intent();
         intent.putExtra("gid", gid);
         intent.putExtra("cartNum", cartNum);
         intent.putExtra("cartnum", cartnum);
+        intent.putExtra("allpay", allpay);
+
         setResult(CodeUtils.REQUEST_CODE_NEWSHOP, intent);
     }
 
@@ -401,7 +404,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 gcAdapter.changeSelected(position);//刷新
 
-                                //index_child = 0;
+                                index_child = 0;
 
                                 index_msg = position;
                                 foodList = shopnew.getMsg().get(position).getChild().get(0).getDet();
@@ -426,7 +429,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 gcsAdapter.changeSelected(position);
 
-                                //index_child = position;
+                                index_child = position;
 
                                 foodList = shopnew.getMsg().get(index_msg).getChild().get(position).getDet();
 
@@ -449,7 +452,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 //                                ShopNew.MsgBean.ChildBean.DetBean detBean = shopnew.getMsg().get(index_msg).
 //                                        getChild().get(index_child).getDet().get(position);
 
-                                foodList = shopnew.getMsg().get(index_msg).getChild().get(position).getDet();
+                                foodList = shopnew.getMsg().get(index_msg).getChild().get(index_child).getDet();
 
                                 //传值
                                 String str_id = foodList.get(position).getId();
@@ -849,19 +852,13 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 //                                                but_sg_pay.setTextColor(Color.GRAY);
                                                 but_pay.setText("还差" + df.format(add) + "元");
                                                 noGoPay();
-                                            } else if (totalPrice == 0) {
-//                                                but_sg_pay.setText("购物车为空");
-//                                                but_sg_pay.setTextColor(Color.GRAY);
-                                                but_pay.setText("购物车为空");
-                                                noGoPay();
-                                            } else {
                                             }
 
                                             vh.shopCart_num.setText("" + good_num);
                                             tv_shopcart_num.setText(""+cartnum);
                                             tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
 
-                                            setResult(goodId, good_num, cartnum);
+                                            setResult(goodId, good_num, cartnum, totalPrice);
 
                                             //tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
@@ -951,7 +948,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                                             tv_shopcart_num.setText(""+cartnum);
                                             tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
 
-                                            setResult(goodId, good_num, cartnum);
+                                            setResult(goodId, good_num, cartnum, totalPrice);
 
                                         } else if (shopCartReturn.getMsg().isResult() == false) {
                                             Toast.makeText(ShopNewActivity.this, "减少失败，库存不足", Toast.LENGTH_SHORT).show();
@@ -1033,13 +1030,15 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CodeUtils.REQUEST_CODE_NEWSHOP) {
-            if (resultCode == CodeUtils.REQUEST_CODE_CATEFOOD || resultCode == CodeUtils.REQUEST_CODE_SHOPCART) {
+            if (resultCode == CodeUtils.REQUEST_CODE_CATEFOOD ||
+                    resultCode == CodeUtils.REQUEST_CODE_SHOPCART) {
                 Bundle bundle = data.getExtras();
                 String gid = bundle.getString("gid");
                 int cartNum = bundle.getInt("cartNum");
                 int cartnum = bundle.getInt("cartnum");
 
                 tv_shopcart_num.setText("" + cartnum);
+
 
                 for (int i = 0; i < foodList.size(); i++) {
                     if (gid.equals(foodList.get(i).getId())) {
@@ -1048,9 +1047,34 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                         foodList.get(i).setCartnum(cartNum);
                     }
                 }
+
+                totalPrice = bundle.getDouble("allpay");
+
+
+                System.out.println("ssssss"+totalPrice);
+                System.out.println("ssssssss"+limitcost);
+                if (limitcost == 0) {
+                    goPay();
+
+                } else if (totalPrice >= limitcost) {
+                    goPay();
+                } else if (totalPrice > 0 && totalPrice < limitcost) {
+                    double add = limitcost - totalPrice;
+
+                    but_pay.setText("还差" + df.format(add) + "元");
+                    noGoPay();
+                } else if (totalPrice == 0) {
+                    but_pay.setText("购物车为空");
+                    noGoPay();
+                } else {
+                    //toast("错误");
+                }
+
+                tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
+
                 snAdapter.notifyDataSetChanged();
 
-                setResult(gid, cartNum, cartnum);
+                setResult(gid, cartNum, cartnum, totalPrice);
             }
         }
 
