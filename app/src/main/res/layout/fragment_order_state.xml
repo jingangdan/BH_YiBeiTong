@@ -52,11 +52,11 @@
 
             <Button
                 android:id="@+id/but_continue_pay"
-                style="@style/button_style"
+                style="@style/button_style_red"
                 android:layout_alignParentBottom="true"
                 android:text="继续支付"
-                android:textSize="14dp"
-                android:visibility="gone" />
+                android:layout_height="35dp"
+                android:textSize="14dp" />
 
         </LinearLayout>
 

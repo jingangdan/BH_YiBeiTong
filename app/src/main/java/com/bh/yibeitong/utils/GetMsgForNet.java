@@ -89,7 +89,8 @@ public class GetMsgForNet extends Activity {
     public static void putShopCart(String shopid, int num, String gid) {
         HttpUtils http = new HttpUtils();
         http.send(HttpMethod.GET,
-                HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_ADD_SHOPCART + "shopid=" + shopid + "&num=" + num + "&gid=" + gid,
+                HttpPath.PATH + HttpPath.ADD_SHOPCART
+                        + "shopid=" + shopid + "&num=" + num + "&gid=" + gid,
                 new RequestCallBack<String>() {
                     @Override
                     public void onSuccess(ResponseInfo<String> responseInfo) {

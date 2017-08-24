@@ -30,18 +30,22 @@ public class FileDownloadManager {
 
 
     /**
+     * 开始下载
      * @param uri
      * @param title
      * @param description
      * @return download id
      */
     public long startDownload(String uri, String title, String description) {
-        System.out.println("开始下载");
+        System.out.println("11111 开始下载");
 
         DownloadManager.Request req = new DownloadManager.Request(Uri.parse(uri));
 
-        req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
-        //req.setAllowedOverRoaming(false);
+        //req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+
+        //req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE);
+
+        //req.setAllowedOverRoaming(false);//移动漫游
 
         req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 

@@ -5,67 +5,68 @@
     android:orientation="vertical">
 
     <!--头部-->
-    <RelativeLayout
-        android:id="@+id/rel_jingang"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/rel_jingang"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:visibility="gone">-->
 
-        <ImageView
-            android:id="@+id/iv_scanning"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:padding="10dp"
-            android:src="@mipmap/ic_scanning" />
+    <!--<ImageView-->
+    <!--android:id="@+id/iv_scanning"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:padding="10dp"-->
+    <!--android:src="@mipmap/ic_scanning" />-->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:src="@mipmap/sousuo1"
-            android:visibility="gone" />
+    <!--<ImageView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginRight="5dp"-->
+    <!--android:src="@mipmap/sousuo1"-->
+    <!--android:visibility="gone" />-->
 
-        <EditText
-            android:id="@+id/et_address"
-            style="@style/title_text_witht"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:drawableLeft="@mipmap/ditu1"
-            android:editable="false"
-            android:hint="定位中..."
-            android:textColorHint="#fff"
-            android:textSize="18dp" />
+    <!--<EditText-->
+    <!--android:id="@+id/et_address"-->
+    <!--style="@style/title_text_witht"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:background="@null"-->
+    <!--android:drawableLeft="@mipmap/ditu1"-->
+    <!--android:editable="false"-->
+    <!--android:hint="定位中..."-->
+    <!--android:textColorHint="#fff"-->
+    <!--android:textSize="18dp" />-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/edittext_shape"
-        android:orientation="horizontal"
-        android:visibility="gone">
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:background="@drawable/edittext_shape"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:visibility="gone">-->
 
-        <EditText
-            android:id="@+id/et_home_page_search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:focusable="false"
-            android:gravity="center"
-            android:hint="请输入店铺名、商品名"
-            android:padding="5dp"
-            android:textSize="12dp" />
+    <!--<EditText-->
+    <!--android:id="@+id/et_home_page_search"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="@null"-->
+    <!--android:focusable="false"-->
+    <!--android:gravity="center"-->
+    <!--android:hint="请输入店铺名、商品名"-->
+    <!--android:padding="5dp"-->
+    <!--android:textSize="12dp" />-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
+
 
     <RelativeLayout
         android:id="@+id/rel_new_header"
@@ -90,8 +91,10 @@
             android:layout_centerVertical="true"
             android:drawableRight="@mipmap/new_drop_down"
             android:editable="false"
-            android:text="定位中。。。"
-            android:layout_margin="5dp"/>
+            android:ellipsize="end"
+            android:maxEms="12"
+            android:singleLine="true"
+            android:text="送至：" />
 
         <ImageView
             android:id="@+id/iv_new_search"

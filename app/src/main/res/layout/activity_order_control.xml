@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F0F0">
+
+    <LinearLayout
+        android:id="@+id/lin_control_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <include layout="@layout/activity_base" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lin_control_foot"
+        android:layout_below="@+id/lin_control_header">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <!--退款金额-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/setting_text"
+                    android:layout_alignParentLeft="true"
+                    android:text="退款金额"
+                    android:textColor="#000" />
+
+                <TextView
+                    android:id="@+id/tv_control_allcost"
+                    style="@style/text_cost"
+                    android:layout_alignParentRight="true"
+                    android:text="111" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <!---->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/setting_text"
+                        android:layout_alignParentLeft="true"
+                        android:text="退款原因"
+                        android:textColor="#000" />
+
+                    <TextView
+                        style="@style/textView_style"
+                        android:layout_alignParentRight="true"
+                        android:text="(需选择一项)" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:background="#F0F0F0" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/setting_text"
+                        android:layout_alignParentLeft="true"
+                        android:text="买错了，买多了"
+                        android:textColor="#000" />
+
+                    <CheckBox
+                        android:id="@+id/cb_control1"
+                        style="@style/custom_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:checked="false" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:background="#F0F0F0" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/setting_text"
+                        android:layout_alignParentLeft="true"
+                        android:text="地址、电话填写有误"
+                        android:textColor="#000" />
+
+                    <CheckBox
+                        android:id="@+id/cb_control2"
+                        style="@style/custom_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:checked="false" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:background="#F0F0F0" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/setting_text"
+                        android:layout_alignParentLeft="true"
+                        android:text="计划有变，不想买了"
+                        android:textColor="#000" />
+
+                    <CheckBox
+                        android:id="@+id/cb_control3"
+                        style="@style/custom_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:checked="false" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:background="#F0F0F0" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:padding="10dp">
+
+                    <CheckBox
+                        android:id="@+id/cb_control4"
+                        style="@style/custom_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:checked="false" />
+
+                    <TextView
+                        style="@style/setting_text"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:text="商品品质有问题"
+                        android:textColor="#000" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:background="#F0F0F0" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/setting_text"
+                        android:layout_alignParentLeft="true"
+                        android:text="送的太慢，等太久了"
+                        android:textColor="#000" />
+
+                    <CheckBox
+                        android:id="@+id/cb_control5"
+                        style="@style/custom_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:checked="false" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:background="#F0F0F0" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/setting_text"
+                        android:layout_alignParentLeft="true"
+                        android:text="没有给承诺的优惠"
+                        android:textColor="#000" />
+
+                    <CheckBox
+                        android:id="@+id/cb_control6"
+                        style="@style/custom_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:checked="false" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.8dp"
+                    android:background="#F0F0F0" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/setting_text"
+                        android:layout_alignParentLeft="true"
+                        android:text="买其他的了"
+                        android:textColor="#000" />
+
+                    <CheckBox
+                        android:id="@+id/cb_control7"
+                        style="@style/custom_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:checked="false" />
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="#EEEEEE"
+                    android:gravity="top"
+                    android:hint="详细描述您遇到的问题，有助于更快处理退款"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/lin_control_foot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp">
+
+        <Button
+            android:id="@+id/but_control_repay"
+            style="@style/button_style"
+            android:layout_height="35dp"
+            android:text="申请退款" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

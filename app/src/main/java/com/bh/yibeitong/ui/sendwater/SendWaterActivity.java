@@ -154,8 +154,6 @@ public class SendWaterActivity extends BaseTextActivity {
 
             String imgPath = msgBeanList.get(i).getImg();
             final String id = msgBeanList.get(i).getGid();
-            //final String instro = msgBeanList.get(i)
-            final String name = msgBeanList.get(i).getName();
 
             if (imgPath.equals("")) {
                 vh.imageView.setImageResource(R.mipmap.yibeitong001);

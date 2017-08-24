@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 
 import java.io.File;
 
@@ -23,10 +22,12 @@ public class ApkUpdateUtils {
     public static void download(Context context, String url, String title) {
         long downloadId = SpUtils.getInstance(context).getLong(KEY_DOWNLOAD_ID, -1L);
         if (downloadId != -1L) {
+            System.out.println("11111 downloadId != -1L 已经下载过了 执行安装或者是重新下载");
             FileDownloadManager fdm = FileDownloadManager.getInstance(context);
             int status = fdm.getDownloadStatus(downloadId);
             Uri uri = fdm.getDownloadUri(downloadId);
             if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                System.out.println("11111 状态 成功 执行安装");
                 //启动更新界面
                 if (uri != null) {
                     if (compare(getApkInfo(context, uri.getPath()), context)) {
@@ -38,12 +39,15 @@ public class ApkUpdateUtils {
                 }
                 start(context, url, title);
             } else if (status == DownloadManager.STATUS_FAILED) {
+                System.out.println("11111 状态 失败 执行下载");
                 start(context, url, title);
             } else {
-                Log.d(TAG, "apk is already downloading 直接安装");
+                //Log.d(TAG, "apk is already downloading 直接安装");
+                System.out.println("11111 apk is already downloading 直接安装");
 
             }
         } else {
+            System.out.println("11111 未下载过 执行下载");
             start(context, url, title);
         }
     }
@@ -52,34 +56,50 @@ public class ApkUpdateUtils {
         long id = FileDownloadManager.getInstance(context).startDownload(url,
                 title, "下载完成后点击打开");
         SpUtils.getInstance(context).putLong(KEY_DOWNLOAD_ID, id);
-        Log.d(TAG, "apk start download " + id);
+        //Log.d(TAG, "apk start download " + id);
+        System.out.println("11111 apk start download " + id);
+
     }
 
     public static void startInstall(Context context, Uri uri) {
 
-        System.out.println("11111111111111111111111111");
-        /*Intent install = new Intent(Intent.ACTION_VIEW);
-        install.setDataAndType(uri, "application/vnd.android.package-archive");
-        install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(install);*/
-
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        // 判断是否是7.0
-        if (Build.VERSION.SDK_INT >= 23) {
-            Log.d(TAG, "android7.0");
-            // 适配android7.0 ，不能直接访问原路径
-            // 需要对intent 授权
-            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            i.setDataAndType(FileProvider.getUriForFile(context,
-                    context.getPackageName() + ".fileProvider",
-                    new File("")),
-                    "application/vnd.android.package-archive");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            System.out.println("11111 andorid7.0");
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            Uri contentUri = FileProvider.getUriForFile(context,
+//                    "com.bh.yibeitong.fileprovider",
+//                    new File(String.valueOf(uri)));
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
         } else {
-            Log.d(TAG, "no android 7.0");
-            i.setDataAndType(uri, "application/vnd.android.package-archive");
+            System.out.println("11111 no android7.0");
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        context.startActivity(i);
+        if (context.getPackageManager().queryIntentActivities(intent, 0).size() > 0) {
+            System.out.println("11111 安装走起");
+            context.startActivity(intent);
+        }
+
+//        Intent i = new Intent(Intent.ACTION_VIEW);
+//        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        // 判断是否是7.0
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            //Log.d(TAG, "android7.0");
+//            System.out.println("11111 andorid7.0");
+//            // 适配android7.0 ，不能直接访问原路径
+//            // 需要对intent 授权
+//            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            i.setDataAndType(FileProvider.getUriForFile(context,
+//                    context.getPackageName() + ".fileProvider",
+//                    new File("")),
+//                    "application/vnd.android.package-archive");
+//        } else {
+//            System.out.println("11111 no android7.0");
+//            //Log.d(TAG, "no android 7.0");
+//            i.setDataAndType(uri, "application/vnd.android.package-archive");
+//        }
+//        context.startActivity(i);
     }
 
 
@@ -93,11 +113,6 @@ public class ApkUpdateUtils {
         PackageManager pm = context.getPackageManager();
         PackageInfo info = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
         if (info != null) {
-            //String packageName = info.packageName;
-            //String version = info.versionName;
-            //Log.d(TAG, "packageName:" + packageName + ";version:" + version);
-            //String appName = pm.getApplicationLabel(appInfo).toString();
-            //Drawable icon = pm.getApplicationIcon(appInfo);//得到图标信息
             return info;
         }
         return null;

@@ -39,36 +39,58 @@ package com.bh.yibeitong.utils;
 
 public class HttpPath {
     //域名
-    public static String PATH_REALM = "https://www.ybt9.com/";
+//    public static String PATH_REALM = "https://www.ybt9.com/";
+//
+//    //借口的语言
+//    public static String PATH_MODE = "index.php?ctrl=app&";
+//
+//    //商品列表 lat=35.11121798058952&lng=118.3519727194077
+//    public static String PATH_GOOD_LIST = "action=goodsindex&page=1&datatype=json&";
+//
+//    //商品详情 goodsid
+//    public static String PATH_GOOD_DETAILS = "action=goodsone&datatype=json&";//商品详情
+//
+//    //添加购物车 shopid   num   gid
+//    public static String PATH_ADD_SHOPCART = "action=addcart&datatype=json&";//添加购物车
+//
+//    //获取购物车列表 shopid
+//    public static String PATH_SHOPCART = "action=cart&datatype=json&";
+//
+//    //商店 商品详细信息
+//    public static String PATH_SHOPALL = "action=getshopnew&datatype=json&";
+//
+//    //注册
+//    public static String PATH_REGISTER = "action=reg&datatype=json&";
+//
+//
 
-    //借口的语言
-    public static String PATH_MODE = "index.php?ctrl=app&";
+    public static final String  printCurTime() {
 
-    //商品列表 lat=35.11121798058952&lng=118.3519727194077
-    public static String PATH_GOOD_LIST = "action=goodsindex&page=1&datatype=json&";
+        return String.valueOf(System.currentTimeMillis());
+    }
 
-    //商品详情 goodsid
-    public static String PATH_GOOD_DETAILS = "action=goodsone&datatype=json&";//商品详情
+    /*请求头*/
+    public static final String PATH_HEAD = "https://www.ybt9.com/index.php?";
 
-    //添加购物车 shopid   num   gid
-    public static String PATH_ADD_SHOPCART = "action=addcart&datatype=json&";//添加购物车
+    /*不知道*/
+    public static String PATH_DATA = "ctrl=app&datatype=json&timestamp=";
 
-    //获取购物车列表 shopid
-    public static String PATH_SHOPCART = "action=cart&datatype=json&";
+    /*还是不知道*/
+    public static String PATH_DATA_MD5 = "ctrl=app&datatype=json&timestamp="+(System.currentTimeMillis()/1000)+"&";
 
-    //商店 商品详细信息
-    public static String PATH_SHOPALL = "action=getshopnew&datatype=json&";
-
-    //注册
-    public static String PATH_REGISTER = "action=reg&datatype=json&";
-
-
-    //获取首页数据 lat lng
-    public static String GOODS_INDEX = "action=goodsindex&";
-
+    public static final String PATH_BAIHAI = "baihai123456";
 
     //接口地址
-    public static String PATH = "http://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&";
+    public static String PATH = "https://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&";
+
+    //    //获取首页数据 lat lng
+    public static String GOODS_INDEX = "action=goodsindex&";
+
+    /*商店 商品详细信息*/
+    public static String GETSHOPNEW = "action=getshopnew&";
+
+    /**/
+    public static String GOODSONE = "action=goodsone&";
 
     //checkphone验证手机号是否存在 phone
     public static String CHECKPHONE = "action=checkphone&";
@@ -216,7 +238,7 @@ public class HttpPath {
      * doname	是	string	订单操作 delorder
      * orderid	是	string	orderid
      */
-    public static String ORDER_DEL = "action=newordercontrol&doname=delorder";
+    public static String ORDER_DEL = "action=newordercontrol&doname=delorder&";
 
     /**
      * 获取支付密钥啥的
@@ -479,6 +501,18 @@ public class HttpPath {
      * pointcontent	fou	string	评价详情
      */
     public static String ORDER_NEW_PINGORDER = "action=newpingorder&";
+
+    /*申请退款
+    * 参数：
+    * uid&
+    * pwd&
+    * orderid
+    * reason=退款原因
+    * &content=退款详细内容说明&
+    * typeid=支付类型  0支付宝  1  账号余额
+
+    * */
+    public static String ORDER_NEW_ORDERCONTROL = "action=newordercontrol&doname=reback&";
 
     /**
      * 快递

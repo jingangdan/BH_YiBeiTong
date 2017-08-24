@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <paths>
-        <root-path
-            name="download"
-            path="" />
+        <!--<root-path-->
+            <!--name="download"-->
+            <!--path="" />-->
+        <external-path path="Android/data/com.bh.yibeitong/"        name="files_root" />
+        <external-path path="." name="external_storage_root" />
+
     </paths>
 </resources>

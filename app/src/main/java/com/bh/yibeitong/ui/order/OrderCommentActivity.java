@@ -1,4 +1,4 @@
-package com.bh.yibeitong.ui;
+package com.bh.yibeitong.ui.order;
 
 import android.content.Intent;
 import android.text.Editable;
@@ -18,6 +18,7 @@ import com.bh.yibeitong.bean.OrderComment;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.ordercomment.CommonAdapter;
 import com.bh.yibeitong.ordercomment.ViewHolder;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.UserInfo;
@@ -254,6 +255,8 @@ public class OrderCommentActivity extends BaseTextActivity {
                         Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
 
                         if (error.isError() == false) {
+                            intent = new Intent();
+                            setResult(CodeUtils.REQUEST_CODE_ORDER_COMMENT, intent);
                             OrderCommentActivity.this.finish();
                         } else {
 

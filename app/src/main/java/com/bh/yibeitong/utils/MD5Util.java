@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 /**
  * MD5 encryption
  * @author jingang
- *		MD5加密测试
+ *		MD5加密
 		String srcString = "yanzi1225627";
 		System.out.println("MD5加密后 = " + MD5Util.getMD5String(srcString));
  */

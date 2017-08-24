@@ -1,7 +1,6 @@
 package com.bh.yibeitong.refresh;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +13,8 @@ import com.bh.yibeitong.R;
 import com.bh.yibeitong.bean.AddShopCart;
 import com.bh.yibeitong.bean.GoodsIndex;
 import com.bh.yibeitong.bean.ShopCartReturn;
-import com.bh.yibeitong.ui.CateFoodDetailsActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
-import com.bh.yibeitong.utils.XUtilsImageUtils;
 import com.bh.yibeitong.view.NoDoubleClickListener;
 
 import org.xutils.http.RequestParams;
@@ -104,11 +101,8 @@ public class GridViewAdapter extends BaseAdapter {
 
         } else {
             //加载图片
-            //x.image().bind(vh.imager, "http://www.ybt9.com/" + imgPath);
-            XUtilsImageUtils.display(vh.imager, "http://www.ybt9.com/" + imgPath);
-
-            //vh.imager.setImageBitmap(XUtilsImageUtils.getBitmapOptions("http://www.ybt9.com/" + imgPath));
-
+            //XUtilsImageUtils.display(vh.imager, "http://www.ybt9.com/" + imgPath);
+            x.image().bind(vh.imager, "http://www.ybt9.com/" + imgPath);
         }
 
         /*id 详情图片 名称 已售 评价 单价 单位 购物车数量*/
@@ -144,7 +138,7 @@ public class GridViewAdapter extends BaseAdapter {
 
                 String goodId = foodList.get(position).getId();
 
-                String PATH = HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_ADD_SHOPCART
+                String PATH = HttpPath.PATH + HttpPath.ADD_SHOPCART
                         + "shopid=" + shopId + "&num=1" + "&gid=" + goodId;
 
                 RequestParams params = new RequestParams(PATH);
@@ -220,7 +214,7 @@ public class GridViewAdapter extends BaseAdapter {
                 //添加购物车
                 //String PATH = "http://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&action=addcart&shopid=8&num=1&gid=110";
 
-                String PATH = HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_ADD_SHOPCART
+                String PATH = HttpPath.PATH + HttpPath.ADD_SHOPCART
                         + "shopid=" + shopId + "&num=-1" + "&gid=" + goodId;
 
                 RequestParams params = new RequestParams(PATH);

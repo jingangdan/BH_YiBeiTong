@@ -34,7 +34,13 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.location.Poi;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.PoiInfo;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.bh.yibeitong.Interface.OnItemLongClickListener;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.adapter.CatefoodslistAdapter;
@@ -60,7 +66,7 @@ import com.bh.yibeitong.ui.CateInfoActivity;
 import com.bh.yibeitong.ui.LoginRegisterActivity;
 import com.bh.yibeitong.ui.ShopNewActivity;
 import com.bh.yibeitong.ui.homepage.JoinActivity;
-import com.bh.yibeitong.ui.homepage.LocationTestActivity;
+import com.bh.yibeitong.ui.homepage.LocationAddressActivity;
 import com.bh.yibeitong.ui.homepage.SpecialActivity;
 import com.bh.yibeitong.ui.percen.JiFenActivity;
 import com.bh.yibeitong.ui.percen.YuEActivity;
@@ -76,10 +82,8 @@ import com.bh.yibeitong.view.MyScrollView;
 import com.bh.yibeitong.view.NoDoubleClickListener;
 import com.bh.yibeitong.view.UserInfo;
 import com.bh.yibeitong.zxing.ZXingCaptureActivity;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lidroid.xutils.BitmapUtils;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -88,7 +92,6 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.BuildConfig;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -108,8 +111,9 @@ public class FMHomePage extends BaseFragment implements
         PullToRefreshView.OnHeaderRefreshListener,
         PullToRefreshView.OnFooterRefreshListener,
         ActivityCompat.OnRequestPermissionsResultCallback,
-        BaseSliderView.OnSliderClickListener,
-        MyScrollView.ISmartScrollChangedListener {
+        MyScrollView.ISmartScrollChangedListener,
+        BDLocationListener,
+        OnGetGeoCoderResultListener {
     public static final int READ_EXTERNAL_STORAGE = 0x01;
 
     private View view;
@@ -127,8 +131,8 @@ public class FMHomePage extends BaseFragment implements
      * 页面之间的跳转传值
      */
     private Intent intent;
-    private String shopid = "", startTime, mapphone, address;
-    private String latitude, longtitude;//经纬度
+    public static String shopid = "", startTime, mapphone, address;
+    public static String latitude, longtitude;//经纬度
 
     public static String shopName;
 
@@ -152,12 +156,11 @@ public class FMHomePage extends BaseFragment implements
     UserInfo userInfo;
     private String jingang = "";//是否登录  “空”未登录  0未登录  1登录
 
-    //private ProgressDialog pd;
-
     /*界面修改*/
     private RelativeLayout rel_new_header;//背景
     private ImageView iv_new_scaning, iv_new_search;//扫一扫 搜索
     private EditText et_new_address;//定位地址
+    private TextView tv_shopname;
 
     /*积分抢购 抢购专区 商家入驻 跑腿服务*/
     private LinearLayout lin_jifen, lin_qianggou, lin_ruzhu, lin_paotui;
@@ -180,8 +183,9 @@ public class FMHomePage extends BaseFragment implements
     private CustomProgress progressDialog = null;
 
     /*定位服务*/
-    public static LocationClient mLocationClient = null;
-    public BDLocationListener myListener = new MyLocationListener();
+    private LocationClient mLocationClient = null;
+
+    //private BDLocationListener myListener = new MyLocationListener();
 
     /*判断是否定位成功*/
     public boolean isLocation = false;
@@ -199,6 +203,8 @@ public class FMHomePage extends BaseFragment implements
 
             handler.postDelayed(runnable, 2000);
 
+            //mLocationClient.start();
+
             startLocate();
         }
 
@@ -209,7 +215,10 @@ public class FMHomePage extends BaseFragment implements
         public void run() {
             Log.i("移除", printCurTime());
             handler.removeCallbacks(runnable);
+
             mLocationClient.stop();
+
+
         }
 
     };
@@ -223,7 +232,6 @@ public class FMHomePage extends BaseFragment implements
     }
 
     private Handler handlers = new Handler() {
-
         // 该方法运行在主线程中
         // 接收到handler发送的消息，对UI进行操作
         @Override
@@ -244,14 +252,25 @@ public class FMHomePage extends BaseFragment implements
     /**/
     private RecyclerView rv_horizontal;
 
+    /*记录购物车商品id字符串*/
+    private List<ShopCart.MsgBean.ListBean> shopMsg = new ArrayList<>();
+    private String str_id2 = "";//记录购物车商品数量
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        System.out.println("首页 加载onCreate");
+        //startLocate();
+        initDatas();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("首页 加载");
+        System.out.println("首页 加载onCreateView");
         view = inflater.inflate(R.layout.fragment_home_page, null);
-        x.Ext.init(getActivity().getApplication());
-        x.Ext.setDebug(BuildConfig.DEBUG);
-        handler.post(runnable);//定期执行
+        //handler.post(runnable);//定期执行
 
         pdStyle();
 
@@ -279,6 +298,7 @@ public class FMHomePage extends BaseFragment implements
 
         return view;
     }
+
 
     /*开始dialog*/
     private void startProgressDialog() {
@@ -335,6 +355,7 @@ public class FMHomePage extends BaseFragment implements
         iv_new_scaning = (ImageView) view.findViewById(R.id.iv_new_scanning);
         iv_new_search = (ImageView) view.findViewById(R.id.iv_new_search);
         et_new_address = (EditText) view.findViewById(R.id.et_new_address);
+        tv_shopname = (TextView) view.findViewById(R.id.tv_hp_shopname);
 
         iv_new_scaning.setOnClickListener(this);
         iv_new_search.setOnClickListener(this);
@@ -473,9 +494,9 @@ public class FMHomePage extends BaseFragment implements
 
     @Override
     public void onJingang(boolean isToJingang) {
-        if(isToJingang){
+        if (isToJingang) {
             rv_horizontal.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             rv_horizontal.setVisibility(View.GONE);
         }
     }
@@ -483,13 +504,14 @@ public class FMHomePage extends BaseFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mLocationClient != null && myListener != null) {
-            mLocationClient.unRegisterLocationListener(myListener);
-        }
+//        if (mLocationClient != null && myListener != null) {
+//            mLocationClient.unRegisterLocationListener(myListener);
+//            //mLocationClient.unregisterListener(myListener);
+//        }
 
-        if (mLocationClient.isStarted()) {
-            mLocationClient.stop();
-        }
+//        if (mLocationClient.isStarted()) {
+//            mLocationClient.stop();
+//        }
     }
 
     private List<WxADV.MsgBean> advList = new ArrayList<>();
@@ -880,11 +902,6 @@ public class FMHomePage extends BaseFragment implements
             jingang = userInfo.getLogin();
 
             /*执行局部刷新 更改购物车数量cartNum*/
-
-            /**/
-//            ceFoodList.clear();
-//            getShopGoods(latitude, longtitude, 1);
-
             /**
              * 1.获取购物车（得到数量和商品唯一标示符）
              * 2.利用唯一标示符对比首页商品列表找到该商品
@@ -896,9 +913,6 @@ public class FMHomePage extends BaseFragment implements
 
         }
     }
-
-    private List<ShopCart.MsgBean.ListBean> shopMsg = new ArrayList<>();
-    private String str_id2 = "";//记录购物车商品数量
 
     /**
      * 获取购物车 （用于首页和购物车数据共享）
@@ -970,7 +984,7 @@ public class FMHomePage extends BaseFragment implements
                                                 if (num1 == num2) {
                                                     //相同 不动
                                                 } else {
-                                                    //不同且大于 修改
+                                                    //不同且大于0 修改
                                                     ceFoodList.get(i).setCartnum(num2);
                                                 }
                                             }
@@ -1020,12 +1034,20 @@ public class FMHomePage extends BaseFragment implements
      * @param longtitude 118.351852   35.111124
      */
     public void getShopGoods(String latitude, String longtitude, final int pages) {
-        String Path = HttpPath.PATH + HttpPath.GOODSINDEX +
-                "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages;
+//        String Path = HttpPath.PATH + HttpPath.GOODSINDEX +
+//                "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages;
 
-        System.out.println("" + Path);
+        /*ctrl=app&datatype=json&timestamp=1503020032&action=goodsindex&lat=35.111117&lng=118.352&page=1&sign*/
 
-        RequestParams params = new RequestParams(Path);
+        PATH = HttpPath.PATH_HEAD + HttpPath.PATH_DATA + (System.currentTimeMillis() / 1000) + "&" + HttpPath.GOODSINDEX +
+                "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages + "&sign=" +
+                MD5Util.getMD5String(HttpPath.PATH_DATA + (System.currentTimeMillis() / 1000) + "&" + HttpPath.GOODSINDEX +
+                        "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages
+                        + "&" + HttpPath.PATH_BAIHAI);
+
+        System.out.println("" + PATH);
+
+        RequestParams params = new RequestParams(PATH);
         x.http().post(params,
                 new Callback.CommonCallback<String>() {
                     public void onSuccess(String result) {
@@ -1059,18 +1081,13 @@ public class FMHomePage extends BaseFragment implements
                         /*送快递时间段*/
                         userInfo.savePostData(new Gson().toJson(goodsIndex.getMsg().getShopdet().getPostdate()));
 
-                        //et_address.setText(shopName);
-                        et_new_address.setText("" + shopName);
-
-                        et_new_address.setTextColor(Color.WHITE);
-
-                        //tv_shopname.setText("(当前店铺：" + shopName + "）");
+                        //et_new_address.setText("" + shopName);
+                        tv_shopname.setText("当前店铺：" + shopName);
 
                         if (goodsIndex.getMsg().getCatefoodslist().toString().equals("[]")) {
                             toast("没有更多数据");
 
                         } else {
-                            //ceFood = goodsIndex.getMsg().getCatefoodslist();
                             //获取信息列表
                             ceFoodList.addAll(goodsIndex.getMsg().getCatefoodslist());
 
@@ -1110,12 +1127,24 @@ public class FMHomePage extends BaseFragment implements
      * @param longtitude 118.351852   35.111124
      */
     public void getLoadingShopGood(String latitude, String longtitude, final int pages) {
-        String Path = HttpPath.PATH + HttpPath.GOODSINDEX +
-                "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages;
+//        String Path = HttpPath.PATH + HttpPath.GOODSINDEX +
+//                "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages;
 
-        System.out.println("" + Path);
+        PATH = HttpPath.PATH_HEAD + HttpPath.PATH_DATA + (System.currentTimeMillis() / 1000) + "&" + HttpPath.GOODSINDEX +
+                "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages + "&sign=" +
+                MD5Util.getMD5String(HttpPath.PATH_DATA + (System.currentTimeMillis() / 1000) + "&" + HttpPath.GOODSINDEX +
+                        "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages
+                        + "&" + HttpPath.PATH_BAIHAI);
 
-        RequestParams params = new RequestParams(Path);
+//        PATH = HttpPath.PATH_HEAD + HttpPath.PATH_DATA_MD5 + HttpPath.GOODSINDEX +
+//                "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages + "&sign=" +
+//                MD5Util.getMD5String(HttpPath.PATH_DATA_MD5 + HttpPath.GOODSINDEX +
+//                        "lat=" + latitude + "&lng=" + longtitude + "" + "&page=" + pages
+//                        + "&" + HttpPath.PATH_BAIHAI);
+
+        System.out.println("" + PATH);
+
+        RequestParams params = new RequestParams(PATH);
         x.http().post(params,
                 new Callback.CommonCallback<String>() {
                     public void onSuccess(String result) {
@@ -1162,6 +1191,9 @@ public class FMHomePage extends BaseFragment implements
      */
     public void logMsg(String string) {
 
+        ceFoodList.clear();
+        page = 1;
+
         getShopGoods(latitude, longtitude, page);
 
         System.out.println("经纬度" + longtitude + "   " + latitude);
@@ -1175,11 +1207,65 @@ public class FMHomePage extends BaseFragment implements
 
     }
 
+    private GeoCoder geoCoder;
+
+    private LatLng locationLatLng;
+
     @Override
-    public void onSliderClick(BaseSliderView slider) {
-        System.out.println("ssssss");
+    public void onReceiveLocation(BDLocation bdLocation) {
+        locationLatLng = new LatLng(bdLocation.getAltitude(), bdLocation.getLongitude());
+
+        latitude = String.valueOf(locationLatLng.latitude);
+        longtitude = String.valueOf(locationLatLng.longitude);
+
+
+        // 创建GeoCoder实例对象
+        geoCoder = GeoCoder.newInstance();
+        // 发起反地理编码请求(经纬度->地址信息)
+        ReverseGeoCodeOption reverseGeoCodeOption = new ReverseGeoCodeOption();
+        // 设置反地理编码位置坐标
+        reverseGeoCodeOption.location(new LatLng(bdLocation.getLatitude(), bdLocation.getLongitude()));
+        geoCoder.reverseGeoCode(reverseGeoCodeOption);
+
+        // 设置查询结果监听者
+        geoCoder.setOnGetGeoCodeResultListener(this);
+
+        mLocationClient.stop();//停止定位
     }
 
+    @Override
+    public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+
+    }
+
+    @Override
+    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+        final List<PoiInfo> poiInfos = reverseGeoCodeResult.getPoiList();
+        stopProgressDialog();
+        mLocationClient.stop();//停止定位
+        handler.postDelayed(runRemove, 0);//过6秒后执行
+        isLocation = true;
+
+        if (poiInfos != null && !"".equals(poiInfos)) {
+            if (poiInfos.size() > 0) {
+                System.out.println("首页 定位:" + poiInfos.get(0).address);
+                et_new_address.setText("送至：" + poiInfos.get(0).name);
+
+//                for (int i = 0; i < poiInfos.size(); i++) {
+//                    System.out.println("555 = " + poiInfos.get(i).name);
+//                }
+
+                logMsg("");
+
+            } else {
+            }
+
+        } else {
+            isLocation = false;
+        }
+
+        //
+    }
 
     /**
      * gridView点击事件
@@ -1227,165 +1313,258 @@ public class FMHomePage extends BaseFragment implements
 //        }
     }
 
+    /*地图检索*/
+    private void initDatas() {
+        mLocationClient = new LocationClient(getActivity());
+
+        //mLocationService = ((CatchExcep) getApplication()).locationService;
+        mLocationClient.registerLocationListener(this);
+
+        // mLocClient = new LocationClient(this);
+        // 注册定位监听
+        //mLocClient.registerLocationListener(this);
+
+        // 定位选项
+        LocationClientOption option = new LocationClientOption();
+
+        /*
+        coorType - 取值有3个：
+        返回国测局经纬度坐标系：gcj02
+         返回百度墨卡托坐标系 ：bd09
+         返回百度经纬度坐标系：bd09ll
+        */
+        option.setCoorType("bd09ll");
+        // 设置是否需要地址信息，默认为无地址
+        option.setIsNeedAddress(true);
+        // 设置是否需要返回位置语义化信息，可以在BDLocation.getLocationDescribe()中得到数据，ex:"在天安门附近"，
+        // 可以用作地址信息的补充
+        option.setIsNeedLocationDescribe(true);
+        // 设置是否需要返回位置POI信息，可以在BDLocation.getPoiList()中得到数据
+        option.setIsNeedLocationPoiList(true);
+
+       /* 设置定位模式 Battery_Saving 低功耗模式 Device_Sensors 仅设备(Gps) 模式 Hight_Accuracy
+        高精度模式*/
+
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        // 设置是否打开gps进行定位
+        option.setOpenGps(true);
+        // 设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
+        option.setScanSpan(1000);
+        // 设置 LocationClientOption
+        //mLocClient.setLocOption(option);
+
+        mLocationClient.setLocOption(option);
+        //mLocClient.setLocOption(mLocationService.getDefaultLocationClientOption());
+        // 开始定位
+        //mLocClient.start();
+        mLocationClient.start();
+
+    }
+
     /*设置location*/
     private void startLocate() {
 
-        mLocationClient = new LocationClient(getActivity().getApplicationContext());
-        //声明LocationClient类
+        mLocationClient = new LocationClient(getActivity());
+        // 注册定位监听
+        mLocationClient.registerLocationListener(this);
 
+        // 定位选项
         LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        //可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
 
+        /*
+        coorType - 取值有3个：
+        返回国测局经纬度坐标系：gcj02
+         返回百度墨卡托坐标系 ：bd09
+         返回百度经纬度坐标系：bd09ll
+        */
         option.setCoorType("bd09ll");
-        //可选，默认gcj02，设置返回的定位结果坐标系
-
-        option.setScanSpan(0);
-        //可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
-
+        // 设置是否需要地址信息，默认为无地址
         option.setIsNeedAddress(true);
-        //可选，设置是否需要地址信息，默认不需要
-
-        option.setOpenGps(true);
-        //可选，默认false,设置是否使用gps
-
-        option.setLocationNotify(true);
-        //可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
-
+        // 设置是否需要返回位置语义化信息，可以在BDLocation.getLocationDescribe()中得到数据，ex:"在天安门附近"，
+        // 可以用作地址信息的补充
         option.setIsNeedLocationDescribe(true);
-        //可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
-
+        // 设置是否需要返回位置POI信息，可以在BDLocation.getPoiList()中得到数据
         option.setIsNeedLocationPoiList(true);
-        //可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
 
-        option.setIgnoreKillProcess(false);
-        //可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+       /* 设置定位模式 Battery_Saving 低功耗模式 Device_Sensors 仅设备(Gps) 模式 Hight_Accuracy
+        高精度模式*/
 
-        option.SetIgnoreCacheException(false);
-        //可选，默认false，设置是否收集CRASH信息，默认收集
-
-        option.setEnableSimulateGps(false);
-        //可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
-
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        // 设置是否打开gps进行定位
+        option.setOpenGps(true);
+        // 设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
+        option.setScanSpan(0);
+        // 设置 LocationClientOption
         mLocationClient.setLocOption(option);
+        System.out.println("location");
 
-        mLocationClient.registerLocationListener(myListener);
-        //注册监听函数
-
+        // 开始定位
         mLocationClient.start();
-        System.out.println("location start");
+        System.out.println("Location start");
+
+//        mLocationClient = new LocationClient(getActivity());
+//
+//        //声明LocationClient类
+//        LocationClientOption option = new LocationClientOption();
+//        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+//        //可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+//
+//        option.setCoorType("bd09ll");
+//        //可选，默认gcj02，设置返回的定位结果坐标系
+//
+//        option.setScanSpan(0);
+//        //可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+//
+//        option.setIsNeedAddress(true);
+//        //可选，设置是否需要地址信息，默认不需要
+//
+//        option.setOpenGps(true);
+//        //可选，默认false,设置是否使用gps
+//
+//        option.setLocationNotify(true);
+//        //可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
+//
+//        option.setIsNeedLocationDescribe(true);
+//        //可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+//
+//        option.setIsNeedLocationPoiList(true);
+//        //可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+//
+//        option.setIgnoreKillProcess(false);
+//        //可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+//
+//        option.SetIgnoreCacheException(false);
+//        //可选，默认false，设置是否收集CRASH信息，默认收集
+//
+////        option.setEnableSimulateGps(false);
+////        //可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
+//
+//        //mLocationClient.setLocationOption(mLocationClient.getDefaultLocationClientOption());
+//        mLocationClient.setLocOption(option);
+//        //mLocationClient.registerListener(myListener);
+//
+//        mLocationClient.registerLocationListener(myListener);
+//        //注册监听函数
+//
+//        mLocationClient.start();
+//        System.out.println("location start");
+
     }
 
     /*location输出结果*/
-    public class MyLocationListener implements BDLocationListener {
-
-        @Override
-        public void onReceiveLocation(BDLocation location) {
-
-            handler.postDelayed(runRemove, 0);//过6秒后执行
-
-            //获取定位结果
-            StringBuffer sb = new StringBuffer(256);
-
-            sb.append("time : ");
-            sb.append(location.getTime());    //获取定位时间
-
-            sb.append("\nerror code : ");
-            sb.append(location.getLocType());    //获取类型类型
-
-            sb.append("\nlatitude : ");
-            sb.append(location.getLatitude());    //获取纬度信息
-
-            sb.append("\nlontitude : ");
-            sb.append(location.getLongitude());    //获取经度信息
-
-            latitude = Double.toString(location.getLatitude());
-            longtitude = Double.toString(location.getLongitude());
-
-            sb.append("\nradius : ");
-            sb.append(location.getRadius());    //获取定位精准度
-
-            if (location.getLocType() == BDLocation.TypeGpsLocation) {
-
-                // GPS定位结果
-                sb.append("\nspeed : ");
-                sb.append(location.getSpeed());    // 单位：公里每小时
-
-                sb.append("\nsatellite : ");
-                sb.append(location.getSatelliteNumber());    //获取卫星数
-
-                sb.append("\nheight : ");
-                sb.append(location.getAltitude());    //获取海拔高度信息，单位米
-
-                sb.append("\ndirection : ");
-                sb.append(location.getDirection());    //获取方向信息，单位度
-
-                sb.append("\naddr : ");
-                sb.append(location.getAddrStr());    //获取地址信息
-
-                sb.append("\ndescribe : ");
-                sb.append("gps定位成功");
-
-            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
-
-                System.out.println("" + location.getStreet() + "   " + location.getCity());
-
-
-                // 网络定位结果
-                sb.append("\naddr : ");
-                sb.append(location.getAddrStr());    //获取地址信息
-
-                sb.append("\noperationers : ");
-                sb.append(location.getOperators());    //获取运营商信息
-
-                sb.append("\ndescribe : ");
-                sb.append("网络定位成功");
-
-            } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {
-
-                // 离线定位结果
-                sb.append("\ndescribe : ");
-                sb.append("离线定位成功，离线定位结果也是有效的");
-
-            } else if (location.getLocType() == BDLocation.TypeServerError) {
-
-                sb.append("\ndescribe : ");
-                sb.append("服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因");
-
-            } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
-
-                sb.append("\ndescribe : ");
-                sb.append("网络不同导致定位失败，请检查网络是否通畅");
-
-                System.out.println("");
-
-            } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
-
-                sb.append("\ndescribe : ");
-                sb.append("无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机");
-
-            }
-
-            sb.append("\nlocationdescribe : ");
-            sb.append(location.getLocationDescribe());    //位置语义化信息
-
-            List<Poi> list = location.getPoiList();    // POI数据
-            if (list != null) {
-                sb.append("\npoilist size = : ");
-                sb.append(list.size());
-                for (Poi p : list) {
-                    sb.append("\npoi= : ");
-                    sb.append(p.getId() + " " + p.getName() + " " + p.getRank());
-                }
-            }
-
-            mLocationClient.stop();
-
-            Log.i("描述：", sb.toString());
-
-            logMsg("");
-        }
-    }
+//    private BDLocationListener myListener = new BDLocationListener() {
+//
+//        @Override
+//        public void onReceiveLocation(BDLocation location) {
+//
+//            handler.postDelayed(runRemove, 0);//过6秒后执行
+//
+//            //获取定位结果
+//            StringBuffer sb = new StringBuffer(256);
+//
+//            sb.append("time : ");
+//            sb.append(location.getTime());    //获取定位时间
+//
+//            sb.append("\nerror code : ");
+//            sb.append(location.getLocType());    //获取类型类型
+//
+//            sb.append("\nlatitude : ");
+//            sb.append(location.getLatitude());    //获取纬度信息
+//
+//            sb.append("\nlontitude : ");
+//            sb.append(location.getLongitude());    //获取经度信息
+//
+//            latitude = Double.toString(location.getLatitude());
+//            longtitude = Double.toString(location.getLongitude());
+//
+//            sb.append("\nradius : ");
+//            sb.append(location.getRadius());    //获取定位精准度
+//
+//            if (location.getLocType() == BDLocation.TypeGpsLocation) {
+//
+//                // GPS定位结果
+//                sb.append("\nspeed : ");
+//                sb.append(location.getSpeed());    // 单位：公里每小时
+//
+//                sb.append("\nsatellite : ");
+//                sb.append(location.getSatelliteNumber());    //获取卫星数
+//
+//                sb.append("\nheight : ");
+//                sb.append(location.getAltitude());    //获取海拔高度信息，单位米
+//
+//                sb.append("\ndirection : ");
+//                sb.append(location.getDirection());    //获取方向信息，单位度
+//
+//                sb.append("\naddr : ");
+//                sb.append(location.getAddrStr());    //获取地址信息
+//
+//                sb.append("\ndescribe : ");
+//                sb.append("gps定位成功");
+//
+//            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
+//
+//                System.out.println("" + location.getStreet() + "   " + location.getCity());
+//
+//                // 网络定位结果
+//                sb.append("\naddr : ");
+//                sb.append(location.getAddrStr());    //获取地址信息
+//
+//                sb.append("\noperationers : ");
+//                sb.append(location.getOperators());    //获取运营商信息
+//
+//                sb.append("\ndescribe : ");
+//                sb.append("网络定位成功");
+//
+//            } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {
+//
+//                // 离线定位结果
+//                sb.append("\ndescribe : ");
+//                sb.append("离线定位成功，离线定位结果也是有效的");
+//
+//            } else if (location.getLocType() == BDLocation.TypeServerError) {
+//
+//                sb.append("\ndescribe : ");
+//                sb.append("服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因");
+//
+//            } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
+//
+//                sb.append("\ndescribe : ");
+//                sb.append("网络不同导致定位失败，请检查网络是否通畅");
+//
+//                System.out.println("");
+//
+//            } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
+//
+//                sb.append("\ndescribe : ");
+//                sb.append("无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机");
+//
+//            }
+//
+//            sb.append("\nlocationdescribe : ");
+//            sb.append(location.getLocationDescribe());    //位置语义化信息
+//
+//            List<Poi> list = location.getPoiList();    // POI数据
+//            if (list != null) {
+//                sb.append("\npoilist size = : ");
+//                sb.append(list.size());
+//
+//                System.out.println("1111111 = " + list.get(0).getName());
+//
+//                et_new_address.setText("送至：" + list.get(0).getName());
+//                for (Poi p : list) {
+//                    sb.append("\npoi= : ");
+//                    sb.append(p.getId() + " " + p.getName() + " " + p.getRank());
+//                }
+//            }
+//
+//            mLocationClient.stop();
+//
+//
+//            Log.i("描述：", sb.toString());
+//
+//            logMsg("");
+//        }
+//    };
 
     /*ProgressDialog样式*/
     public void pdStyle() {
@@ -1661,28 +1840,6 @@ public class FMHomePage extends BaseFragment implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
-//            case R.id.tv_gointo_shop:
-//                //进入店铺
-//                if (isNetworkUtils()) {
-//                    intent = new Intent(getActivity(), ShopNewActivity.class);
-//                    intent.putExtra("shopid", shopid);
-//                    intent.putExtra("shopname", shopName);
-//                    intent.putExtra("startTime", startTime);
-//                    intent.putExtra("mapphone", mapphone);
-//                    intent.putExtra("address", address);
-//
-//                    intent.putExtra("lat", latitude);
-//                    intent.putExtra("lng", longtitude);
-//
-//                    startActivity(intent);
-//                } else {
-//                    toast("无网络连接");
-//                }
-//
-//
-//                break;
-
             case R.id.rel_gointo_shop:
                 //进入店铺
                 if (isNetworkUtils()) {
@@ -1746,15 +1903,28 @@ public class FMHomePage extends BaseFragment implements
 
             case R.id.et_new_address:
                 //新版选择地址
+
+                handler.postDelayed(runRemove, 0);//过6秒后执行
+                mLocationClient.stop();
+
                 if (isNetworkUtils()) {
-                    intent = new Intent(getActivity(), LocationTestActivity.class);
-                    intent.putExtra("lat", latitude);
-                    intent.putExtra("lng", longtitude);
-                    startActivityForResult(intent, 10);
+                    intent = new Intent(getActivity(), LocationAddressActivity.class);
+                    startActivityForResult(intent, CodeUtils.REQUEST_CODE_HOMEPAGE);
 
                 } else {
                     toast("无网络连接");
                 }
+
+
+//                if (isNetworkUtils()) {
+//                    intent = new Intent(getActivity(), LocationActivity.class);
+//                    intent.putExtra("lat", latitude);
+//                    intent.putExtra("lng", longtitude);
+//                    startActivityForResult(intent, 10);
+//
+//                } else {
+//                    toast("无网络连接");
+//                }
 
                 break;
 
@@ -1862,7 +2032,9 @@ public class FMHomePage extends BaseFragment implements
                 isLocation = false;
 
                 ceFoodList.clear();
-                handler.post(runnable);//定期执行
+                //handler.post(runnable);//定期执行
+                //startLocate();
+                initDatas();
                 break;
 
             case R.id.but_hp_setting:
@@ -1879,55 +2051,46 @@ public class FMHomePage extends BaseFragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 10 && resultCode == 2) {
-            Bundle bundle = data.getExtras();
-            String strResult = bundle.getString("selectAddress");
-            latitude = bundle.getString("lat");
-            longtitude = bundle.getString("lng");
-            ceFoodList.clear();
-            myScrollView.scrollTo(0, 0);
-            getShopGoods(latitude, longtitude, 1);
-
-            rv_horizontal.setVisibility(View.GONE);
-
-        } else if (requestCode == CodeUtils.REQUEST_CODE_HOMEPAGE) {
+//        if (requestCode == 10 && resultCode == 2) {
+//            Bundle bundle = data.getExtras();
+//            String strResult = bundle.getString("selectAddress");
+//            latitude = bundle.getString("lat");
+//            longtitude = bundle.getString("lng");
+//            ceFoodList.clear();
+//            myScrollView.scrollTo(0, 0);
+//            getShopGoods(latitude, longtitude, 1);
+//
+//            rv_horizontal.setVisibility(View.GONE);
+//
+//        } else
+        if (requestCode == CodeUtils.REQUEST_CODE_HOMEPAGE) {
             if (resultCode == CodeUtils.REQUEST_CODE_CATEFOOD || resultCode == CodeUtils.REQUEST_CODE_NEWSHOP) {
+
+                jingang = userInfo.getLogin();
+                getShopCart(shopid);
+            } else if (resultCode == CodeUtils.REQUEST_CODE_LOGIN) {
+            /*登录之后返回登录唯一标识*/
                 Bundle bundle = data.getExtras();
-                String gid = bundle.getString("gid");
-                int cartNum = bundle.getInt("cartNum");
+                jingang = bundle.getString("jingang");
+            } else if (resultCode == CodeUtils.REQUEST_CODE_LOCATION_ADDRESS) {
+                Bundle bundle = data.getExtras();
+                latitude = bundle.getString("lat");
+                longtitude = bundle.getString("lng");
+                address = bundle.getString("address");
 
-                System.out.println("gid=" + gid + "  cartum=" + cartNum);
+                if (!address.equals("")) {
+                    et_new_address.setText("送至：" + address);
 
-                for (int i = 0; i < ceFoodList.size(); i++) {
-                    if (gid.equals(ceFoodList.get(i).getId())) {
-                        ceFoodList.get(i).setCartnum(cartNum);
-                    } else if (gid.equals("000")) {
-                        ceFoodList.get(i).setCartnum(cartNum);
-                    }
+                    ceFoodList.clear();
+                    myScrollView.scrollTo(0, 0);
+                    getShopGoods(latitude, longtitude, 1);
+
+                    rv_horizontal.setVisibility(View.GONE);
                 }
 
-                gridViewAdapter.notifyDataSetChanged();
+
             }
         }
-
-//        else if (requestCode == CodeUtils.REQUEST_CODE_HOMEPAGE && resultCode == CodeUtils.REQUEST_CODE_CATEFOOD) {
-//            Bundle bundle = data.getExtras();
-//            String gid = bundle.getString("gid");
-//            int cartNum = bundle.getInt("cartNum");
-//
-//            System.out.println("gid=" + gid + "  cartum=" + cartNum);
-//
-//            for (int i = 0; i < ceFoodList.size(); i++) {
-//                if (gid.equals(ceFoodList.get(i).getId())) {
-//                    ceFoodList.get(i).setCartnum(cartNum);
-//                }else if(gid.equals("000")){
-//                    ceFoodList.get(i).setCartnum(cartNum);
-//                }
-//            }
-//
-//            gridViewAdapter.notifyDataSetChanged();
-//
-//        }
 
     }
 
@@ -1935,13 +2098,9 @@ public class FMHomePage extends BaseFragment implements
     public boolean isLogin() {
         if (jingang.equals("")) {
             //没有登录
-            //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-            //dialog();
             return false;
         } else if (jingang.equals("0")) {
             //没有登录
-            //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
-            //dialog();
             return false;
         } else if (jingang.equals("1")) {
             //已登录
@@ -1952,17 +2111,16 @@ public class FMHomePage extends BaseFragment implements
     }
 
     /**
-     * 提示框
+     * 提示框（未登录）
      */
     protected void dialog() {
         CustomDialog.Builder builder = new CustomDialog.Builder(getActivity());
         builder.setMessage("还未登录，确定要登录吗？");
-        //builder.setTitle("还未登录");
         builder.setPositiveButton("登录/注册", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 //设置你的操作事项
-                startActivity(new Intent(getActivity(), LoginRegisterActivity.class));
+                startActivityForResult(new Intent(getActivity(), LoginRegisterActivity.class), CodeUtils.REQUEST_CODE_HOMEPAGE);
             }
         });
 
@@ -2142,123 +2300,6 @@ public class FMHomePage extends BaseFragment implements
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    /**/
-    class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
-
-        private com.bh.yibeitong.Interface.OnItemClickListener mOnItemClickListener;
-        private OnItemLongClickListener mOnItemLongClickListener;
-
-        public void setOnItemClickListener(com.bh.yibeitong.Interface.OnItemClickListener mOnItemClickListener) {
-            this.mOnItemClickListener = mOnItemClickListener;
-        }
-
-        public void setOnItemLongClickListener(OnItemLongClickListener mOnItemLongClickListener) {
-            this.mOnItemLongClickListener = mOnItemLongClickListener;
-        }
-
-        private Context mContext;
-        private List<GoodsIndex.MsgBean.CatefoodslistBean> msgBeanList;
-
-        public RecyclerViewAdapter(Context mContext, List<GoodsIndex.MsgBean.CatefoodslistBean> msgBeanList) {
-            this.mContext = mContext;
-            this.msgBeanList = msgBeanList;
-        }
-
-        @Override
-        public RecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            MyViewHolder vh = new MyViewHolder(LayoutInflater.from(
-                    mContext).inflate(R.layout.item_self_support, null));
-            return vh;
-        }
-
-        @Override
-        public void onBindViewHolder(final MyViewHolder holder, int position) {
-            if (mOnItemClickListener != null) {
-                //为ItemView设置监听器
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int position = holder.getLayoutPosition(); // 1
-                        mOnItemClickListener.onItemClick(holder.itemView, position); // 2
-                    }
-                });
-            }
-            if (mOnItemLongClickListener != null) {
-                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        int position = holder.getLayoutPosition();
-                        mOnItemLongClickListener.onItemLongClick(holder.itemView, position);
-                        //返回true 表示消耗了事件 事件不会继续传递
-                        return true;
-                    }
-                });
-            }
-
-            // 组件赋值
-            String imgPath = msgBeanList.get(position).getImg();
-
-            //购物车数量
-            int cartNum = msgBeanList.get(position).getCartnum();
-            holder.tv_shop_num.setText("" + cartNum);
-
-            if (cartNum == 0) {
-                holder.tv_shop_num.setVisibility(View.INVISIBLE);
-                holder.iv_sub_botton.setVisibility(View.INVISIBLE);
-            } else if (cartNum > 0) {
-                holder.tv_shop_num.setVisibility(View.VISIBLE);
-                holder.iv_sub_botton.setVisibility(View.VISIBLE);
-            } else {
-                Toast.makeText(mContext, "格式不正确", Toast.LENGTH_SHORT).show();
-            }
-
-            if (msgBeanList.get(position).getImg().equals("")) {
-                holder.imager.setImageResource(R.mipmap.yibeitong001);
-
-            } else {
-                BitmapUtils bitmapUtils = new BitmapUtils(mContext);
-
-                bitmapUtils.configDiskCacheEnabled(true);
-                bitmapUtils.configMemoryCacheEnabled(false);
-
-                bitmapUtils.display(holder.imager, "http://www.ybt9.com/" + imgPath);
-
-            }
-
-            holder.title.setText(msgBeanList.get(position).getName());
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return msgBeanList.size();
-        }
-
-        class MyViewHolder extends BaseRecyclerViewHolder {
-
-            private ImageView imager;
-            private TextView title, price, num;
-
-            private ImageView iv_add_button, iv_sub_botton;
-            private TextView tv_shop_num;
-
-            public MyViewHolder(View convertView) {
-                super(view);
-                //img = (ImageView) view.findViewById(R.id.iv_item_tese_img);
-                imager = (ImageView) convertView.findViewById(R.id.iv_item_ss);
-                title = (TextView) convertView.findViewById(R.id.tv_item_ss_title);
-                price = (TextView) convertView.findViewById(R.id.tv_item_ss_price);
-                num = (TextView) convertView.findViewById(R.id.tv_item_ss_num);
-
-                //添加购物车
-                tv_shop_num = (TextView) convertView.findViewById(R.id.tv_shop_num);
-                iv_add_button = (ImageView) convertView.findViewById(R.id.iv_add);
-                iv_sub_botton = (ImageView) convertView.findViewById(R.id.iv_sub);
-            }
-        }
     }
 
     /**

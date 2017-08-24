@@ -266,6 +266,7 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
     /*支付按钮状态*/
     public void goPay() {
+        but_pay.setText("去支付");
         but_pay.setTextColor(Color.WHITE);
         but_pay.setBackgroundColor(Color.rgb(162, 203, 52));
     }
@@ -326,10 +327,6 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                                         tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
                                     }
 
-                                    but_pay.setText("去支付");
-//                                    but_pay.setTextColor(Color.WHITE);
-//                                    but_pay.setBackgroundColor(Color.rgb(162,203,52));
-
                                     goPay();
 
                                 } else {
@@ -345,12 +342,10 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                                     } else if (shopCart.getMsg().getList().size() > 0) {
 
                                         if (limitcost == 0) {
-                                            but_pay.setText("去支付");
 //                                            but_pay.setTextColor(Color.WHITE);
 //                                            but_pay.setBackgroundColor(Color.rgb(162,203,52));
                                             goPay();
                                         } else if (totalPrice >= limitcost) {
-                                            but_pay.setText("去支付");
 //                                            but_pay.setTextColor(Color.WHITE);
 //                                            but_pay.setBackgroundColor(Color.rgb(162,203,52));
                                             goPay();
@@ -516,15 +511,9 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                                     sc_count++;
                                     //
                                     if (limitcost == 0) {
-                                        but_pay.setText("去支付");
-//                                        but_pay.setTextColor(Color.WHITE);
-//                                        but_pay.setBackgroundColor(Color.rgb(162,203,52));
                                         goPay();
 
                                     } else if (totalPrice >= limitcost) {
-                                        but_pay.setText("去支付");
-//                                        but_pay.setTextColor(Color.WHITE);
-//                                        but_pay.setBackgroundColor(Color.rgb(162,203,52));
                                         goPay();
 
                                     } else if (totalPrice > 0 && totalPrice < limitcost) {
@@ -603,13 +592,9 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
                                         sc_count--;
 
                                         if (limitcost == 0) {
-                                            but_pay.setText("去支付");
-                                            //but_pay.setTextColor(Color.WHITE);
                                             goPay();
 
                                         } else if (totalPrice >= limitcost) {
-                                            but_pay.setText("去支付");
-                                            //but_pay.setTextColor(Color.WHITE);
                                             goPay();
                                         } else if (totalPrice > 0 && totalPrice < limitcost) {
                                             double add = limitcost - totalPrice;

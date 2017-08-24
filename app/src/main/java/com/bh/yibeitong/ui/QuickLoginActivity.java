@@ -12,8 +12,10 @@ import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.base.BaseTextActivity;
 import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.Register;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
+import com.bh.yibeitong.utils.MD5Util;
 import com.bh.yibeitong.view.UserInfo;
 
 import org.xutils.common.Callback;
@@ -41,6 +43,9 @@ public class QuickLoginActivity extends BaseTextActivity {
 
     UserInfo userInfo;
 
+    /*接口地址*/
+    private String PATH = "";
+
     @Override
     protected void setRootView() {
         super.setRootView();
@@ -54,14 +59,6 @@ public class QuickLoginActivity extends BaseTextActivity {
         setTitleBack(true, 0);
 
         initData();
-        /*but_ql_code = (Button) findViewById(R.id.but_ql_code);
-
-        but_ql_code.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("你是大笨狗！");
-            }
-        });*/
     }
 
     /**
@@ -84,6 +81,8 @@ public class QuickLoginActivity extends BaseTextActivity {
 
     @Override
     public void onClick(View v) {
+        super.onClick(v);
+
         phone = et_ql_phone.getText().toString();
         code = et_ql_code.getText().toString();
 
@@ -129,14 +128,25 @@ public class QuickLoginActivity extends BaseTextActivity {
      * @param type
      */
     public void postCode(String phone, String type) {
-        RequestParams params = new RequestParams(
-                HttpPath.PATH + HttpPath.SENDREGPHONE + "phone=" + phone + "&type=" + type);
+        PATH = HttpPath.PATH + HttpPath.SENDREGPHONE + "phone=" + phone + "&type=" + type;
+
+        PATH = HttpPath.PATH_HEAD+HttpPath.PATH_DATA+(System.currentTimeMillis()/1000)+"&"+HttpPath.SENDREGPHONE+
+                "phone=" + phone + "&type=" + type+
+                "&sign="+ MD5Util.getMD5String(HttpPath.PATH_DATA+(System.currentTimeMillis()/1000)+"&"+HttpPath.SENDREGPHONE+
+                "phone=" + phone + "&type="+ type+"&"
+                +HttpPath.PATH_BAIHAI);
+
+        System.out.println("加密"+HttpPath.PATH_DATA_MD5+HttpPath.SENDREGPHONE+
+                "phone=" + phone + "&type="+ type+"&"
+                +HttpPath.PATH_BAIHAI);
+
+        System.out.println("获取验证码"+PATH);
+        RequestParams params = new RequestParams(PATH);
         x.http().post(params,
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
                         System.out.println("获取验证码 = " + result);
-
                     }
 
                     @Override
@@ -182,16 +192,38 @@ public class QuickLoginActivity extends BaseTextActivity {
                             Toast.makeText(QuickLoginActivity.this, register.getMsg().toString(), Toast.LENGTH_SHORT).show();
                         } else if (register.isError() == false) {
                             //登录成功 跳转主界面
-                            userInfo.saveCoder("1");//保存数字1
+
+
                             userInfo.saveLogin("1");//登录成功 保存数字1
 
-                            Intent intent = new Intent(QuickLoginActivity.this, MainActivity.class);
-                            intent.putExtra("login", result);
+                            userInfo.savePwd("");//保存密码 方便后续操作
+                            userInfo.saveCoder("1");
 
+                            userInfo.saveScore(register.getMsg().getScore());//积分
+                            userInfo.saveUserInfo(result);
 
-                            QuickLoginActivity.this.finish();//不知道为什么 这家伙没有销毁掉。。。
-                            ActivityCollector.finishAll();
-                            startActivity(intent);
+                            Intent intent = new Intent();
+                            intent.putExtra("jingang", "1");
+                            setResult(CodeUtils.REQUEST_CODE_QUICK_LOGIN, intent);
+                            QuickLoginActivity.this.finish();
+
+//                            userInfo.saveCoder("1");//保存数字1
+//                            userInfo.saveLogin("1");//登录成功 保存数字1
+//                            userInfo.saveUserInfo(result);
+//                            userInfo.savePwd("");//保存密码 方便后续操作
+//                            userInfo.saveScore(register.getMsg().getScore());//积分
+//
+//                            Intent intent = new Intent();
+//                            intent.putExtra("jingang", "1");
+//                            setResult(CodeUtils.REQUEST_CODE_QUICK_LOGIN, intent);
+//                            QuickLoginActivity.this.finish();
+
+//                            Intent intent = new Intent(QuickLoginActivity.this, MainActivity.class);
+//                            intent.putExtra("login", result);
+//
+//                            QuickLoginActivity.this.finish();//不知道为什么 这家伙没有销毁掉。。。
+//                            ActivityCollector.finishAll();
+//                            startActivity(intent);
                         }
 
                     }

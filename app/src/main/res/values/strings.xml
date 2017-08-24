@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">易贝通</string>
 
-    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+    <string name="scan_text">将条形码放入框内, 即可自动扫描</string>
     <!-- 图片浏览 -->
     <string name="only_choose_num">超出可选图片张数</string>
     <string name="finish">完成</string>

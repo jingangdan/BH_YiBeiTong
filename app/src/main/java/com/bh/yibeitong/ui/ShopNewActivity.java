@@ -121,6 +121,13 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 
     private List<ShopNew.MsgBean.ChildBean.DetBean> foodList = new ArrayList<>();
 
+    /*购物车商品id字符串*/
+    private String gid = "";
+    private List<ShopCart.MsgBean.ListBean> shopMsg = new ArrayList<>();
+
+    /*接口地址*/
+    private String PATH = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -280,63 +287,186 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
-
                         System.out.println("购物车" + result);
 
-                        JSONObject response = null;
-                            try {
-                                response = new JSONObject(result);
-                                if(response.get("msg").toString().equals("[]")){
-                                    System.out.println("没有数据");
-                                }else{
-                                    ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
+                        gid = "";
+                        shopMsg.clear();
 
-                                    cartnum = shopCart.getMsg().getSumcount();
+                        totalPrice = 0;
+                        try {
+                            JSONObject response = new JSONObject(result);
 
-                                    int size = shopCart.getMsg().getList().size();
-                                    double d_cost = 0;
-                                    int count = 0;
-                                    if (size == 0) {
-                                        return;
-                                    }
-                                    for (int i = 0; i < size; i++) {
-                                        d_cost = Double.parseDouble(shopCart.getMsg().getList().get(i).getCost());
-                                        count = shopCart.getMsg().getList().get(i).getCount();
-                                        totalPrice += d_cost * count;
+                            if (response.get("msg").toString().equals("[]")) {
+                                System.out.println("没有数据");
+                                but_pay.setText("购物车为空");
+                                noGoPay();
+                            } else {
+                                ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
+                                shopMsg = shopCart.getMsg().getList();
 
-                                        count += count;
-                                    }
+                                totalPrice = shopCart.getMsg().getSurecost();
 
-                                    if (limitcost == 0) {
-//                                        but_sg_pay.setText("去支付");
-//                                        but_sg_pay.setTextColor(Color.RED);
-                                        goPay();
-                                    } else if (totalPrice >= limitcost) {
-//                                        but_sg_pay.setText("去支付");
-//                                        but_sg_pay.setTextColor(Color.RED);
-                                        goPay();
-                                    } else if (totalPrice > 0 && totalPrice < limitcost) {
-                                        double add = limitcost - totalPrice;
-//                                        but_sg_pay.setText("还差" + df.format(add) + "元");
-//                                        but_sg_pay.setTextColor(Color.GRAY);
-                                        but_pay.setText("还差" + df.format(add) + "元");
-                                        noGoPay();
-                                    } else if (totalPrice == 0) {
-//                                        but_sg_pay.setText("购物车为空");
-//                                        but_sg_pay.setTextColor(Color.GRAY);
-                                        but_pay.setText("购物车为空");
-                                        noGoPay();
+                                //显示购物车数量
+                                tv_shopcart_num.setText("" + shopCart.getMsg().getSumcount());
+
+                                /*判断快递情况*/
+                                if (shopCart.getMsg().isOnlynewtype() == true) {
+                                    System.out.println("只有快递");
+
+                                    //判断总计小于1的情况
+                                    if (totalPrice < 1) {
+                                        tv_all_pay.setText("￥" + "0" + df.format(totalPrice) + "元");
                                     } else {
-                                        Toast.makeText(ShopNewActivity.this, "错误", Toast.LENGTH_SHORT).show();
+                                        tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
                                     }
+                                    goPay();
+
+                                } else {
+                                    System.out.println("不是只有快递");
+
+                                    if (shopCart.getMsg().getList().size() == 0) {
+                                        tv_shopcart_num.setText("" + 0);
+                                        tv_all_pay.setText("￥0.00");
+                                        but_pay.setText("购物车为空");
+
+                                        noGoPay();
+
+                                    } else if (shopCart.getMsg().getList().size() > 0) {
+
+                                        if (limitcost == 0) {
+                                            goPay();
+                                        } else if (totalPrice >= limitcost) {
+                                            goPay();
+                                        } else if (totalPrice > 0 && totalPrice < limitcost) {
+                                            double add = limitcost - totalPrice;
+                                            but_pay.setText("还差" + df.format(add) + "元");
+                                            noGoPay();
+
+                                        } else if (totalPrice == 0) {
+                                            but_pay.setText("购物车为空");
+                                            noGoPay();
+                                        } else {
+
+                                        }
+                                        //判断总计小于1的情况
+                                        System.out.println("totalPrice=" + totalPrice);
+                                        if (totalPrice < 1) {
+                                            tv_all_pay.setText("￥" + "0" + df.format(totalPrice) + "元");
+                                        } else {
+                                            tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
+                                        }
+
+                                        if (shopMsg.size() > 0) {
+                                            //遍历首页商品列表
+                                            for (int j = 0; j < shopMsg.size(); j++) {
+                                                gid = gid + shopMsg.get(j).getId();
+                                            }
+                                        }
+
+                                        /**
+                                         * 1.找出首页购物车数量num1 >0的，并记录id1
+                                         * 2.将id1于购物车id2作比
+                                         * 较（不同：首页购物车数量清零  相同：将num2赋值给num1）
+                                         */
+
+                                        /*遍历商品列表*/
+                                        for (int i = 0; i < foodList.size(); i++) {
+
+                                            int num1 = foodList.get(i).getCartnum();//首页数量
+                                            String id1 = foodList.get(i).getId();//首页
+
+                                            if (num1 > 0) {
+                                                if (gid.indexOf(foodList.get(i).getId()) == -1) {
+                                                    foodList.get(i).setCartnum(0);
+                                                }
+
+                                            }
+
+                                            if (shopMsg.size() > 0) {
+                                                //遍历商品列表
+                                                for (int j = 0; j < shopMsg.size(); j++) {
+                                                    int num2 = shopMsg.get(j).getCount();//购物车数量
+                                                    String id2 = "" + shopMsg.get(j).getId(); //购物车
+
+                                                    if (id1.equals(id2)) {
+                                                        if (num1 == num2) {
+                                                            //相同 不动
+                                                        } else {
+                                                            //不同且大于0 修改
+                                                            foodList.get(i).setCartnum(num2);
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                int cartNum = foodList.get(i).getCartnum();
+                                                if (cartNum > 0) {
+                                                    foodList.get(i).setCartnum(0);
+                                                }
+                                            }
+
+                                        }
+
+                                    }
+
                                     tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
-                                    tv_shopcart_num.setText(""+cartnum);
-                                    //tv_sg_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //teseCateInfoAdapter.notifyDataSetChanged();
+                        snAdapter.notifyDataSetChanged();
+
+
+//
+//
+//                        JSONObject response = null;
+//                            try {
+//                                response = new JSONObject(result);
+//                                if(response.get("msg").toString().equals("[]")){
+//                                    System.out.println("没有数据");
+//                                }else{
+//                                    ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
+//
+//                                    cartnum = shopCart.getMsg().getSumcount();
+//
+//                                    int size = shopCart.getMsg().getList().size();
+//                                    double d_cost = 0;
+//                                    int count = 0;
+//                                    if (size == 0) {
+//                                        return;
+//                                    }
+//                                    for (int i = 0; i < size; i++) {
+//                                        d_cost = Double.parseDouble(shopCart.getMsg().getList().get(i).getCost());
+//                                        count = shopCart.getMsg().getList().get(i).getCount();
+//                                        totalPrice += d_cost * count;
+//
+//                                        count += count;
+//                                    }
+//
+//                                    if (limitcost == 0) {
+//                                        goPay();
+//                                    } else if (totalPrice >= limitcost) {
+//                                        goPay();
+//                                    } else if (totalPrice > 0 && totalPrice < limitcost) {
+//                                        double add = limitcost - totalPrice;
+//                                        but_pay.setText("还差" + df.format(add) + "元");
+//                                        noGoPay();
+//                                    } else if (totalPrice == 0) {
+//                                        but_pay.setText("购物车为空");
+//                                        noGoPay();
+//                                    } else {
+//                                        Toast.makeText(ShopNewActivity.this, "错误", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                    tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
+//                                    tv_shopcart_num.setText(""+cartnum);
+//
+//                                }
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
 
                     }
 
@@ -363,8 +493,14 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
      * HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_SHOPALL + shopid
      */
     public void getShopAll(String shopid) {
-        final String PATH = HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_SHOPALL +
-                "&shopid=" + shopid;
+//        String PATH = HttpPath.PATH + HttpPath.GETSHOPNEW +
+//                "&shopid=" + shopid;
+
+        PATH = HttpPath.PATH_HEAD+HttpPath.PATH_DATA+(System.currentTimeMillis()/1000)+"&"+HttpPath.GETSHOPNEW+
+                "shopid=" + shopid+"&sign="+
+        MD5Util.getMD5String(HttpPath.PATH_DATA+(System.currentTimeMillis()/1000)+"&"+HttpPath.GETSHOPNEW+
+                "shopid=" + shopid+"&"+HttpPath.PATH_BAIHAI);
+
 
         RequestParams params = new RequestParams(PATH);
 
@@ -742,14 +878,6 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                 vh.shopCart_add = (ImageView) convertView.findViewById(R.id.iv_shopnew_add);
                 vh.shopCart_sub = (ImageView) convertView.findViewById(R.id.iv_shopnew_sub);
 
-                /*改版样式*/
-//                vh.iv_img = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_img);
-//                vh.iv_sub = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_sub);
-//                vh.iv_add = (ImageView) convertView.findViewById(R.id.iv_item_shopnew_add);
-//                vh.tv_good_name = (TextView) convertView.findViewById(R.id.tv_item_shopnew_name);
-//                vh.tv_good_cost = (TextView) convertView.findViewById(R.id.tv_item_shopnew_cost);
-//                vh.tv_good_num = (TextView) convertView.findViewById(R.id.tv_item_shopnew_num);
-
                 convertView.setTag(vh);
             } else {
                 vh = (ViewHolder) convertView.getTag();
@@ -766,11 +894,6 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                 vh.imager.setImageResource(R.mipmap.yibeitong001);
 
             } else {
-//                BitmapUtils bitmapUtils = new BitmapUtils(mContext);
-//
-//                bitmapUtils.configDiskCacheEnabled(true);
-//                bitmapUtils.configMemoryCacheEnabled(false);
-//                bitmapUtils.display(vh.imager, imgPath);
                 x.image().bind(vh.imager, imgPath);
             }
             final int cartNum = detBeen.get(position).getCartnum();
@@ -779,7 +902,6 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
             vh.sellcount.setText("月售  " + sellcount);
             vh.cost.setText("￥" + cost);
 
-            //vh.shopCart_num.setText(point);
 
             vh.shopCart_num.setText("" + cartNum);
             //购物车为0  隐藏减少按钮和数量
@@ -807,7 +929,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                     //添加购物车  请求接口 成功则添加 反之不添加
                     //添加购物车
                     RequestParams params = new RequestParams(
-                            HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_ADD_SHOPCART
+                            HttpPath.PATH + HttpPath.ADD_SHOPCART
                                     + "shopid=" + shopid + "&num=" + 1 + "&gid=" + goodId
                     );
                     x.http().post(params,
@@ -1032,49 +1154,53 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
         if (requestCode == CodeUtils.REQUEST_CODE_NEWSHOP) {
             if (resultCode == CodeUtils.REQUEST_CODE_CATEFOOD ||
                     resultCode == CodeUtils.REQUEST_CODE_SHOPCART) {
-                Bundle bundle = data.getExtras();
-                String gid = bundle.getString("gid");
-                int cartNum = bundle.getInt("cartNum");
-                int cartnum = bundle.getInt("cartnum");
 
-                tv_shopcart_num.setText("" + cartnum);
+                getShopCart(shopid);
+//                Bundle bundle = data.getExtras();
+//                String gid = bundle.getString("gid");
+//                int cartNum = bundle.getInt("cartNum");
+//                int cartnum = bundle.getInt("cartnum");
+//
+//                tv_shopcart_num.setText("" + cartnum);
+//
+//
+//                for (int i = 0; i < foodList.size(); i++) {
+//                    if (gid.equals(foodList.get(i).getId())) {
+//                        foodList.get(i).setCartnum(cartNum);
+//                    } else if (gid.equals("000")) {
+//                        foodList.get(i).setCartnum(cartNum);
+//                    }
+//                }
+//
+//                totalPrice = bundle.getDouble("allpay");
+//
+//
+//                System.out.println("ssssss"+totalPrice);
+//                System.out.println("ssssssss"+limitcost);
+//                if (limitcost == 0) {
+//                    goPay();
+//
+//                } else if (totalPrice >= limitcost) {
+//                    goPay();
+//                } else if (totalPrice > 0 && totalPrice < limitcost) {
+//                    double add = limitcost - totalPrice;
+//
+//                    but_pay.setText("还差" + df.format(add) + "元");
+//                    noGoPay();
+//                } else if (totalPrice == 0) {
+//                    but_pay.setText("购物车为空");
+//                    noGoPay();
+//                } else {
+//                    //toast("错误");
+//                }
+//
+//                tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
+//
+//                snAdapter.notifyDataSetChanged();
 
+//                setResult(gid, cartNum, cartnum, totalPrice);
 
-                for (int i = 0; i < foodList.size(); i++) {
-                    if (gid.equals(foodList.get(i).getId())) {
-                        foodList.get(i).setCartnum(cartNum);
-                    } else if (gid.equals("000")) {
-                        foodList.get(i).setCartnum(cartNum);
-                    }
-                }
-
-                totalPrice = bundle.getDouble("allpay");
-
-
-                System.out.println("ssssss"+totalPrice);
-                System.out.println("ssssssss"+limitcost);
-                if (limitcost == 0) {
-                    goPay();
-
-                } else if (totalPrice >= limitcost) {
-                    goPay();
-                } else if (totalPrice > 0 && totalPrice < limitcost) {
-                    double add = limitcost - totalPrice;
-
-                    but_pay.setText("还差" + df.format(add) + "元");
-                    noGoPay();
-                } else if (totalPrice == 0) {
-                    but_pay.setText("购物车为空");
-                    noGoPay();
-                } else {
-                    //toast("错误");
-                }
-
-                tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
-
-                snAdapter.notifyDataSetChanged();
-
-                setResult(gid, cartNum, cartnum, totalPrice);
+                setResult("", 0, cartnum, totalPrice);
             }
         }
 

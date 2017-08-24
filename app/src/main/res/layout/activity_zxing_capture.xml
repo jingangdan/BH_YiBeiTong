@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="45dp">
 
         <SurfaceView
             android:id="@+id/preview_view"
             android:layout_width="match_parent"
             android:layout_height="500dp"
-            android:layout_gravity="center"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:layout_gravity="center" />
 
         <com.bh.yibeitong.zxing.view.ViewfinderView
             android:id="@+id/viewfinder_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/but_zxing_capture_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:text="返回"
-            android:textColor="@android:color/white" />
+        <!--<Button-->
+        <!--android:id="@+id/but_zxing_capture_back"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:text="返回"-->
+        <!--android:textColor="@android:color/white" />-->
 
     </RelativeLayout>
+
+    <include layout="@layout/activity_base" />
 
 </FrameLayout>

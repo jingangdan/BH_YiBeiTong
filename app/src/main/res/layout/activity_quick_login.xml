@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/activity_base"></include>
+    <include layout="@layout/activity_base"/>
 
     <LinearLayout
         android:id="@+id/lin_login_main"
@@ -52,7 +53,7 @@
                 android:textCursorDrawable="@drawable/test_cursor"></EditText>
 
             <Button
-                android:textSize="14dp"
+                android:textSize="12dp"
                 style="@style/button_style"
                 android:id="@+id/but_ql_code"
                 android:layout_width="0dp"
@@ -73,7 +74,7 @@
             <Button
                 android:id="@+id/but_ql_login"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:background="@drawable/buttonshape"
                 android:text="登录"
                 android:textColor="@android:color/white" />

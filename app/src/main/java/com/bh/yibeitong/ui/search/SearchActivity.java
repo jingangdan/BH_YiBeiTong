@@ -27,6 +27,7 @@ import com.bh.yibeitong.bean.search.HotKey;
 import com.bh.yibeitong.sqlite.RecordSQLiteOpenHelper;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
+import com.bh.yibeitong.utils.MD5Util;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -203,7 +204,16 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
      * 无参
      */
     public void getHotKey() {
-        PATH = HttpPath.PATH + HttpPath.SEARCH_HOT_KEY;
+        //PATH = HttpPath.PATH + HttpPath.SEARCH_HOT_KEY;
+
+//        PATH = HttpPath.PATH_HEAD+HttpPath.PATH_DATA_MD5+HttpPath.SEARCH_HOT_KEY+
+//        "sign="+MD5Util.getMD5String(HttpPath.PATH_DATA_MD5+HttpPath.SEARCH_HOT_KEY+HttpPath.PATH_BAIHAI);
+//
+
+        PATH = HttpPath.PATH_HEAD+HttpPath.PATH_DATA+(System.currentTimeMillis()/1000)+"&"+HttpPath.SEARCH_HOT_KEY
+                +"sign="+MD5Util.getMD5String(HttpPath.PATH_DATA+(System.currentTimeMillis()/1000)+"&"+HttpPath.SEARCH_HOT_KEY+HttpPath.PATH_BAIHAI);
+
+        System.out.println("获取热搜词"+PATH);
 
         RequestParams params = new RequestParams(PATH);
         x.http().get(params,

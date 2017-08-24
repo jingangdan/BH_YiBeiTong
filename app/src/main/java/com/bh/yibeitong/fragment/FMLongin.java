@@ -20,14 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bh.yibeitong.R;
-import com.bh.yibeitong.actitvity.ActivityCollector;
-import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.ui.QuickLoginActivity;
 import com.bh.yibeitong.ui.loginregist.FindCodeActivity;
 import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
+import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.UserInfo;
 
 import org.xutils.BuildConfig;
@@ -41,6 +40,9 @@ import org.xutils.x;
  */
 public class FMLongin extends Fragment implements View.OnClickListener, View.OnLongClickListener {
     private View view;
+
+    /*接口地址*/
+    private String PATH = "";
 
     // 声明控件对象
     private EditText et_name, et_pass;
@@ -213,7 +215,8 @@ public class FMLongin extends Fragment implements View.OnClickListener, View.OnL
 
             case R.id.tv_quick_logon:
                 //快速登录
-                startActivity(new Intent(getActivity(), QuickLoginActivity.class));
+
+                startActivityForResult(new Intent(getActivity(), QuickLoginActivity.class), CodeUtils.REQUEST_CODE_LOGIN);
 
                 break;
 
@@ -241,10 +244,17 @@ public class FMLongin extends Fragment implements View.OnClickListener, View.OnL
      * @param pwd
      */
     public void getLogin(String uname, String pwd) {
-        String Path = "http://www.ybt9.com//index.php?ctrl=app&source=1&action=appMemlogin&" +
-                "datatype=json&" + "uname=" + uname + "&pwd=" + pwd;
+//        String Path = "http://www.ybt9.com//index.php?ctrl=app&source=1&action=appMemlogin&" +
+//                "datatype=json&" + "uname=" + uname + "&pwd=" + pwd;
 
-        RequestParams params = new RequestParams(Path);
+        PATH = HttpPath.PATH + HttpPath.APPMENLOGIN +
+                "uname=" + uname + "&pwd=" + pwd;
+
+//        String s = Path+"&baihai123456";
+//        System.out.println("666 ="+s);
+//        System.out.println("555 ="+ MD5Util.getMD5String(s));
+
+        RequestParams params = new RequestParams(PATH);
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -273,6 +283,7 @@ public class FMLongin extends Fragment implements View.OnClickListener, View.OnL
                     userInfo.saveUserInfo(result);
 
                     Intent intent = new Intent();
+                    intent.putExtra("jingang", "1");
                     getActivity().setResult(CodeUtils.REQUEST_CODE_LOGIN, intent);
                     getActivity().finish();
 
@@ -326,5 +337,19 @@ public class FMLongin extends Fragment implements View.OnClickListener, View.OnL
 
         }
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CodeUtils.REQUEST_CODE_LOGIN) {
+            if (resultCode == CodeUtils.REQUEST_CODE_QUICK_LOGIN) {
+                Bundle bundle = data.getExtras();
+                Intent intent = new Intent();
+                intent.putExtra("jingang", bundle.getString("jingang"));
+                getActivity().setResult(CodeUtils.REQUEST_CODE_LOGIN, intent);
+                getActivity().finish();
+            }
+        }
     }
 }

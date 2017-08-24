@@ -13,6 +13,7 @@ import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
+import com.bh.yibeitong.utils.MD5Util;
 import com.bh.yibeitong.view.UserInfo;
 
 import org.xutils.common.Callback;
@@ -90,13 +91,14 @@ public class FindPwdActivity extends BaseTextActivity {
 
     @Override
     public void onClick(View v) {
+        super.onClick(v);
+
         code = et_input_code.getText().toString();
         uname = et_input_uname.getText().toString();
         email = et_input_email.getText().toString();
         pwd = et_input_pwd.getText().toString();
         pwd2 = et_input_pwd_again.getText().toString();
 
-        super.onClick(v);
         switch (v.getId()) {
             case R.id.but_getcode:
                 //获取验证码
@@ -141,15 +143,21 @@ public class FindPwdActivity extends BaseTextActivity {
      * @param type
      */
     public void postCode(String phone, String type) {
-        RequestParams params = new RequestParams(
-                HttpPath.PATH + HttpPath.SENDREGPHONE + "phone=" + phone + "&type=" + type);
+
+        PATH = HttpPath.PATH_HEAD + HttpPath.PATH_DATA+(System.currentTimeMillis()/1000) + HttpPath.SENDREGPHONE +
+                "phone=" + phone + "&type=" + type + "sign=" +
+                MD5Util.getMD5String(HttpPath.PATH_DATA+(System.currentTimeMillis()/1000)+"&" + HttpPath.SENDREGPHONE +
+                        "phone=" + phone + "&type=" + type + "&" + HttpPath.PATH_BAIHAI);
+
+        //PATH =  HttpPath.PATH + HttpPath.SENDREGPHONE + "phone=" + phone + "&type=" + type;
+
+        RequestParams params = new RequestParams(PATH);
+
         x.http().post(params,
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
                         System.out.println("获取验证码 = " + result);
-
-
 
                     }
 

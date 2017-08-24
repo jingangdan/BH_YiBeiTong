@@ -11,6 +11,8 @@ import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseTextActivity;
 import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.Register;
+import com.bh.yibeitong.ui.homepage.LocationTestActivity;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.UserInfo;
@@ -110,7 +112,7 @@ public class AddAddressActivity extends BaseTextActivity {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_mamage_address:
-                Intent intent = new Intent(AddAddressActivity.this, MoreAddressActivity.class);
+                Intent intent = new Intent(AddAddressActivity.this, LocationTestActivity.class);
                 startActivityForResult(intent, 3);
                 //startActivity(new Intent(AddAddressActivity.this, MoreAddressTestActivity.class));
                 //startActivity(new Intent(AddAddressActivity.this, MoreAddressActivity.class));
@@ -304,23 +306,36 @@ public class AddAddressActivity extends BaseTextActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 3 && resultCode == 4) {
-            Bundle bundle = data.getExtras();
-            String strResult = bundle.getString("selectAddress");
-            contactname = bundle.getString("contactname");
-            phone = bundle.getString("phone");
-            bigadr = bundle.getString("bigadr");
-            detailadr = bundle.getString("detailadr");
+        if (requestCode == 3) {
+            if (resultCode == CodeUtils.REQUEST_CODE_LOCATION) {
+                Bundle bundle = data.getExtras();
+                bigadr = bundle.getString("address");
+                lat = bundle.getString("lat");
+                lng = bundle.getString("lng");
 
+                System.out.println("555"+bigadr);
 
-            lat = bundle.getString("lat");
-            lng = bundle.getString("lng");
+                tv_mamage_address.setText(bigadr);
 
-            addresid = bundle.getString("addresid");
-
-            tv_mamage_address.setText(strResult);
-
+            }
         }
+//        if (requestCode == 3 && resultCode == 4) {
+//            Bundle bundle = data.getExtras();
+//            String strResult = bundle.getString("selectAddress");
+//            contactname = bundle.getString("contactname");
+//            phone = bundle.getString("phone");
+//            bigadr = bundle.getString("bigadr");
+//            detailadr = bundle.getString("detailadr");
+//
+//
+//            lat = bundle.getString("lat");
+//            lng = bundle.getString("lng");
+//
+//            addresid = bundle.getString("addresid");
+//
+//            tv_mamage_address.setText(strResult);
+//
+//        }
 
     }
 

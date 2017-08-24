@@ -45,5 +45,33 @@ public class CodeUtils {
     /*设置*/
     public static final int REQUEST_CODE_SETTING = 0x13;
 
+    /*扫一扫结果*/
+    public static final int REQUEST_CODE_ZXING_RESULT = 0x14;
+
+    /*收发快递*/
+    public static final int REQUEST_CODE_EXPRESS = 0x15;
+
+    /*快速登录*/
+    public static final int REQUEST_CODE_QUICK_LOGIN = 0x16;
+
+    /*选择收货地址*/
+    public static final int REQUEST_CODE_LOCATION_ADDRESS = 0x17;
+
+    /*输入选择地址*/
+    public static final int REQUEST_CODE_LOCATION = 0x18;
+
+    /*订单评价*/
+    public static final int REQUEST_CODE_ORDER_COMMENT = 0x19;
+
+    /*订单继续支付*/
+    public static final int REUEST_CODE_PAY = 0x20;
+
+    /*订单详情*/
+    public static final int REQUEST_CODER_ORDER_STATE = 0x21;
+
+    /*生情退款*/
+    public static final int REQUEST_CODE_ORDER_CONTROL = 0x22;
+
+
 
 }

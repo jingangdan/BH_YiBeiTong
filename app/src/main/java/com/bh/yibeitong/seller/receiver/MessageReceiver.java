@@ -4,8 +4,10 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.util.Log;
 
+import com.bh.yibeitong.R;
 import com.tencent.android.tpush.XGCustomPushNotificationBuilder;
 import com.tencent.android.tpush.XGLocalMessage;
 import com.tencent.android.tpush.XGPushBaseReceiver;
@@ -423,9 +425,9 @@ public class MessageReceiver extends XGPushBaseReceiver {
         build.setSound(
                 RingtoneManager.getActualDefaultRingtoneUri(
                         context, RingtoneManager.TYPE_ALARM)) // 设置声音
-                // setSound(
-                // Uri.parse("android.resource://" + getPackageName()
-                // + "/" + R.raw.wind)) 设定Raw下指定声音文件
+//                 .setSound(
+//                 Uri.parse("android.resource://" + context.getPackageName()
+//                 + "/" + R.raw.aidemo)) //设定Raw下指定声音文件
                 .setDefaults(Notification.DEFAULT_VIBRATE) // 振动
                 .setFlags(Notification.FLAG_NO_CLEAR); // 是否可清除
         // 设置自定义通知layout,通知背景等可以在layout里设置

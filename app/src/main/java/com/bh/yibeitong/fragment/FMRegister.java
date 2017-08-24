@@ -66,7 +66,6 @@ public class FMRegister extends Fragment implements View.OnClickListener {
     //每次验证请求需要间隔60S
     private int i = 60;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

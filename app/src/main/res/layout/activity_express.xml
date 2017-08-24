@@ -17,7 +17,7 @@
 
     <RelativeLayout
         android:layout_below="@+id/rel_express_header"
-        android:layout_above="@+id/rel_express_footer"
+        android:layout_above="@+id/lin_express_footer"
         android:id="@+id/rel_express"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -47,78 +47,84 @@
 
     </RelativeLayout>
 
-    <!--<ListView
-        android:id="@+id/lv_express"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>-->
-
-    <RelativeLayout
-        android:id="@+id/rel_express_footer"
+    <LinearLayout
+        android:id="@+id/lin_express_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="#E6E6E6" />
+        <include layout="@layout/include_shopcart_test" />
 
-        <RelativeLayout
+    </LinearLayout>
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:gravity="center_vertical"
-            android:padding="5dp">
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/rel_express_footer"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="#fff"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true">-->
 
-            <FrameLayout
-                android:id="@+id/lin_express_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:background="@mipmap/ic_yuan">
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="10dp"-->
+    <!--android:background="#E6E6E6" />-->
 
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:src="@mipmap/ic_shopcart_white" />
+    <!--<RelativeLayout-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="0"
-                    android:visibility="gone" />
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:padding="5dp">-->
 
-            </FrameLayout>
+    <!--<FrameLayout-->
+    <!--android:id="@+id/lin_express_left"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:background="@mipmap/ic_yuan">-->
 
-            <TextView
-                android:id="@+id/tv_express_all_price"
-                style="@style/title_second_text"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/lin_express_left"
-                android:text="购物车是空的" />
+    <!--<ImageView-->
+    <!--android:layout_width="28dp"-->
+    <!--android:layout_height="28dp"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:src="@mipmap/ic_shopcart_white" />-->
 
-            <Button
-                android:id="@+id/but_express_pay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_margin="5dp"
-                android:background="@null"
-                android:text="还差9.00元"
-                android:textColor="#666" />
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="5dp"-->
+    <!--android:text="0"-->
+    <!--android:visibility="gone" />-->
 
-        </RelativeLayout>
+    <!--</FrameLayout>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_express_all_price"-->
+    <!--style="@style/title_second_text"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_toRightOf="@+id/lin_express_left"-->
+    <!--android:text="购物车是空的" />-->
+
+    <!--<Button-->
+    <!--android:id="@+id/but_express_pay"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_margin="5dp"-->
+    <!--android:background="@null"-->
+    <!--android:text="还差9.00元"-->
+    <!--android:textColor="#666" />-->
+
+    <!--</RelativeLayout>-->
 
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
 </RelativeLayout>

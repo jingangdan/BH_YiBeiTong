@@ -1,7 +1,6 @@
-package com.bh.yibeitong.ui;
+package com.bh.yibeitong.ui.order;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -10,10 +9,9 @@ import com.bh.yibeitong.R;
 import com.bh.yibeitong.actitvity.ActivityCollector;
 import com.bh.yibeitong.adapter.SimpleFragmentPagerAdapter;
 import com.bh.yibeitong.base.BaseTextActivity;
-import com.bh.yibeitong.fragment.FMLongin;
 import com.bh.yibeitong.fragment.FMOrderDetaile;
 import com.bh.yibeitong.fragment.FMOrderState;
-import com.bh.yibeitong.fragment.FMRegister;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.view.NoScrollViewPager;
 
 import java.util.ArrayList;
@@ -24,7 +22,8 @@ import java.util.List;
  * 订单详情
  */
 
-public class OrderDetaileActivity extends BaseTextActivity implements ViewPager.OnPageChangeListener {
+public class OrderDetaileActivity extends BaseTextActivity implements
+        ViewPager.OnPageChangeListener {
     private TabLayout tl_order_detaile;
     private NoScrollViewPager vp_order_detaile;
 

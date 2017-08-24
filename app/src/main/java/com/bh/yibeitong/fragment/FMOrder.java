@@ -24,27 +24,24 @@ import android.widget.Toast;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseFragment;
 import com.bh.yibeitong.bean.Error;
-import com.bh.yibeitong.bean.GoodsIndex;
 import com.bh.yibeitong.bean.Order;
 import com.bh.yibeitong.bean.OrderDel;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.seller.activity.SellerLoginActivity;
 import com.bh.yibeitong.ui.LoginRegisterActivity;
-import com.bh.yibeitong.ui.OrderCommentActivity;
-import com.bh.yibeitong.ui.OrderDetaileActivity;
+import com.bh.yibeitong.ui.PayActivity;
+import com.bh.yibeitong.ui.order.OrderCommentActivity;
+import com.bh.yibeitong.ui.order.OrderDetaileActivity;
 import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.CustomDialog;
 import com.bh.yibeitong.view.UserInfo;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,12 +50,10 @@ import java.util.List;
  * 测试fragment懒加载
  */
 
-public class FMOrderTest extends BaseFragment {
+public class FMOrder extends BaseFragment {
 
     private TextView tv_header_title;
     private ImageView iv_header_left, iv_header_right;
-
-    private String login;
 
     public static String uid, pwd;
 
@@ -74,8 +69,6 @@ public class FMOrderTest extends BaseFragment {
     private OrderAdapter orderAdapter;
     private List<Order.MsgBean> msgBeanList = new ArrayList<>();
 
-    private Gson gson;
-
     private View view;
 
     //没有登录登录时布局
@@ -87,39 +80,18 @@ public class FMOrderTest extends BaseFragment {
 
     private Intent intent;
 
+    /*接口地址*/
+    private String PATH = "";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         System.out.println("订单页 加载");
 
         view = inflater.inflate(R.layout.fragment_orders, container, false);
 
         initData();
         initDatas();
-
-//        userInfo = new UserInfo(getActivity().getApplication());
-//
-//        jingang = userInfo.getLogin();
-//
-//        /*判断是否已登录*/
-//        if (jingang.equals("")) {
-//
-//            view = inflater.inflate(R.layout.activity_nologin, container, false);
-//
-//            initDatas();
-//
-//        } else if (jingang.equals("0")) {
-//            view = inflater.inflate(R.layout.activity_nologin, container, false);
-//
-//            initDatas();
-//
-//        } else if (jingang.equals("1")) {
-//            view = inflater.inflate(R.layout.fragment_orders, container, false);
-//
-//            initData();
-//
-//        }
 
         return view;
     }
@@ -146,13 +118,6 @@ public class FMOrderTest extends BaseFragment {
         lin_nologin = (LinearLayout) view.findViewById(R.id.lin_order_nologin);
 
         isLogin();
-
-//        gson = new Gson();
-//        Type listType = new TypeToken<List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean>>() {
-//        }.getType();
-//
-//        final List<GoodsIndex.MsgBean.ShopdetBean.PostdateBean> catefoodslist =
-//                gson.fromJson(userInfo.getPostData(), listType);
 
     }
 
@@ -246,34 +211,36 @@ public class FMOrderTest extends BaseFragment {
 
     }
 
-    public void isLogin(){
-        userInfo = new UserInfo(getActivity().getApplication());
+
+    /*判断登录状态*/
+    public void isLogin() {
         jingang = userInfo.getLogin();
 
-        if(jingang.equals("1")){
+        if (jingang.equals("1")) {
             //验证登录方式
             if (!(userInfo.getUserInfo().equals(""))) {
                 Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
                 uid = register.getMsg().getUid();
                 phone = register.getMsg().getPhone();
+
                 if (!(userInfo.getPwd().equals(""))) {
                     pwd = userInfo.getPwd();
+                }
 
-                    if (userInfo.getCode().equals("0")) {
-                        System.out.println("我的验证码" + userInfo.getCode());
-                        getOrder(uid, pwd);
-                    } else {
-                        System.out.println("我的手机号" + phone);
-                        getOrder("phone", phone);
-                    }
-
+                if (userInfo.getCode().equals("0")) {
+                    System.out.println("我的验证码" + userInfo.getCode());
+                    getOrder(uid, pwd);
+                } else if (userInfo.getCode().equals("1")) {
+                    System.out.println("我的手机号" + phone);
+                    getOrder("phone", phone);
+                } else {
                 }
 
             }
 
             lin_login.setVisibility(View.VISIBLE);
             lin_nologin.setVisibility(View.GONE);
-        }else{
+        } else {
             lin_login.setVisibility(View.GONE);
             lin_nologin.setVisibility(View.VISIBLE);
         }
@@ -291,28 +258,7 @@ public class FMOrderTest extends BaseFragment {
             System.out.println("加载FMOrder");
             //重新刷新
 
-            jingang = userInfo.getLogin();
-
             isLogin();
-
-//            if (!(userInfo.getUserInfo().equals(""))) {
-//                Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
-//                uid = register.getMsg().getUid();
-//                phone = register.getMsg().getPhone();
-//                if (!(userInfo.getPwd().equals(""))) {
-//                    pwd = userInfo.getPwd();
-//
-//                    if (userInfo.getCode().equals("0")) {
-//                        System.out.println("我的验证码" + userInfo.getCode());
-//                        getOrder(uid, pwd);
-//                    } else {
-//                        System.out.println("我的手机号" + phone);
-//                        getOrder("phone", phone);
-//                    }
-//                }
-//            } else {
-//
-//            }
 
 
         }
@@ -325,17 +271,16 @@ public class FMOrderTest extends BaseFragment {
      * @param pwd
      */
     public void getOrder(String uid, String pwd) {
-        String PATH = null;
         if (userInfo.getCode().equals("0")) {
             PATH = HttpPath.PATH + HttpPath.ORDER_NEW +
                     "uid=" + uid + "&pwd=" + pwd;
-        } else {
+        } else if (userInfo.getCode().equals("1")) {
             PATH = HttpPath.PATH + HttpPath.ORDER_NEW +
                     "logintype=" + uid + "&loginphone=" + pwd;
+        } else {
         }
 
-        System.out.println("订单列表"+PATH);
-
+        System.out.println("订单列表" + PATH);
 
         RequestParams params = new RequestParams(PATH);
         x.http().get(params,
@@ -358,7 +303,7 @@ public class FMOrderTest extends BaseFragment {
                                 Intent intent = new Intent(getActivity(), OrderDetaileActivity.class);
                                 intent.putExtra("orderid", msgBeanList.get(position).getId());
                                 intent.putExtra("status", msgBeanList.get(position).getStatus());
-                                startActivity(intent);
+                                startActivityForResult(intent, CodeUtils.REQUEST_CODE_HOME_ORDER);
                             }
                         });
 
@@ -419,8 +364,10 @@ public class FMOrderTest extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CodeUtils.REQUEST_CODE_HOME_ORDER){
-            if(resultCode == CodeUtils.REQUEST_CODE_LOGIN){
+        if (requestCode == CodeUtils.REQUEST_CODE_HOME_ORDER) {
+            if (resultCode == CodeUtils.REQUEST_CODE_LOGIN) {
+                isLogin();
+            } else if (resultCode == CodeUtils.REQUEST_CODE_ORDER_COMMENT) {
                 isLogin();
             }
         }
@@ -459,7 +406,7 @@ public class FMOrderTest extends BaseFragment {
         public View getView(final int position, View convertView, ViewGroup parent) {
             final ViewHolder vh;
             if (convertView == null) {
-                vh = new OrderAdapter.ViewHolder();
+                vh = new ViewHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_order, null);
 
                 vh.img = (ImageView) convertView.findViewById(R.id.iv_item_order_img);
@@ -473,6 +420,7 @@ public class FMOrderTest extends BaseFragment {
                 vh.c_receipt = (Button) convertView.findViewById(R.id.but_item_order_c_receipt);
                 vh.comment = (Button) convertView.findViewById(R.id.but_item_order_comment);
                 vh.again = (Button) convertView.findViewById(R.id.but_item_order_again);
+                vh.repay = (Button) convertView.findViewById(R.id.but_item_order_repay);
 
 
                 convertView.setTag(vh);
@@ -483,13 +431,18 @@ public class FMOrderTest extends BaseFragment {
             String imgPath = msgBeen.get(position).getShoplogo();
             String shopname = msgBeen.get(position).getShopname();
             String state = msgBeen.get(position).getSeestatus();
-            String price = msgBeen.get(position).getAllcost();
+            final String allcost = msgBeen.get(position).getAllcost();
             String time = msgBeen.get(position).getAddtime();
 
             //订单状态
-            String status = msgBeen.get(position).getStatus();
+            final String status = msgBeen.get(position).getStatus();
+
+            /*支付状态*/
+            String paystatus = msgBeen.get(position).getPaystatus();
 
             final String orderid = msgBeen.get(position).getId();
+
+            final String is_ping = msgBeen.get(position).getIs_ping();
 
 
             if (imgPath.equals("")) {
@@ -501,7 +454,7 @@ public class FMOrderTest extends BaseFragment {
 
             vh.shopname.setText(shopname);
             vh.state.setText(state);
-            vh.price.setText("￥" + price);
+            vh.price.setText("￥" + allcost);
             vh.time.setText(time);
 
             /*订单状态*/
@@ -530,8 +483,16 @@ public class FMOrderTest extends BaseFragment {
             } else if (status.toString().equals("3")) {
                 //已完成
                 vh.del.setVisibility(View.INVISIBLE);
-                vh.comment.setVisibility(View.VISIBLE);
+
                 vh.again.setVisibility(View.VISIBLE);
+
+                if (is_ping.equals("0")) {
+                    vh.comment.setVisibility(View.VISIBLE);
+                } else if (is_ping.equals("1")) {
+                    vh.comment.setVisibility(View.GONE);
+                } else {
+                    vh.comment.setVisibility(View.GONE);
+                }
 
             } else if (status.toString().equals("4")) {
                 //订单取消
@@ -542,18 +503,36 @@ public class FMOrderTest extends BaseFragment {
                 vh.del.setVisibility(View.VISIBLE);
             }
 
+            if (paystatus.equals("0")) {
+                //未支付
+                vh.repay.setVisibility(View.VISIBLE);
+            } else if (paystatus.equals("1")) {
+                //已支付
+                vh.repay.setVisibility(View.GONE);
+            } else {
+                //错误
+                vh.repay.setVisibility(View.GONE);
+            }
+
             //删除订单
             vh.del.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String PATH;
                     if (userInfo.getCode().equals("0")) {
-                        PATH = "http://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&action=newordercontrol&doname=delorder&uid="
-                                + uid + "+&pwd" + pwd + "&orderid=" + orderid;
+                        PATH = HttpPath.PATH + HttpPath.ORDER_DEL +
+                                "uid=" + uid + "+&pwd" + pwd + "&orderid=" + orderid;
+
+//                        PATH = "http://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&action=newordercontrol&doname=delorder&uid="
+//                                + uid + "+&pwd" + pwd + "&orderid=" + orderid;
                     } else {
 
-                        PATH = "http://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&action=newordercontrol&doname=delorder&" +
-                                "logintype=phone" + "+&longinphone=" + phone + "&orderid=" + orderid;
+                        PATH = HttpPath.PATH + HttpPath.ORDER_DEL +
+                                "logintype=phone" + "+&loginphone" + pwd + "&orderid=" + orderid;
+
+//                        PATH = "http://www.ybt9.com//index.php?ctrl=app&source=1&datatype=json&action=newordercontrol&doname=delorder&" +
+//                                "logintype=phone" + "+&longinphone=" + phone + "&orderid=" + orderid;
+
                     }
 
                     System.out.println(PATH);
@@ -619,6 +598,8 @@ public class FMOrderTest extends BaseFragment {
                                         vh.comment.setVisibility(View.VISIBLE);
                                         vh.c_receipt.setVisibility(View.INVISIBLE);
 
+                                        orderAdapter.notifyDataSetChanged();
+
                                     } else {
 
                                     }
@@ -650,6 +631,7 @@ public class FMOrderTest extends BaseFragment {
                 @Override
                 public void onClick(View view) {
                     //跳到商店
+
                 }
             });
 
@@ -660,7 +642,26 @@ public class FMOrderTest extends BaseFragment {
                     //
                     Intent intent = new Intent(mContext, OrderCommentActivity.class);
                     intent.putExtra("orderid", orderid);
-                    startActivity(intent);
+                    startActivityForResult(intent, CodeUtils.REQUEST_CODE_HOME_ORDER);
+
+                }
+            });
+
+            /*继续支付*/
+            vh.repay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (status.equals("0")) {
+                        intent = new Intent(getActivity(), PayActivity.class);
+                        intent.putExtra("dno", msgBeen.get(position).getDno());
+                        intent.putExtra("shopcost", allcost);
+                        intent.putExtra("orderid", orderid);
+                        intent.putExtra("type", "order");
+
+                        startActivityForResult(intent, CodeUtils.REQUEST_CODE_HOME_ORDER);
+                    } else {
+                        toast("订单状态不能支付");
+                    }
 
                 }
             });
@@ -672,10 +673,9 @@ public class FMOrderTest extends BaseFragment {
         public class ViewHolder {
             private TextView shopname, price, state, time;
             private ImageView img;
-            private Button del, comment, again, c_receipt;
+            private Button del, comment, again, c_receipt, repay;
 
         }
-
     }
 
 }

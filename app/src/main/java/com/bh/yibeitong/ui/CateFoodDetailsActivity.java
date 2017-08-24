@@ -76,16 +76,11 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
 
     private List<GoodsDetails.MsgBean.GoodsBean.ImgBean> imgBeen = new ArrayList<>();
 
-    private List<ShopCart.MsgBean.ListBean> listBean = new ArrayList<>();
-
-    private GoodsDetails.MsgBean.GoodsBean goodsBeen ;
-
     /**
      * ViewPager实现图片左右滑动查看
      */
     private ViewPager viewPager;
     private ImageView[] tips;//提示性点点数组
-    //private int[] images;//图片ID数组
     private int currentPage = 0;//当前展示的页码
     private LinearLayout tipsBox;
 
@@ -97,12 +92,10 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
     private ImageView iv_catefood_add, iv_catefood_sub;
 
     private double totalPrice = 0;//商品总价
-    //private int sumCount = 0;//商品总数量
     private double limitcost = 0;
 
     /*购物车UI*/
     private Button but_pay;
-    //private TextView tv_all_pay, tv_shopcart_num;
     private TextView tv_shopcart_num;
     private FrameLayout fl_gotoShopcart;
     private int cartnum = 0;
@@ -111,34 +104,33 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
     //本地缓存
     UserInfo userInfo;
     private String shopid;
-
-    String jingang;
+    private String jingang;//用户是否登录的唯一标识
 
     DecimalFormat df;
-
-    /*跳转到购物车*/
-    private FrameLayout fml_shopcar;
 
     /*顶部*/
     private RelativeLayout relativeLayout;
     private ImageView iv_back;
     private TextView tv_title;
 
-    private MyScrollViewTwo scrollView;
-
     /*分享（微信端）*/
     private IWXAPI api;
     private ImageView iv_share;
     private PopupWindow pop = null;
     private LinearLayout ll_popup;
-    private View parentView ;
+    private View parentView;
+
+    /*接口地址*/
+    private String PATH = "";
+
+    /*购物车商品id字符串*/
+    private String gid = "";
 
     @Override
     protected void setRootView() {
         super.setRootView();
         parentView = getLayoutInflater().inflate(R.layout.activity_catefood_details, null);
         setContentView(parentView);
-        //setContentView(R.layout.activity_catefood_details);
     }
 
     @Override
@@ -159,15 +151,6 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
 
         instro = intent.getStringExtra("instro");//详细图片
 
-        System.out.println(""+instro);
-
-        /*foodName = intent.getStringExtra("foodName");//商品名称
-        foodSellCount = intent.getStringExtra("foodSellCount");//商品销量
-
-        foodPoint = intent.getStringExtra("foodPoint");
-        foodCost = intent.getStringExtra("foodCost");
-        foodGoodattr = intent.getStringExtra("foodGoodattr");*/
-
         if (cartNum == 0) {
             //购物车为0  隐藏减少按钮和数量
             iv_catefood_sub.setVisibility(View.INVISIBLE);
@@ -179,23 +162,6 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
             toast("格式不正确");
         }
 
-        //shopid = userInfo.getShopInfo();
-
-        //limitcost = Double.parseDouble(userInfo.getShopDet());
-
-        /*tv_foodderails_name.setText(foodName);
-        tv_fooddetails_sellcount.setText("已售" + foodSellCount + "份");
-
-        tv_fooddetails_point.setText(foodPoint + "人评价");
-
-        //进入商铺 商品没有规格啊！！！
-        if (foodGoodattr == null) {
-            tv_foodderails_price.setText("￥" + foodCost);
-        } else {
-            tv_foodderails_price.setText("￥" + foodCost + "/" + foodGoodattr);
-        }*/
-
-        //getCateFoodDetails(str_id);
         isShopGoodId(str_id);
 
         getWebHTML(instro.toString());
@@ -230,19 +196,8 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
         iv_catefood_add.setOnClickListener(this);
         iv_catefood_sub.setOnClickListener(this);
 
-//        tv_catefood_all_price = (TextView) findViewById(tv_catefood_all_price);
-//        but_catefood_pay = (Button) findViewById(but_catefood_pay);
-//
-//        tv_catefood_all_num = (TextView) findViewById(R.id.tv_catefood_details_num);
-//
-//        but_catefood_pay.setOnClickListener(this);
-
-//        fml_shopcar = (FrameLayout) findViewById(R.id.fml_catefood_foot_left);
-//        fml_shopcar.setOnClickListener(this);
-
         /*购物车UI*/
         but_pay = (Button) findViewById(R.id.but_cd_pay);
-        //tv_all_pay = (TextView) findViewById(R.id.tv_cd_all_pay);
         tv_shopcart_num = (TextView) findViewById(R.id.tv_cd_shopcart_num);
 
         but_pay.setOnClickListener(this);
@@ -254,8 +209,6 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
         iv_back = (ImageView) findViewById(R.id.iv_catefood_back);
         tv_title = (TextView) findViewById(R.id.tv_catefood_title);
         iv_back.setOnClickListener(this);
-
-        scrollView = (MyScrollViewTwo) findViewById(R.id.sc_catefood_bady);
 
         iv_share = (ImageView) findViewById(R.id.iv_share);
         iv_share.setOnClickListener(this);
@@ -288,18 +241,14 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
 
                     if (jingang.equals("")) {
                         //没有登录
-                        //toast("请先登录");
                         dialog();
-                        //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
                     } else if (jingang.equals("0")) {
                         //没有登录
-                        //toast("请先登录");
                         dialog();
-                        //Toast.makeText(getActivity(), "请先登录", Toast.LENGTH_SHORT).show();
                     } else if (jingang.equals("1")) {
                         //已登录
-                        Intent intent = new Intent(CateFoodDetailsActivity.this, OrderActivity.class);
-                        startActivity(intent);
+                        intent = new Intent(CateFoodDetailsActivity.this, OrderActivity.class);
+                        startActivityForResult(intent, CodeUtils.REQUEST_CODE_CATEFOOD);
                     }
                 }
 
@@ -310,7 +259,6 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
 
                 intent = new Intent(CateFoodDetailsActivity.this, ShopCarActivity.class);
                 intent.putExtra("shopid", shopid);
-                //startActivity(intent);
                 startActivityForResult(intent, CodeUtils.REQUEST_CODE_CATEFOOD);
 
                 break;
@@ -324,7 +272,6 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
                 // 微信注册初始化
                 api = WXAPIFactory.createWXAPI(this, "wxb8a68c0129244502", true);
                 api.registerApp("wxb8a68c0129244502");
-                //share2weixin(0);
 
                 ll_popup.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_bottom_to_top));
                 pop.showAtLocation(parentView, Gravity.BOTTOM, 0, 0);
@@ -337,7 +284,7 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
     }
 
     /*点击选择分享平台*/
-    public void Init(){
+    public void Init() {
         pop = new PopupWindow(CateFoodDetailsActivity.this);
 
         View view = getLayoutInflater().inflate(R.layout.dialog_share, null);
@@ -395,8 +342,7 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
         });
     }
 
-
-    public Bitmap getImage(String path){
+    public Bitmap getImage(String path) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         float realWidth = options.outWidth;
@@ -405,9 +351,10 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
         options.inSampleSize = scale;
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-        return  bitmap;
+        return bitmap;
     }
 
+    /*微信平台分享*/
     private void share2weixin(int flag, String title, String id) {
         if (!api.isWXAppInstalled()) {
             toast("您还未安装微信客户端");
@@ -415,7 +362,7 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
         }
 
         WXWebpageObject webpage = new WXWebpageObject();
-        webpage.webpageUrl = "https://www.ybt9.com/index.php?ctrl=wxsite&action=foodshow&id="+id;
+        webpage.webpageUrl = "https://www.ybt9.com/index.php?ctrl=wxsite&action=foodshow&id=" + id;
         WXMediaMessage msg = new WXMediaMessage(webpage);
 
         msg.title = title;
@@ -443,19 +390,19 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
             tv_title.setVisibility(View.VISIBLE);
         }
     }
+
     /*
     * 参数：
     * gid：商品id
     * cartNum：该商品在购物车中的数量
     * cartnum：购物车总数量
     * */
-    public void setResult(String id, int cartNum, int cartnum, double allpay){
+    public void setResult(String id, int cartNum, int cartnum, double allpay) {
         intent = new Intent();
         intent.putExtra("gid", id);//商品id
         intent.putExtra("cartNum", cartNum);//该商品购物车数量
         intent.putExtra("cartnum", cartnum);//购物车总数量
         intent.putExtra("allpay", allpay);
-
 
         setResult(CodeUtils.REQUEST_CODE_CATEFOOD, intent);
     }
@@ -484,7 +431,7 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 //设置你的操作事项
-                startActivity(new Intent(CateFoodDetailsActivity.this, LoginRegisterActivity.class));
+                startActivityForResult(new Intent(CateFoodDetailsActivity.this, LoginRegisterActivity.class), CodeUtils.REQUEST_CODE_CATEFOOD);
             }
         });
 
@@ -613,11 +560,14 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
      * @param foodId
      */
     public void getCateFoodDetails(String foodId) {
+        PATH = HttpPath.PATH + HttpPath.GOODSONE +
+                "goodsid=" + foodId;
 
-        String Path = HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_GOOD_DETAILS + "goodsid=" + foodId;
-        RequestParams params = new RequestParams(Path);
+        //Path = MD5Util.getMD5String(Path);//MD5加密
 
-        System.out.println(""+Path);
+        RequestParams params = new RequestParams(PATH);
+
+        System.out.println("" + PATH);
 
         x.http().get(params,
                 new Callback.CommonCallback<String>() {
@@ -626,10 +576,6 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
                         System.out.println("商品详情" + result);
 
                         GoodsDetails goodsDetails = GsonUtil.gsonIntance().gsonToBean(result, GoodsDetails.class);
-
-                        goodsBeen = new GoodsDetails.MsgBean.GoodsBean();
-
-                        goodsBeen = goodsDetails.getMsg().getGoods();
 
                         /*UI显示*/
                         shopid = goodsDetails.getMsg().getShopinfo().getShopid();
@@ -660,6 +606,7 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
                         imgBeen = goodsDetails.getMsg().getGoods().getImg();
 
                         getViewPager(imgBeen.size());
+
                         cartNum = goodsDetails.getMsg().getGoods().getCartnum();
 
                         if (cartNum == 0) {
@@ -671,11 +618,9 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
                         }
 
                         tv_catefood_num.setText("" + cartNum);
-                        tv_shopcart_num.setText(""+cartNum);
+                        tv_shopcart_num.setText("" + cartNum);
 
                         getShopCart(shopid);
-
-                        //getWebHTML(goodsDetails.getMsg().getGoods().getInstro().toString());
 
                     }
 
@@ -713,57 +658,73 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
                     public void onSuccess(String result) {
                         System.out.println("获取购物车" + result);
                         totalPrice = 0;
+                        gid = "";
 
                         JSONObject response = null;
                         try {
                             response = new JSONObject(result);
 
-                            if(response.get("msg").toString().equals("[]")){
+                            if (response.get("msg").toString().equals("[]")) {
                                 System.out.println("没有数据");
-                                //tv_all_pay.setText("0.00");
                                 but_pay.setText("购物车为空");
                                 noGoPay();
-                            }else{
+                            } else {
+
                                 ShopCart shopCart = GsonUtil.gsonIntance().gsonToBean(result, ShopCart.class);
 
                                 totalPrice = shopCart.getMsg().getSurecost();
 
-                                cartnum = shopCart.getMsg().getSumcount();
-                                //sumCount = shopCart.getMsg().getSumcount();
+                                //显示购物车数量
+                                tv_shopcart_num.setText("" + shopCart.getMsg().getSumcount());
 
-                                listBean = shopCart.getMsg().getList();
-
-                                if (limitcost == 0) {
-//                                    but_catefood_pay.setText("去支付");
-//                                    but_catefood_pay.setTextColor(Color.RED);
+                                /*判断快递情况*/
+                                if (shopCart.getMsg().isOnlynewtype() == true) {
+                                    System.out.println("只有快递");
                                     goPay();
 
-                                } else if (totalPrice >= limitcost) {
-//                                    but_catefood_pay.setText("去支付");
-//                                    but_catefood_pay.setTextColor(Color.RED);
-                                    goPay();
-                                } else if (totalPrice > 0 && totalPrice < limitcost) {
-                                    double add = limitcost - totalPrice;
-//                                    but_catefood_pay.setText("还差" + df.format(add) + "元");
-//                                    but_catefood_pay.setTextColor(Color.GRAY);
-
-                                    but_pay.setText("还差" + df.format(add) + "元");
-                                    noGoPay();
-                                } else if (totalPrice == 0) {
-//                                    but_catefood_pay.setText("购物车为空");
-//                                    but_catefood_pay.setTextColor(Color.GRAY);
-                                    but_pay.setText("购物车为空");
-                                    noGoPay();
                                 } else {
-                                    //toast("错误");
+                                    System.out.println("不是只有快递");
+
+                                    if (shopCart.getMsg().getList().size() == 0) {
+                                        tv_shopcart_num.setText("" + 0);
+                                        but_pay.setText("购物车为空");
+                                        noGoPay();
+
+                                    } else if (shopCart.getMsg().getList().size() > 0) {
+
+                                        if (limitcost == 0) {
+                                            goPay();
+                                        } else if (totalPrice >= limitcost) {
+                                            goPay();
+                                        } else if (totalPrice > 0 && totalPrice < limitcost) {
+                                            double add = limitcost - totalPrice;
+                                            but_pay.setText("还差" + df.format(add) + "元");
+                                            noGoPay();
+
+                                        } else if (totalPrice == 0) {
+                                            but_pay.setText("购物车为空");
+                                            noGoPay();
+                                        } else {
+                                        }
+
+                                        for (int i = 0; i < shopCart.getMsg().getList().size(); i++) {
+                                            gid = gid + shopCart.getMsg().getList().get(i).getId();
+                                        }
+
+                                        for (int i = 0; i < shopCart.getMsg().getList().size(); i++) {
+                                            if (str_id.equals(String.valueOf(shopCart.getMsg().getList().get(i).getId()))) {
+                                                tv_catefood_num.setText("" + shopCart.getMsg().getList().get(i).getCount());
+                                            }
+                                        }
+
+                                        /*数量>0 但购物车数量为0时*/
+                                        if (gid.indexOf(str_id) == -1) {
+                                            tv_catefood_num.setText("" + 0);
+                                        }
+
+                                    }
+
                                 }
-
-                                //tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
-                                tv_shopcart_num.setText(""+cartnum);
-
-
-//                                tv_catefood_all_num.setText("" + sumCount);
-//                                tv_catefood_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
 
                             }
 
@@ -798,12 +759,11 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
      * @param gid
      */
     public void addShopCart(String shopid, final String gid) {
-        //String str_num = tv_catefood_num.getText().toString();
         cartNum = Integer.valueOf(tv_catefood_num.getText().toString());
         cartnum = Integer.parseInt(tv_shopcart_num.getText().toString());
 
-        String PATH = HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_ADD_SHOPCART
-                + "shopid=" + shopid + "&num=1" + "&gid=" + gid;
+        PATH = HttpPath.PATH + HttpPath.ADD_SHOPCART +
+                "shopid=" + shopid + "&num=1" + "&gid=" + gid;
 
         RequestParams params = new RequestParams(PATH);
         x.http().post(params,
@@ -835,32 +795,22 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
 
                             //
                             if (limitcost == 0) {
-//                                but_catefood_pay.setText("去支付");
-//                                but_catefood_pay.setTextColor(Color.RED);
                                 goPay();
 
                             } else if (totalPrice >= limitcost) {
-//                                but_catefood_pay.setText("去支付");
-//                                but_catefood_pay.setTextColor(Color.RED);
                                 goPay();
                             } else if (totalPrice > 0 && totalPrice < limitcost) {
                                 double add = limitcost - totalPrice;
-//                                but_catefood_pay.setText("还差" + df.format(add) + "元");
-//                                but_catefood_pay.setTextColor(Color.GRAY);
                                 but_pay.setText("还差" + df.format(add) + "元");
                                 noGoPay();
                             } else if (totalPrice == 0) {
-//                                but_catefood_pay.setText("购物车为空");
-//                                but_catefood_pay.setTextColor(Color.GRAY);
                                 but_pay.setText("购物车为空");
                                 noGoPay();
                             } else {
                                 toast("错误");
                             }
                             tv_catefood_num.setText("" + cartNum);
-                            tv_shopcart_num.setText(""+cartnum);
-                            //tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
-                            //tv_catefood_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+                            tv_shopcart_num.setText("" + cartnum);
 
                             setResult(gid, cartNum, cartnum, totalPrice);//向上一页面传值（告知数量以改变）
 
@@ -898,8 +848,8 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
         cartNum = Integer.valueOf(tv_catefood_num.getText().toString());
         cartnum = Integer.parseInt(tv_shopcart_num.getText().toString());
 
-        String PATH = HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_ADD_SHOPCART
-                + "shopid=" + shopid + "&num=-1" + "&gid=" + gid;
+        PATH = HttpPath.PATH + HttpPath.ADD_SHOPCART +
+                "shopid=" + shopid + "&num=-1" + "&gid=" + gid;
 
         RequestParams params = new RequestParams(PATH);
         x.http().post(params,
@@ -908,7 +858,6 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
                     public void onSuccess(String result) {
                         iv_catefood_sub.setClickable(true);
                         System.out.println("减少成功 返回" + result);
-
 
                         ShopCartReturn shopCartReturn =
                                 GsonUtil.gsonIntance().gsonToBean(result, ShopCartReturn.class);
@@ -941,23 +890,15 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
                             }
                             //
                             if (limitcost == 0) {
-//                                but_catefood_pay.setText("去支付");
-//                                but_catefood_pay.setTextColor(Color.RED);
                                 goPay();
 
                             } else if (totalPrice >= limitcost) {
-//                                but_catefood_pay.setText("去支付");
-//                                but_catefood_pay.setTextColor(Color.RED);
                                 goPay();
                             } else if (totalPrice > 0 && totalPrice < limitcost) {
                                 double add = limitcost - totalPrice;
-//                                but_catefood_pay.setText("还差" + df.format(add) + "元");
-//                                but_catefood_pay.setTextColor(Color.GRAY);
                                 but_pay.setText("还差" + df.format(add) + "元");
                                 noGoPay();
                             } else if (totalPrice == 0) {
-//                                but_catefood_pay.setText("购物车为空");
-//                                but_catefood_pay.setTextColor(Color.GRAY);
                                 but_pay.setText("购物车为空");
                                 noGoPay();
                             } else {
@@ -965,10 +906,7 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
                             }
 
                             tv_catefood_num.setText("" + cartNum);
-                            tv_shopcart_num.setText(""+cartnum);
-                            //tv_all_pay.setText("￥" + df.format(totalPrice) + "元");
-
-                            //tv_catefood_all_price.setText("合计：￥" + df.format(totalPrice) + "元");
+                            tv_shopcart_num.setText("" + cartnum);
 
                             setResult(gid, cartNum, cartnum, totalPrice);
 
@@ -1033,44 +971,49 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CodeUtils.REQUEST_CODE_CATEFOOD
-                && resultCode == CodeUtils.REQUEST_CODE_SHOPCART){
-            Bundle bundle = data.getExtras();
-            String gid = bundle.getString("gid");
-            int cartNum = bundle.getInt("cartNum");
-            int cartnum = bundle.getInt("cartnum");
-
-            tv_shopcart_num.setText(""+cartnum);
-
-            if(gid.equals(goodsBeen.getId())){
-                tv_catefood_num.setText("" + cartNum);;
-            }else if(gid.equals("000")){
-                tv_shopcart_num.setText(""+cartNum);
-            }
-
-            totalPrice = bundle.getDouble("allpay");
-
-
-            if (limitcost == 0) {
-                goPay();
-
-            } else if (totalPrice >= limitcost) {
-                goPay();
-            } else if (totalPrice > 0 && totalPrice < limitcost) {
-                double add = limitcost - totalPrice;
-
-                but_pay.setText("还差" + df.format(add) + "元");
-                noGoPay();
-            } else if (totalPrice == 0) {
-                but_pay.setText("购物车为空");
-                noGoPay();
-            } else {
-                //toast("错误");
-            }
+        if (requestCode == CodeUtils.REQUEST_CODE_CATEFOOD
+                && resultCode == CodeUtils.REQUEST_CODE_SHOPCART) {
+            getShopCart(shopid);
+//            Bundle bundle = data.getExtras();
+//            String gid = bundle.getString("gid");
+//            int cartNum = bundle.getInt("cartNum");
+//            int cartnum = bundle.getInt("cartnum");
+//
+//            tv_shopcart_num.setText(""+cartnum);
+//
+//            if(gid.equals(goodsBeen.getId())){
+//                tv_catefood_num.setText("" + cartNum);;
+//            }else if(gid.equals("000")){
+//                tv_shopcart_num.setText(""+cartNum);
+//            }
+//
+//            totalPrice = bundle.getDouble("allpay");
+//
+//
+//            if (limitcost == 0) {
+//                goPay();
+//
+//            } else if (totalPrice >= limitcost) {
+//                goPay();
+//            } else if (totalPrice > 0 && totalPrice < limitcost) {
+//                double add = limitcost - totalPrice;
+//
+//                but_pay.setText("还差" + df.format(add) + "元");
+//                noGoPay();
+//            } else if (totalPrice == 0) {
+//                but_pay.setText("购物车为空");
+//                noGoPay();
+//            } else {
+//                //toast("错误");
+//            }
 
             /*数据发生改变 在返回上层时即传输数据 改变上层数据*/
-            setResult(gid, cartNum, cartnum, totalPrice);
+            setResult("", cartNum, cartnum, totalPrice);
 
+        } else if (resultCode == CodeUtils.REQUEST_CODE_LOGIN) {
+            Bundle bundle = data.getExtras();
+            jingang = bundle.getString("jingang");
+            setResult("", cartNum, cartnum, totalPrice);
         }
     }
 }

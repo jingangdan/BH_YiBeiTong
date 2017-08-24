@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F0F0"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#a2cb34"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/iv_al_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="6dp"
+            android:src="@mipmap/back001" />
+
+        <TextView
+            style="@style/title_second_text"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="选择收货地址"
+            android:textColor="#fff" />
+
+        <TextView
+            android:id="@+id/tv_al_add_address"
+            style="@style/text_cost"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="新增地址"
+            android:textSize="14dp" />
+
+    </RelativeLayout>
+
+    <!--输入（选择）收货地址-->
+    <LinearLayout
+        android:id="@+id/lin_al_more_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/editshape"
+            android:editable="false"
+            android:hint="请输入送货地址"
+            android:padding="5dp"
+            android:textSize="12dp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#EEEEEE" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <!--定位当前位置-->
+            <LinearLayout
+                android:id="@+id/lin_al_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_white_shape"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:src="@mipmap/ic_location" />
+
+                <TextView
+                    style="@style/text_cost"
+                    android:text="定位当前位置"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+            <!--常用收货地址-->
+
+            <TextView
+                android:id="@+id/tv_al_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="常用收货地址" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_white_shape"
+                android:orientation="vertical">
+
+                <com.bh.yibeitong.refresh.MyListView
+                    android:id="@+id/mlv_al_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.bh.yibeitong.refresh.MyListView>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_al_poi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="附近地址" />
+
+            <!--附近地址-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_white_shape"
+                android:orientation="vertical">
+
+
+                <com.bh.yibeitong.refresh.MyListView
+                    android:id="@+id/mlv_al_poi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_al_more_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="更多地址" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

@@ -22,6 +22,8 @@ import com.bh.yibeitong.base.BaseTextActivity;
 import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.PayDataZFB;
 import com.bh.yibeitong.bean.Register;
+import com.bh.yibeitong.ui.order.OrderDetaileActivity;
+import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.UserInfo;
@@ -585,6 +587,8 @@ public class PayActivity extends BaseTextActivity {
         req.sign = sign;
 
         msgApi.sendReq(req);
+        intent = new Intent();
+        setResult(CodeUtils.REUEST_CODE_PAY, intent);
 
         PayActivity.this.finish();
     }

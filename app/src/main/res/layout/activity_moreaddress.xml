@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:paddingRight="10dp"
         android:layout_width="fill_parent"
         android:background="#a2cb34"
         android:layout_height="wrap_content"
@@ -18,27 +19,44 @@
             android:src="@mipmap/back001"
             android:padding="6dp"/>
 
-        <EditText
-            android:id="@+id/edit_address_city"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:editable="false"
-            android:textSize="12dp"/>
+            android:background="@drawable/button_white_shape"
+            android:orientation="horizontal">
 
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="5"
-            android:background="@drawable/edittext_shape"
-            android:hint="请输入搜索关键字"
-            android:padding="5dp"
-            android:textCursorDrawable="@drawable/test_cursor"
-            android:textSize="12dp"
-            />
+            <EditText
+                android:id="@+id/edit_address_city"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:drawableRight="@mipmap/new_drop_down2"
+                android:editable="false"
+                android:padding="6dp"
+                android:textColor="#999"
+                android:textSize="12dp"
+                android:gravity="center"/>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#CCC" />
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="3"
+                android:background="@drawable/edittext_shape"
+                android:hint="请输入搜索关键字"
+                android:padding="5dp"
+                android:textCursorDrawable="@drawable/test_cursor"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

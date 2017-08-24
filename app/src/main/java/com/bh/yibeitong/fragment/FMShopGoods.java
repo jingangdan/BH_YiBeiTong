@@ -204,7 +204,7 @@ public class FMShopGoods extends Fragment implements View.OnClickListener {
      * HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_SHOPALL + shopid
      */
     public void getShopAll(String shopid) {
-        final String PATH = HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_SHOPALL +
+        final String PATH = HttpPath.PATH + HttpPath.GETSHOPNEW +
                 "&shopid=" + shopid;
 
         RequestParams params = new RequestParams(PATH);
@@ -747,7 +747,7 @@ public class FMShopGoods extends Fragment implements View.OnClickListener {
                     //添加购物车
 
                     RequestParams params = new RequestParams(
-                            HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_ADD_SHOPCART
+                            HttpPath.PATH + HttpPath.ADD_SHOPCART
                                     + "shopid=" + shopid + "&num=" + 1 + "&gid=" + goodId
                     );
                     x.http().post(params,

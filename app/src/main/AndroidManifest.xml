@@ -57,6 +57,7 @@
     <uses-permission android:name="android.permission.WRITE_APN_SETTINGS"/>
 
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -77,14 +78,14 @@
         </service>
 
         <!--debug测试签名-->
-        <!--<meta-data-->
-            <!--android:name="com.baidu.lbsapi.API_KEY"-->
-            <!--android:value="la0Zv3yzToywvA7hneDCO3xDYmlfmkPd" />-->
-
-        <!--打包签名-->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="MgZvcqQvAzo64r3kmHAeMWBr6RyuOSC1" />
+            android:value="la0Zv3yzToywvA7hneDCO3xDYmlfmkPd" />
+
+        <!--打包签名-->
+        <!--<meta-data-->
+        <!--android:name="com.baidu.lbsapi.API_KEY"-->
+        <!--android:value="MgZvcqQvAzo64r3kmHAeMWBr6RyuOSC1" />-->
 
 
         <!-- 【必须】 信鸽receiver广播接收 -->
@@ -196,6 +197,9 @@
 
         <!--定位信息 返回定位信息（新的）-->
         <activity android:name=".ui.homepage.LocationTestActivity"/>
+
+        <!--定位信息 返回定位信息（更新的）-->
+        <activity android:name=".ui.homepage.LocationAddressActivity" />
 
         <!--闪屏页　-->
         <activity android:name=".actitvity.StartActivity"
@@ -354,17 +358,20 @@
         <activity android:name=".ui.address.ManageAddressActivity"></activity>
 
         <!--选择地址-->
-        <activity android:name=".ui.address.MoreAddressActivity"></activity>
+        <!--<activity android:name=".ui.address.MoreAddressActivity"></activity>-->
 
         <!--选择地址 测试-->
         <!--<activity android:name=".ui.address.MoreAddressTestActivity"></activity>-->
 
         <!--订单详情-->
-        <activity android:name=".ui.OrderDetaileActivity"></activity>
+        <activity android:name=".ui.order.OrderDetaileActivity"></activity>
+
+        <!--申请退款-->
+        <activity android:name=".ui.order.OrderControlActivity" />
 
         <!--评价订单-->
         <activity
-            android:name=".ui.OrderCommentActivity"
+            android:name=".ui.order.OrderCommentActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
 
         <!--支付订单-->
@@ -470,9 +477,9 @@
         <activity android:name=".seller.ui.SManageCommtActivity"/>
 
         <!--开启服务下载新版本-->
-        <service android:name="com.bh.yibeitong.updateversion.UpdateVersionService"></service>
+        <!--<service android:name="com.bh.yibeitong.updateversion.UpdateVersionService"></service>-->
 
-
+        <!--开启安装服务-->
         <receiver android:name="com.bh.yibeitong.appupdate.ApkInstallReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
@@ -501,16 +508,15 @@
         <activity android:name=".ui.percen.JiFenActivity"></activity>
 
 
-
-        <!--<provider
+        <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.bh.yibeitong.fileprovider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-        </provider>-->
+        </provider>
 
         <meta-data
             android:name="com.google.android.gms.version"

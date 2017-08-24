@@ -27,7 +27,6 @@ public class LoginRegisterActivity extends BaseTextActivity implements ViewPager
     private NoScrollViewPager vp_login_register;
 
     private String[] titles = new String[]{"登录", "注册"};
-    //private Fragment[] fragments = new Fragment[]{new FMLongin(), new FMRegister()};
     private List<Fragment> fragments = new ArrayList<>();
     private SimpleFragmentPagerAdapter sfpAdapter;
 

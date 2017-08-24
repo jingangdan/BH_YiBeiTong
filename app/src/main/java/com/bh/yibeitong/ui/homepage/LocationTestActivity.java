@@ -3,7 +3,6 @@ package com.bh.yibeitong.ui.homepage;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -53,9 +52,10 @@ import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
-import com.baidu.mapapi.search.sug.SuggestionSearchOption;
+import com.bh.yibeitong.LocationService;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.adapter.location.PoiSearchAdapter;
+import com.bh.yibeitong.utils.CodeUtils;
 
 import java.util.List;
 
@@ -76,7 +76,9 @@ public class LocationTestActivity extends Activity implements
 
     private MapView map;
     private MyLocationConfiguration.LocationMode mCurrentMode;
-    private LocationClient mLocClient;
+    //private LocationClient mLocClient;
+    private LocationClient mLocClient = null;
+    //private LocationService mLocationService = null;
     private GeoCoder geoCoder;
     private String city;
     private boolean isFirstLoc = true;
@@ -132,6 +134,7 @@ public class LocationTestActivity extends Activity implements
         listView = (ListView) findViewById(R.id.lv_poi_address);
 
         editCity = (EditText) findViewById(R.id.edit_address_city);
+        editCity.setOnClickListener(this);
         editSearchKey = (EditText) findViewById(R.id.autoCompleteTextView);
 
         /**
@@ -183,6 +186,21 @@ public class LocationTestActivity extends Activity implements
     }
 
     /**
+     * 页码跳转传值
+     *
+     * @param lat
+     * @param lng
+     * @param address
+     */
+    public void setResult(String lat, String lng, String address) {
+        Intent intent = new Intent();
+        intent.putExtra("lat", lat);
+        intent.putExtra("lng", lng);
+        intent.putExtra("address", address);
+        setResult(CodeUtils.REQUEST_CODE_LOCATION, intent);
+    }
+
+    /**
      * 影响搜索按钮点击事件
      * 点击搜索
      *
@@ -224,11 +242,16 @@ public class LocationTestActivity extends Activity implements
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Log.i("点击", ""+ppp.get(i).location.longitude+"\n"+ppp.get(i).location.latitude);
-                        Intent intentAddress = new Intent();
-                        intentAddress.putExtra("lat", ""+ppp.get(i).location.latitude);
-                        intentAddress.putExtra("lng", ""+ppp.get(i).location.longitude);
+//                        Intent intentAddress = new Intent();
+//                        intentAddress.putExtra("lat", ""+ppp.get(i).location.latitude);
+//                        intentAddress.putExtra("lng", ""+ppp.get(i).location.longitude);
+//
+//                        setResult(2, intentAddress);
 
-                        setResult(2, intentAddress);
+                        setResult(String.valueOf(ppp.get(i).location.latitude),
+                                String.valueOf(ppp.get(i).location.longitude),
+                                ppp.get(i).address);
+
                         LocationTestActivity.this.finish();
                     }
                 });
@@ -308,8 +331,12 @@ public class LocationTestActivity extends Activity implements
         mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
         mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true, null));
         mLocClient = new LocationClient(this);
+        //mLocClient = new LocationService(getApplication());
         // 注册定位监听
+        //mLocClient.registerLocationListener(this);
+        //mLocClient.registerListener(this);
         mLocClient.registerLocationListener(this);
+
         // 定位选项
         LocationClientOption option = new LocationClientOption();
 
@@ -336,8 +363,11 @@ public class LocationTestActivity extends Activity implements
         option.setOpenGps(true);
         // 设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
         option.setScanSpan(1000);
-        // 设置 LocationClientOption
+         //设置 LocationClientOption
         mLocClient.setLocOption(option);
+
+        //mLocClient.setLocationOption(mLocClient.getDefaultLocationClientOption());
+        //mLocClient.setLocOption(mLocationService.getDefaultLocationClientOption());
         // 开始定位
         mLocClient.start();
         lv_near_address = (ListView) findViewById(R.id.lv_near_address);
@@ -361,6 +391,11 @@ public class LocationTestActivity extends Activity implements
         switch (v.getId()) {
             case R.id.iv_address_back:
                 LocationTestActivity.this.finish();
+                break;
+
+            case R.id.edit_address_city:
+                //选择城市
+                Toast.makeText(LocationTestActivity.this, "选择城市", Toast.LENGTH_SHORT).show();
                 break;
 
             default:
@@ -478,11 +513,14 @@ public class LocationTestActivity extends Activity implements
                     double latitude = poiInfos.get(position).location.latitude;
                     double longitude = poiInfos.get(position).location.longitude;
 
-                    Intent intentAddress = new Intent();
-                    intentAddress.putExtra("lat", String.valueOf(latitude));
-                    intentAddress.putExtra("lng", String.valueOf(longitude));
+//                    Intent intentAddress = new Intent();
+//                    intentAddress.putExtra("lat", String.valueOf(latitude));
+//                    intentAddress.putExtra("lng", String.valueOf(longitude));
+//
+//                    setResult(2, intentAddress);
 
-                    setResult(2, intentAddress);
+                    setResult(String.valueOf(latitude), String.valueOf(longitude), name);
+
                     LocationTestActivity.this.finish();
                 }
             });
@@ -527,21 +565,21 @@ public class LocationTestActivity extends Activity implements
             } else {
                 holder = (PoiAdapter.ViewHolder) convertView.getTag();
             }
-            if (position == 0) {
-                holder.iv_gps.setImageDrawable(getResources().getDrawable(R.mipmap.gps_grey));
-                holder.locationpoi_name.setTextColor(Color.parseColor("#FF9D06"));
-                holder.locationpoi_address.setTextColor(Color.parseColor("#FF9D06"));
-            }
-            if (position == 0 && linearLayout.getChildCount() < 2) {
-                ImageView imageView = new ImageView(context);
-                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(32, 32);
-                imageView.setLayoutParams(params);
-                imageView.setBackgroundColor(Color.TRANSPARENT);
-                imageView.setImageResource(R.mipmap.gps_grey);
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                linearLayout.addView(imageView, 0, params);
-                holder.locationpoi_name.setTextColor(Color.parseColor("#FF5722"));
-            }
+//            if (position == 0) {
+//                holder.iv_gps.setImageDrawable(getResources().getDrawable(R.mipmap.gps_grey));
+//                holder.locationpoi_name.setTextColor(Color.parseColor("#FF9D06"));
+//                holder.locationpoi_address.setTextColor(Color.parseColor("#FF9D06"));
+//            }
+//            if (position == 0 && linearLayout.getChildCount() < 2) {
+//                ImageView imageView = new ImageView(context);
+//                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(32, 32);
+//                imageView.setLayoutParams(params);
+//                imageView.setBackgroundColor(Color.TRANSPARENT);
+//                imageView.setImageResource(R.mipmap.gps_grey);
+//                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+//                linearLayout.addView(imageView, 0, params);
+//                holder.locationpoi_name.setTextColor(Color.parseColor("#FF5722"));
+//            }
             PoiInfo poiInfo = pois.get(position);
             holder.locationpoi_name.setText(poiInfo.name);
             holder.locationpoi_address.setText(poiInfo.address);

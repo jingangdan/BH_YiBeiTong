@@ -9,15 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.adapter.OrderDetaileAdapter;
 import com.bh.yibeitong.bean.OrderDetaile;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.refresh.MyListView;
-import com.bh.yibeitong.refresh.PullToRefreshView;
-import com.bh.yibeitong.ui.OrderDetaileActivity;
+import com.bh.yibeitong.ui.order.OrderDetaileActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.UserInfo;
@@ -25,9 +23,6 @@ import com.bh.yibeitong.view.UserInfo;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
-
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by jingang on 2016/11/25.

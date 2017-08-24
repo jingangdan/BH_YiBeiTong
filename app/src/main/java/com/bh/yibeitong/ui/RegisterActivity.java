@@ -14,6 +14,7 @@ import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
+import com.bh.yibeitong.utils.MD5Util;
 import com.bh.yibeitong.view.UserInfo;
 
 import org.xutils.common.Callback;
@@ -40,6 +41,9 @@ public class RegisterActivity extends BaseTextActivity {
     private int i = 60;
 
     private UserInfo userInfo;
+
+    /*接口地址*/
+    private String PATH = "";
 
     @Override
     protected void setRootView() {
@@ -125,8 +129,14 @@ public class RegisterActivity extends BaseTextActivity {
      * @param type
      */
     public void postCode(String phone, String type) {
-        RequestParams params = new RequestParams(
-                HttpPath.PATH + HttpPath.SENDREGPHONE + "phone=" + phone + "&type=" + type);
+        PATH = HttpPath.PATH_HEAD + HttpPath.PATH_DATA + (System.currentTimeMillis() / 1000) + "&" + HttpPath.SENDREGPHONE +
+                "phone=" + phone + "&type=" + type + "sign=" +
+                MD5Util.getMD5String(HttpPath.PATH_DATA + (System.currentTimeMillis() / 1000) + "&" + HttpPath.SENDREGPHONE +
+                        "phone=" + phone + "&type=" + type + "&" + HttpPath.PATH_BAIHAI);
+
+//        PATH = HttpPath.PATH + HttpPath.SENDREGPHONE + "phone=" + phone + "&type=" + type;
+
+        RequestParams params = new RequestParams(PATH);
         x.http().post(params,
                 new Callback.CommonCallback<String>() {
                     @Override
@@ -188,11 +198,9 @@ public class RegisterActivity extends BaseTextActivity {
 
                             userInfo.savePwd(pwd);//保存密码 方便后续操作
                             userInfo.saveCoder("0");
+                            userInfo.saveUserInfo(result);
 
                             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                            intent.putExtra("login", result);
-
-                            intent.putExtra("islogin", "true");
                             RegisterActivity.this.finish();
                             ActivityCollector.finishAll();
                             startActivity(intent);

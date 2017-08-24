@@ -66,6 +66,9 @@ public class SellerActivity extends BaseActivity implements View.OnClickListener
     private double allcost = 0.00;
     private int allcount = 0;
 
+    private double daycost = 0.00;
+    private int daycount = 0;
+
     /*立即结算*/
     private Button but_pay;
 
@@ -451,13 +454,15 @@ public class SellerActivity extends BaseActivity implements View.OnClickListener
                         System.out.println("商家端订单数和营业额" + result);
 
                         NewShoptj newShoptj = GsonUtil.gsonIntance().gsonToBean(result, NewShoptj.class);
+                        daycost = newShoptj.getMsg().getDaycost();
+                        daycount = newShoptj.getMsg().getDaycount();
 
                         allcost = newShoptj.getMsg().getAllcost();
                         allcount = newShoptj.getMsg().getAllcount();
 
                         /*订单数和营业额*/
-                        tv_turnover.setText("" + allcost);
-                        tv_order_num.setText("" + allcount);
+                        tv_turnover.setText("" + daycost);
+                        tv_order_num.setText("" + daycount);
 
                     }
 

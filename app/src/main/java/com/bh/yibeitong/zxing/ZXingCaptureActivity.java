@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.bh.yibeitong.R;
+import com.bh.yibeitong.base.BaseTextActivity;
 import com.bh.yibeitong.bean.Error;
 import com.bh.yibeitong.bean.ScanninGoodIndex;
 import com.bh.yibeitong.utils.GsonUtil;
@@ -39,7 +40,7 @@ import java.util.Vector;
  * Created by jingang on 2016/11/02.
  * 扫一哈子
  */
-public class ZXingCaptureActivity extends Activity implements Callback {
+public class ZXingCaptureActivity extends BaseTextActivity implements Callback {
 
     private CaptureActivityHandler handler;
     private ViewfinderView viewfinderView;
@@ -52,16 +53,23 @@ public class ZXingCaptureActivity extends Activity implements Callback {
     private static final float BEEP_VOLUME = 0.10f;
     private boolean vibrate;
 
-    private Button but_zxing_capture_back;
+    //private Button but_zxing_capture_back;
 
     /*接收页面传值*/
     Intent intent;
     String shopid;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void setRootView() {
+        super.setRootView();
         setContentView(R.layout.activity_zxing_capture);
+    }
+
+    @Override
+    protected void initWidght() {
+        super.initWidght();
+        setTitleName("扫一扫");
+        setTitleBack(true, 0);
 
         intent = getIntent();
         shopid = intent.getStringExtra("shopid");
@@ -69,16 +77,22 @@ public class ZXingCaptureActivity extends Activity implements Callback {
         CameraManager.init(getApplication());
         viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 
-        but_zxing_capture_back = (Button) findViewById(R.id.but_zxing_capture_back);
-        but_zxing_capture_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ZXingCaptureActivity.this.finish();
-            }
-        });
+//        but_zxing_capture_back = (Button) findViewById(R.id.but_zxing_capture_back);
+//        but_zxing_capture_back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ZXingCaptureActivity.this.finish();
+//            }
+//        });
 
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override

@@ -249,8 +249,11 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
             System.out.println("离开FMPerCen");
         } else {
             System.out.println("刷新FMPerCen");
+            jingang = userInfo.getLogin();
 
-            getAppMem(uid, pwd);
+            isLogin();
+
+           // getAppMem(uid, pwd);
         }
     }
 
@@ -1125,7 +1128,6 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
             if (resultCode == CodeUtils.REQUEST_CODE_LOGIN ||
                     resultCode == CodeUtils.REQUEST_CODE_SETTING) {
                 isLogin();
-
 
             }
         }

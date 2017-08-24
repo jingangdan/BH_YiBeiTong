@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
@@ -53,8 +52,10 @@ import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.bh.yibeitong.LocationService;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.adapter.location.PoiSearchAdapter;
+import com.bh.yibeitong.application.CatchExcep;
 
 import java.util.List;
 
@@ -75,7 +76,8 @@ public class MoreAddressActivity extends Activity implements
 
     private MapView map;
     private MyLocationConfiguration.LocationMode mCurrentMode;
-    private LocationClient mLocClient;
+    //private LocationClient mLocClient;
+    private LocationService mLocClient;
     private GeoCoder geoCoder;
     private String city;
     private boolean isFirstLoc = true;
@@ -310,37 +312,42 @@ public class MoreAddressActivity extends Activity implements
         // 定位图层显示方式
         mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
         mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true, null));
-        mLocClient = new LocationClient(this);
+        mLocClient = new LocationService(this);
+        //mLocClient = ((CatchExcep) getApplication()).locationService;
         // 注册定位监听
-        mLocClient.registerLocationListener(this);
+        //mLocClient.registerLocationListener(this);
+        mLocClient.registerListener(this);
+
         // 定位选项
-        LocationClientOption option = new LocationClientOption();
+//        LocationClientOption option = new LocationClientOption();
+//
+//        /*
+//        coorType - 取值有3个：
+//        返回国测局经纬度坐标系：gcj02
+//         返回百度墨卡托坐标系 ：bd09
+//         返回百度经纬度坐标系：bd09ll
+//        */
+//        option.setCoorType("bd09ll");
+//        // 设置是否需要地址信息，默认为无地址
+//        option.setIsNeedAddress(true);
+//        // 设置是否需要返回位置语义化信息，可以在BDLocation.getLocationDescribe()中得到数据，ex:"在天安门附近"，
+//        // 可以用作地址信息的补充
+//        option.setIsNeedLocationDescribe(true);
+//        // 设置是否需要返回位置POI信息，可以在BDLocation.getPoiList()中得到数据
+//        option.setIsNeedLocationPoiList(true);
+//
+//       /* 设置定位模式 Battery_Saving 低功耗模式 Device_Sensors 仅设备(Gps) 模式 Hight_Accuracy
+//        高精度模式*/
+//
+//        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+//        // 设置是否打开gps进行定位
+//        option.setOpenGps(true);
+//        // 设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
+//        option.setScanSpan(1000);
+//        // 设置 LocationClientOption
+//        mLocClient.setLocOption(option);
 
-        /*
-        coorType - 取值有3个：
-        返回国测局经纬度坐标系：gcj02
-         返回百度墨卡托坐标系 ：bd09
-         返回百度经纬度坐标系：bd09ll
-        */
-        option.setCoorType("bd09ll");
-        // 设置是否需要地址信息，默认为无地址
-        option.setIsNeedAddress(true);
-        // 设置是否需要返回位置语义化信息，可以在BDLocation.getLocationDescribe()中得到数据，ex:"在天安门附近"，
-        // 可以用作地址信息的补充
-        option.setIsNeedLocationDescribe(true);
-        // 设置是否需要返回位置POI信息，可以在BDLocation.getPoiList()中得到数据
-        option.setIsNeedLocationPoiList(true);
-
-       /* 设置定位模式 Battery_Saving 低功耗模式 Device_Sensors 仅设备(Gps) 模式 Hight_Accuracy
-        高精度模式*/
-
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        // 设置是否打开gps进行定位
-        option.setOpenGps(true);
-        // 设置扫描间隔，单位是毫秒 当<1000(1s)时，定时定位无效
-        option.setScanSpan(1000);
-        // 设置 LocationClientOption
-        mLocClient.setLocOption(option);
+        mLocClient.setLocationOption(mLocClient.getDefaultLocationClientOption());
         // 开始定位
         mLocClient.start();
         lv_near_address = (ListView) findViewById(R.id.lv_near_address);

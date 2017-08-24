@@ -134,7 +134,7 @@ public class ShopNewAdapter extends BaseAdapter {
                 //添加购物车
 
                 RequestParams params = new RequestParams(
-                        HttpPath.PATH_REALM + HttpPath.PATH_MODE + HttpPath.PATH_ADD_SHOPCART
+                        HttpPath.PATH + HttpPath.ADD_SHOPCART
                                 + "shopid="+shopid + "&num=" + 1 + "&gid=" + goodId
                 );
                 x.http().post(params,
