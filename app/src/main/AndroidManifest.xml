@@ -369,6 +369,9 @@
         <!--申请退款-->
         <activity android:name=".ui.order.OrderControlActivity" />
 
+        <!--退款详情-->
+        <activity android:name=".ui.order.OrderBackLogActivity" />
+
         <!--评价订单-->
         <activity
             android:name=".ui.order.OrderCommentActivity"

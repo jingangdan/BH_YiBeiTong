@@ -52,7 +52,6 @@ import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
-import com.bh.yibeitong.LocationService;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.adapter.location.PoiSearchAdapter;
 import com.bh.yibeitong.utils.CodeUtils;
@@ -250,7 +249,7 @@ public class LocationTestActivity extends Activity implements
 
                         setResult(String.valueOf(ppp.get(i).location.latitude),
                                 String.valueOf(ppp.get(i).location.longitude),
-                                ppp.get(i).address);
+                                ppp.get(i).name);
 
                         LocationTestActivity.this.finish();
                     }

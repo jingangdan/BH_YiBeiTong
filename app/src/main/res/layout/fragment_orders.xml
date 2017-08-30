@@ -18,65 +18,72 @@
     <LinearLayout
         android:id="@+id/lin_order_login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="#EEEEEE"
         android:orientation="vertical"
         android:visibility="visible">
 
         <include layout="@layout/content_header" />
 
-        <ListView
-            android:id="@+id/lv_order"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scrollbars="none">
+        <com.github.jdsjlzx.recyclerview.LRecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        </ListView>
+        </com.github.jdsjlzx.recyclerview.LRecyclerView>
+
+        <!--<ListView-->
+        <!--android:id="@+id/lv_order"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:scrollbars="none">-->
+
+        <!--</ListView>-->
 
         <!--将ScrollView和ListView结合使用-->
-        <com.bh.yibeitong.refresh.PullToRefreshView
-            android:id="@+id/ptrv_order"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#00000000"
-            android:visibility="visible">
+        <!--<com.bh.yibeitong.refresh.PullToRefreshView-->
+        <!--android:id="@+id/ptrv_order"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="#00000000"-->
+        <!--android:visibility="visible">-->
 
-            <com.bh.yibeitong.view.MyScrollView
-                android:id="@+id/msv_order"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none">
+        <!--<ScrollView-->
+        <!--android:id="@+id/msv_order"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scrollbars="none">-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:id="@+id/lin_yes_network"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+        <!--<LinearLayout-->
+        <!--android:id="@+id/lin_yes_network"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical">-->
 
-                        <com.bh.yibeitong.refresh.MyListView
-                            android:id="@+id/mlv_order"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#E1E1E1"
-                            android:listSelector="@android:color/transparent"
-                            android:numColumns="2"
-                            android:padding="5dp">
+        <!--<com.bh.yibeitong.refresh.MyListView-->
+        <!--android:id="@+id/mlv_order"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#E1E1E1"-->
+        <!--android:listSelector="@android:color/transparent"-->
+        <!--android:numColumns="2"-->
+        <!--android:padding="5dp">-->
 
-                        </com.bh.yibeitong.refresh.MyListView>
+        <!--</com.bh.yibeitong.refresh.MyListView>-->
 
-                    </LinearLayout>
+        <!--</LinearLayout>-->
 
-                </LinearLayout>
+        <!--</LinearLayout>-->
 
-            </com.bh.yibeitong.view.MyScrollView>
+        <!--</ScrollView>-->
 
-        </com.bh.yibeitong.refresh.PullToRefreshView>
+        <!--</com.bh.yibeitong.refresh.PullToRefreshView>-->
 
 
     </LinearLayout>

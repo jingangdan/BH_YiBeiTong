@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseTextActivity;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.bean.village.ImgRet;
 import com.bh.yibeitong.ui.village.addimg.activity.AlbumActivity;
@@ -261,7 +261,7 @@ public class PublishThemeActivity extends BaseTextActivity {
                     @Override
                     public void onSuccess(String result) {
                         System.out.println("发表主题" + result);
-                        Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(result, Errors.class);
 
                         if(error.isError() == false){
                             //发布成功

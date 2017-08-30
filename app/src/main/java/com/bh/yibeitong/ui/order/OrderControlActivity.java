@@ -186,8 +186,9 @@ public class OrderControlActivity extends BaseTextActivity {
                 } else {
                     if (userInfo.getCode().equals("0")) {
                         getOrderControl(uid, pwd, orderid, reason, content, pstype);
-                    } else {
+                    } else if (userInfo.getCode().equals("1")) {
                         getOrderControl("phone", pwd, orderid, reason, content, pstype);
+                    } else {
                     }
                 }
 
@@ -223,10 +224,11 @@ public class OrderControlActivity extends BaseTextActivity {
             PATH = HttpPath.PATH + HttpPath.ORDER_NEW_ORDERCONTROL +
                     "uid=" + uid + "&pwd=" + pwd + "&orderid=" + orderid +
                     "&reason=" + reason + "&content=" + content + "typeid=" + typeid;
-        } else {
+        } else if (userInfo.getCode().equals("1")) {
             PATH = HttpPath.PATH + HttpPath.ORDER_NEW_ORDERCONTROL +
                     "uid=" + uid + "&pwd=" + pwd + "&reason=" + reason
                     + "&content=" + content + "typeid=" + typeid;
+        } else {
         }
 
         RequestParams params = new RequestParams(PATH);

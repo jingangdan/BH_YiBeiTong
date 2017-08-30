@@ -4,7 +4,7 @@ package com.bh.yibeitong.bean;
  * Created by jingang on 2016/12/13.
  */
 
-public class Error {
+public class Errors {
 
     /**
      * error : true
@@ -32,7 +32,7 @@ public class Error {
 
     @Override
     public String toString() {
-        return "Error{" +
+        return "Errors{" +
                 "error=" + error +
                 ", msg='" + msg + '\'' +
                 '}';

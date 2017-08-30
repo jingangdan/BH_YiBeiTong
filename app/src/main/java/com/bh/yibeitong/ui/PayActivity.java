@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.alipay.sdk.app.PayTask;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseTextActivity;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.PayDataZFB;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.ui.order.OrderDetaileActivity;
@@ -550,7 +550,7 @@ public class PayActivity extends BaseTextActivity {
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
-                        Error error = GsonUtil.gsonIntance().gsonToBean(str_result, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(str_result, Errors.class);
                         toast(error.getMsg());
 
                     }

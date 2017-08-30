@@ -29,7 +29,7 @@ import com.bh.yibeitong.R;
 import com.bh.yibeitong.actitvity.PerCenActivity;
 import com.bh.yibeitong.appupdate.ApkUpdateUtils;
 import com.bh.yibeitong.base.BaseFragment;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.bean.UserInfos;
 import com.bh.yibeitong.bean.VerCode;
@@ -599,7 +599,7 @@ public class FMPerCen extends BaseFragment implements View.OnClickListener {
                     @Override
                     public void onSuccess(String result) {
                         System.out.println("签到" + result);
-                        Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(result, Errors.class);
                         if (error.isError() == true) {
                             toast(""+error.getMsg().toString());
                         } else {

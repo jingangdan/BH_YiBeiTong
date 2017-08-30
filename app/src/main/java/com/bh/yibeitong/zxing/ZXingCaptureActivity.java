@@ -1,6 +1,5 @@
 package com.bh.yibeitong.zxing;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -13,13 +12,11 @@ import android.os.Vibrator;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseTextActivity;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.ScanninGoodIndex;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
@@ -317,7 +314,7 @@ public class ZXingCaptureActivity extends BaseTextActivity implements Callback {
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
-                        Error error = GsonUtil.gsonIntance().gsonToBean(str_result, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(str_result, Errors.class);
                         Toast.makeText(ZXingCaptureActivity.this,
                                 "" + error.getMsg().toString(), Toast.LENGTH_SHORT).show();
 

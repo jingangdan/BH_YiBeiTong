@@ -290,23 +290,4 @@ public class GridViewAdapter extends BaseAdapter {
         private TextView tv_shop_num;
     }
 
-    /**
-     * 用于回调的抽象类
-     *
-     * @author jingang
-     *         2017-08-14
-     */
-//    public static abstract class MyClickListener implements View.OnClickListener {
-//        /**
-//         * 基类的onClick方法
-//         */
-//        @Override
-//        public void onClick(View v) {
-//            myOnClick((Integer) v.getTag(), v);
-//        }
-//
-//        public abstract void myOnClick(int position, View v);
-//    }
-
-
 }

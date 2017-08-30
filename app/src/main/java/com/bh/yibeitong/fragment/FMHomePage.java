@@ -45,7 +45,7 @@ import com.bh.yibeitong.Interface.OnItemLongClickListener;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.adapter.CatefoodslistAdapter;
 import com.bh.yibeitong.base.BaseFragment;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.GoodsIndex;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.bean.ShopCart;
@@ -820,7 +820,7 @@ public class FMHomePage extends BaseFragment implements
                     public void onSuccess(String result) {
                         System.out.println("签到" + result);
                         lin_ruzhu.setClickable(true);
-                        Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(result, Errors.class);
                         if (error.isError() == true) {
                             toast("" + error.getMsg().toString());
                         } else {
@@ -1853,7 +1853,6 @@ public class FMHomePage extends BaseFragment implements
                     intent.putExtra("lat", latitude);
                     intent.putExtra("lng", longtitude);
 
-                    //startActivity(intent);
                     startActivityForResult(intent, CodeUtils.REQUEST_CODE_HOMEPAGE);
                 } else {
                     toast("无网络连接");

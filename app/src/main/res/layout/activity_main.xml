@@ -11,18 +11,9 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/view_line">
+        android:layout_above="@+id/lin_footer">
 
     </FrameLayout>
-
-    <View
-        android:id="@+id/view_line"
-        android:layout_width="match_parent"
-        android:layout_height="0.8dp"
-        android:layout_above="@+id/lin_footer"
-        android:background="#999">
-
-    </View>
 
     <LinearLayout
         android:id="@+id/lin_footer"
@@ -50,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:text="首页"
                 android:textColor="#999"
+                android:layout_marginTop="2dp"
                 android:textSize="12dp" />
 
         </LinearLayout>
@@ -71,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:text="我的订单"
                 android:textColor="#999"
+                android:layout_marginTop="2dp"
                 android:textSize="12dp" />
 
         </LinearLayout>
@@ -118,6 +111,7 @@
                     android:src="@mipmap/shopcar001" />
 
                 <TextView
+                    android:layout_marginTop="2dp"
                     android:id="@+id/tv_shopping"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -144,6 +138,7 @@
                 android:src="@mipmap/mine001" />
 
             <TextView
+                android:layout_marginTop="2dp"
                 android:id="@+id/tv_personal_center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

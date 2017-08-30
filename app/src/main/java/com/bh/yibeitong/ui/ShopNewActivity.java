@@ -1133,7 +1133,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 //设置你的操作事项
-                startActivity(new Intent(ShopNewActivity.this, LoginRegisterActivity.class));
+                startActivityForResult(new Intent(ShopNewActivity.this, LoginRegisterActivity.class), CodeUtils.REQUEST_CODE_NEWSHOP);
             }
         });
 
@@ -1156,6 +1156,7 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
                     resultCode == CodeUtils.REQUEST_CODE_SHOPCART) {
 
                 getShopCart(shopid);
+
 //                Bundle bundle = data.getExtras();
 //                String gid = bundle.getString("gid");
 //                int cartNum = bundle.getInt("cartNum");
@@ -1201,6 +1202,12 @@ public class ShopNewActivity extends Activity implements View.OnClickListener {
 //                setResult(gid, cartNum, cartnum, totalPrice);
 
                 setResult("", 0, cartnum, totalPrice);
+            } else if (resultCode == CodeUtils.REQUEST_CODE_LOGIN
+                    || resultCode == CodeUtils.REQUEST_CODE_QUICK_LOGIN) {
+                Bundle bundle = data.getExtras();
+                //jingang = bundle.getString("jingang");
+                jingang = userInfo.getLogin();
+                //setResult("", cartNum, cartnum, totalPrice);
             }
         }
 

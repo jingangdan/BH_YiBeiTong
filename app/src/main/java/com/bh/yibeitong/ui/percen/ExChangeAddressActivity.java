@@ -7,7 +7,7 @@ import android.widget.EditText;
 
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseTextActivity;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
@@ -169,7 +169,7 @@ public class ExChangeAddressActivity extends BaseTextActivity {
                     public void onSuccess(String result) {
                         str_result = result;
                         System.out.println("添加用户信息（积分兑换）" + result);
-                        Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(result, Errors.class);
                         if(error.isError() == false){
                             toast(error.getMsg().toString());
 
@@ -184,7 +184,7 @@ public class ExChangeAddressActivity extends BaseTextActivity {
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
-                        Error error = GsonUtil.gsonIntance().gsonToBean(str_result, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(str_result, Errors.class);
                         toast(error.getMsg().toString());
                     }
 

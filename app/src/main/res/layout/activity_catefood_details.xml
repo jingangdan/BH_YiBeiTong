@@ -328,8 +328,8 @@
 
                     <ImageView
                         android:id="@+id/iv_catefood_sub"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:src="@mipmap/new_sub" />
 
                     <TextView
@@ -342,8 +342,8 @@
 
                     <ImageView
                         android:id="@+id/iv_catefood_add"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:src="@mipmap/new_add" />
 
                 </LinearLayout>

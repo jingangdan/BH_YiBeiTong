@@ -1,5 +1,6 @@
 package com.bh.yibeitong.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import com.bh.yibeitong.adapter.OrderDetaileAdapter;
 import com.bh.yibeitong.bean.OrderDetaile;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.refresh.MyListView;
+import com.bh.yibeitong.ui.ShopNewActivity;
 import com.bh.yibeitong.ui.order.OrderDetaileActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
@@ -29,7 +31,8 @@ import org.xutils.x;
  * 订单详情
  */
 
-public class FMOrderDetaile extends Fragment implements View.OnClickListener {
+public class FMOrderDetaile extends Fragment implements
+        View.OnClickListener {
     private View view;
 
     //内容滑动
@@ -38,8 +41,7 @@ public class FMOrderDetaile extends Fragment implements View.OnClickListener {
     private OrderDetaileAdapter odAdapter;
 
     String orderid = OrderDetaileActivity.orderid;
-
-    String phone;
+    private String uid = "", pwd = "", phone = "";
 
 //    public FMOrderDetaile(String orderid) {
 //        this.orderid = orderid;
@@ -57,6 +59,9 @@ public class FMOrderDetaile extends Fragment implements View.OnClickListener {
 
     private LinearLayout linearLayout;
 
+    /*页面传值*/
+    private Intent intent;
+
 
     @Nullable
     @Override
@@ -67,11 +72,21 @@ public class FMOrderDetaile extends Fragment implements View.OnClickListener {
         if (!(userInfo.getUserInfo().equals(""))) {
             Register register = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), Register.class);
 
+            uid = register.getMsg().getUid();
+
             phone = register.getMsg().getPhone();
+            pwd = userInfo.getPwd();
         }
 
 
-        getOrderDetaile(orderid, phone);
+        //getOrderDetaile(orderid, phone);
+
+        if (userInfo.getCode().equals("0")) {
+            getOrderDetaile(uid, pwd, orderid);
+        } else if (userInfo.getCode().equals("1")) {
+            getOrderDetaile("phone", phone, orderid);
+        } else {
+        }
 
         //pullToRefreshView.setOnHeaderRefreshListener(this);
         //pullToRefreshView.setOnFooterRefreshListener(this);
@@ -120,13 +135,21 @@ public class FMOrderDetaile extends Fragment implements View.OnClickListener {
      *
      * @param orderid
      */
-    public void getOrderDetaile(String orderid, String phone) {
+    public void getOrderDetaile(String uid, String pwd, String orderid) {
         String PATH = "";
+//        if (userInfo.getCode().equals("0")) {
+//            PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET + "orderid=" + orderid;
+//        } else {
+//            PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET + "orderid=" + orderid +
+//                    "&logintype=phone" + "&loginphone=" + phone;
+//        }
+
         if (userInfo.getCode().equals("0")) {
-            PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET + "orderid=" + orderid;
+            PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET +
+                    "uid=" + uid + "&pwd=" + pwd + "&orderid=" + orderid;
         } else {
-            PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET + "orderid=" + orderid +
-                    "&logintype=phone" + "&loginphone=" + phone;
+            PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET +
+                    "logintype=" + uid + "&loginphone=" + phone + "&orderid=" + orderid;
         }
 
 
@@ -211,6 +234,18 @@ public class FMOrderDetaile extends Fragment implements View.OnClickListener {
             case R.id.but_more_one:
                 //再来一单 直接跳转到商店
                 //startActivity(new Intent(getActivity(), ShopActivity.class));
+
+                intent = new Intent(getActivity(), ShopNewActivity.class);
+                intent.putExtra("shopid", FMHomePage.shopid);
+                intent.putExtra("shopname", FMHomePage.shopName);
+                intent.putExtra("startTime", FMHomePage.startTime);
+                intent.putExtra("mapphone", FMHomePage.mapphone);
+                intent.putExtra("address", FMHomePage.address);
+
+                intent.putExtra("lat", FMHomePage.latitude);
+                intent.putExtra("lng", FMHomePage.longtitude);
+                startActivity(intent);
+
                 break;
 
             default:

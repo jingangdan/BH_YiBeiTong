@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.adapter.VillageAdapter;
 import com.bh.yibeitong.base.BaseTextActivity;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.bean.village.Village;
 import com.bh.yibeitong.utils.GsonUtil;
@@ -238,7 +238,7 @@ public class VillageActivity extends BaseTextActivity {
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
-                        Error error = GsonUtil.gsonIntance().gsonToBean(str_resilt, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(str_resilt, Errors.class);
                         toast(error.getMsg().toString());
 
                     }
@@ -278,7 +278,7 @@ public class VillageActivity extends BaseTextActivity {
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
-                        Error error = GsonUtil.gsonIntance().gsonToBean(str_resilt, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(str_resilt, Errors.class);
                         toast("cuowu"+error.getMsg().toString());
                     }
 

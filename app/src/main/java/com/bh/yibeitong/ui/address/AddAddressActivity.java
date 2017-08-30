@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseTextActivity;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.ui.homepage.LocationTestActivity;
 import com.bh.yibeitong.utils.CodeUtils;
@@ -260,7 +260,7 @@ public class AddAddressActivity extends BaseTextActivity {
                         }
                         String detailadr = et_delivery_address.getText().toString();
 
-                        Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(result, Errors.class);
                         if(error.isError() == true){
                             toast(error.getMsg().toString());
 

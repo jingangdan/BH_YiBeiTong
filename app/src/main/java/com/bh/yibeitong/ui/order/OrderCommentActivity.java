@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseTextActivity;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.OrderComment;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.ordercomment.CommonAdapter;
@@ -252,7 +252,7 @@ public class OrderCommentActivity extends BaseTextActivity {
                     public void onSuccess(String result) {
                         System.out.println("提交订单评论" + result);
 
-                        Error error = GsonUtil.gsonIntance().gsonToBean(result, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(result, Errors.class);
 
                         if (error.isError() == false) {
                             intent = new Intent();

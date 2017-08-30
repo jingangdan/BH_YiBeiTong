@@ -346,7 +346,7 @@ public class GoodsProActivity extends BaseTextActivity {
             raf.write(strContent.getBytes());
             raf.close();
         } catch (Exception e) {
-            Log.e("TestFile", "Error on write File:" + e);
+            Log.e("TestFile", "Errors on write File:" + e);
         }
     }
 

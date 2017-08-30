@@ -7,10 +7,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bh.yibeitong.R;
-import com.bh.yibeitong.actitvity.ActivityCollector;
-import com.bh.yibeitong.actitvity.MainActivity;
 import com.bh.yibeitong.base.BaseTextActivity;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.utils.GsonUtil;
@@ -230,7 +228,7 @@ public class QuickLoginActivity extends BaseTextActivity {
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
-                        Error error = GsonUtil.gsonIntance().gsonToBean(str_result, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(str_result, Errors.class);
                         Toast.makeText(QuickLoginActivity.this, error.getMsg().toString(), Toast.LENGTH_SHORT).show();
                     }
 

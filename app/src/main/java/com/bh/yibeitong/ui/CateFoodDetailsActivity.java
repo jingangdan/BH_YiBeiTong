@@ -1010,9 +1010,11 @@ public class CateFoodDetailsActivity extends BaseTextActivity implements
             /*数据发生改变 在返回上层时即传输数据 改变上层数据*/
             setResult("", cartNum, cartnum, totalPrice);
 
-        } else if (resultCode == CodeUtils.REQUEST_CODE_LOGIN) {
+        } else if (resultCode == CodeUtils.REQUEST_CODE_LOGIN
+                || resultCode == CodeUtils.REQUEST_CODE_QUICK_LOGIN) {
             Bundle bundle = data.getExtras();
-            jingang = bundle.getString("jingang");
+            //jingang = bundle.getString("jingang");
+            jingang = userInfo.getLogin();
             setResult("", cartNum, cartnum, totalPrice);
         }
     }

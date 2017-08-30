@@ -1,7 +1,6 @@
 package com.bh.yibeitong.ui.address;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import com.bh.yibeitong.bean.Address;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
-import com.bh.yibeitong.view.CustomDialog;
 import com.bh.yibeitong.view.UserInfo;
 
 import org.xutils.common.Callback;
@@ -48,6 +46,9 @@ public class ManageAddressActivity extends BaseTextActivity {
 
     /*本地存储*/
     UserInfo userInfo;
+
+    /*接口地址*/
+    private String PATH = "";
 
     @Override
     protected void setRootView() {
@@ -466,65 +467,103 @@ public class ManageAddressActivity extends BaseTextActivity {
                 @Override
                 public void onClick(View v) {
 
-
-                    CustomDialog.Builder builder = new CustomDialog.Builder(ManageAddressActivity.this);
-                    builder.setMessage("确定要删除吗？");
-                    //builder.setTitle("还未登录");
-                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            //设置你的操作事项
-                            //startActivity(new Intent(ManageAddressActivity.this, LoginRegisterActivity.class));
-
-                            String PATH;
-                            if (userInfo.getCode().toString().equals("0")) {
-                                PATH = HttpPath.PATH + HttpPath.ADDRESS_DEL +
-                                        "uid=" + uid + "&pwd=" + pwd + "&addresid=" + id;
-                            } else {
-                                PATH = HttpPath.PATH + HttpPath.ADDRESS_DEL +
-                                        "logintype=" + uid + "&loginphone=" + pwd + "&addresid=" + id;
-                            }
+                    if (userInfo.getCode().toString().equals("0")) {
+                        PATH = HttpPath.PATH + HttpPath.ADDRESS_DEL +
+                                "uid=" + uid + "&pwd=" + pwd + "&addresid=" + id;
+                    } else {
+                        PATH = HttpPath.PATH + HttpPath.ADDRESS_DEL +
+                                "logintype=" + uid + "&loginphone=" + pwd + "&addresid=" + id;
+                    }
 
 
-                            RequestParams params = new RequestParams(PATH);
-                            x.http().post(params,
-                                    new Callback.CommonCallback<String>() {
-                                        @Override
-                                        public void onSuccess(String result) {
-                                            System.out.println("删除收货地址" + result);
+                    RequestParams params = new RequestParams(PATH);
+                    x.http().post(params,
+                            new Callback.CommonCallback<String>() {
+                                @Override
+                                public void onSuccess(String result) {
+                                    System.out.println("删除收货地址" + result);
 
-                                            msgBeanList.remove(position);
+                                    msgBeanList.remove(position);
 
-                                            alAdapter.notifyDataSetChanged();
+                                    alAdapter.notifyDataSetChanged();
 
-                                        }
+                                }
 
-                                        @Override
-                                        public void onError(Throwable ex, boolean isOnCallback) {
+                                @Override
+                                public void onError(Throwable ex, boolean isOnCallback) {
 
-                                        }
+                                }
 
-                                        @Override
-                                        public void onCancelled(CancelledException cex) {
+                                @Override
+                                public void onCancelled(CancelledException cex) {
 
-                                        }
+                                }
 
-                                        @Override
-                                        public void onFinished() {
+                                @Override
+                                public void onFinished() {
 
-                                        }
-                                    });
-                        }
-                    });
-
-                    builder.setNegativeButton("取消",
-                            new android.content.DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
                                 }
                             });
 
-                    builder.create().show();
+
+//                    CustomDialog.Builder builder = new CustomDialog.Builder(ManageAddressActivity.this);
+//                    builder.setMessage("确定要删除吗？");
+//                    //builder.setTitle("还未登录");
+//                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                            //设置你的操作事项
+//                            //startActivity(new Intent(ManageAddressActivity.this, LoginRegisterActivity.class));
+//
+//
+//                            if (userInfo.getCode().toString().equals("0")) {
+//                                PATH = HttpPath.PATH + HttpPath.ADDRESS_DEL +
+//                                        "uid=" + uid + "&pwd=" + pwd + "&addresid=" + id;
+//                            } else {
+//                                PATH = HttpPath.PATH + HttpPath.ADDRESS_DEL +
+//                                        "logintype=" + uid + "&loginphone=" + pwd + "&addresid=" + id;
+//                            }
+//
+//
+//                            RequestParams params = new RequestParams(PATH);
+//                            x.http().post(params,
+//                                    new Callback.CommonCallback<String>() {
+//                                        @Override
+//                                        public void onSuccess(String result) {
+//                                            System.out.println("删除收货地址" + result);
+//
+//                                            msgBeanList.remove(position);
+//
+//                                            alAdapter.notifyDataSetChanged();
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onError(Throwable ex, boolean isOnCallback) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onCancelled(CancelledException cex) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onFinished() {
+//
+//                                        }
+//                                    });
+//                        }
+//                    });
+//
+//                    builder.setNegativeButton("取消",
+//                            new android.content.DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.dismiss();
+//                                }
+//                            });
+//
+//                    builder.create().show();
 
                 }
             });

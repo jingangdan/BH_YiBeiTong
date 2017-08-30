@@ -514,6 +514,14 @@ public class HttpPath {
     * */
     public static String ORDER_NEW_ORDERCONTROL = "action=newordercontrol&doname=reback&";
 
+    /*
+    * 退款详情
+    * 参数：
+    * 登录验证
+    * 订单id
+    * */
+    public static String ORDER_DRAWBACKLOG = "action=drawbacklog&";
+
     /**
      * 快递
      * shopid	是	int	店铺id

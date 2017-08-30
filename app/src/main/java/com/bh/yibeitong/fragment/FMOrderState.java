@@ -16,6 +16,8 @@ import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.refresh.MyListView;
 import com.bh.yibeitong.refresh.PullToRefreshView;
 import com.bh.yibeitong.ui.PayActivity;
+import com.bh.yibeitong.ui.ShopNewActivity;
+import com.bh.yibeitong.ui.order.OrderBackLogActivity;
 import com.bh.yibeitong.ui.order.OrderCommentActivity;
 import com.bh.yibeitong.ui.order.OrderControlActivity;
 import com.bh.yibeitong.ui.order.OrderDetaileActivity;
@@ -36,7 +38,8 @@ import java.util.Date;
  * 订单状态
  */
 
-public class FMOrderState extends Fragment implements PullToRefreshView.OnHeaderRefreshListener,
+public class FMOrderState extends Fragment implements
+        PullToRefreshView.OnHeaderRefreshListener,
         PullToRefreshView.OnFooterRefreshListener {
     private View view;
 
@@ -50,7 +53,7 @@ public class FMOrderState extends Fragment implements PullToRefreshView.OnHeader
 
     String orderid = OrderDetaileActivity.orderid;
     //String status = OrderDetaileActivity.status;
-    private String status = "", allcost = "", pstype = "";
+    private String status = "", allcost = "", pstype = "", is_reback = "";
 
     //继续支付
     private Button cPay;
@@ -78,11 +81,11 @@ public class FMOrderState extends Fragment implements PullToRefreshView.OnHeader
         pwd = userInfo.getPwd();
 
         if(userInfo.getCode().equals("0")){
-            getOrderDetaile(orderid, "");
-        }else{
-            getOrderDetaile(orderid, phone);
+            getOrderDetaile(uid, pwd, orderid);
+        } else if (userInfo.getCode().equals("1")) {
+            getOrderDetaile("phone", phone, orderid);
+        } else {
         }
-
 
         pullToRefreshView.setOnHeaderRefreshListener(this);
         pullToRefreshView.setOnFooterRefreshListener(this);
@@ -134,7 +137,13 @@ public class FMOrderState extends Fragment implements PullToRefreshView.OnHeader
 
         } else if (status.equals("1")) {
             //待发货（支付已完成）
-            cPay.setText("取消订单");
+            if (is_reback.equals("0")) {
+                cPay.setText("取消订单");
+            } else if (is_reback.equals("1")) {
+                cPay.setText("查看退款详情");
+            } else {
+            }
+
 
         } else if (status.equals("2")) {
             //待确认
@@ -174,23 +183,49 @@ public class FMOrderState extends Fragment implements PullToRefreshView.OnHeader
                 //待发货（支付已完成）
                 System.out.println("申请退款");
 
-                if (userInfo.getCode().equals("0")) {
-                    intent = new Intent(getActivity(), OrderControlActivity.class);
-                    intent.putExtra("uid", uid);
-                    intent.putExtra("pwd", pwd);
-                    intent.putExtra("orderid", orderids);
-                    intent.putExtra("allcost", allcost);
-                    intent.putExtra("pstype", pstype);
-                    startActivityForResult(intent, CodeUtils.REQUEST_CODER_ORDER_STATE);
+                if (is_reback.equals("0")) {
+                    if (userInfo.getCode().equals("0")) {
+                        intent = new Intent(getActivity(), OrderControlActivity.class);
+                        intent.putExtra("uid", uid);
+                        intent.putExtra("pwd", pwd);
+                        intent.putExtra("orderid", orderids);
+                        intent.putExtra("allcost", allcost);
+                        intent.putExtra("pstype", pstype);
+                        startActivityForResult(intent, CodeUtils.REQUEST_CODER_ORDER_STATE);
+                    } else {
+                        intent = new Intent(getActivity(), OrderControlActivity.class);
+                        intent.putExtra("uid", "phone");
+                        intent.putExtra("pwd", phone);
+                        intent.putExtra("orderid", orderids);
+                        intent.putExtra("allcost", allcost);
+                        intent.putExtra("pstype", pstype);
+                        startActivityForResult(intent, CodeUtils.REQUEST_CODER_ORDER_STATE);
+                    }
+                } else if (is_reback.equals("1")) {
+                    //查看退款详情
+
+                    if (userInfo.getCode().equals("0")) {
+                        intent = new Intent(getActivity(), OrderBackLogActivity.class);
+                        intent.putExtra("uid", uid);
+                        intent.putExtra("pwd", pwd);
+                        intent.putExtra("orderid", orderids);
+                        intent.putExtra("allcost", allcost);
+                        intent.putExtra("pstype", pstype);
+                        startActivityForResult(intent, CodeUtils.REQUEST_CODER_ORDER_STATE);
+                    } else {
+                        intent = new Intent(getActivity(), OrderBackLogActivity.class);
+                        intent.putExtra("uid", "phone");
+                        intent.putExtra("pwd", phone);
+                        intent.putExtra("orderid", orderids);
+                        intent.putExtra("allcost", allcost);
+                        intent.putExtra("pstype", pstype);
+                        startActivityForResult(intent, CodeUtils.REQUEST_CODER_ORDER_STATE);
+                    }
+
+
                 } else {
-                    intent = new Intent(getActivity(), OrderControlActivity.class);
-                    intent.putExtra("uid", "phone");
-                    intent.putExtra("pwd", phone);
-                    intent.putExtra("orderid", orderids);
-                    intent.putExtra("allcost", allcost);
-                    intent.putExtra("pstype", pstype);
-                    startActivityForResult(intent, CodeUtils.REQUEST_CODER_ORDER_STATE);
                 }
+
 
             } else if (status.equals("2")) {
                 //待确认
@@ -208,6 +243,17 @@ public class FMOrderState extends Fragment implements PullToRefreshView.OnHeader
                 //已完成（已确认收货） 订单取消
                 cPay.setText("再来一单");
 
+                intent = new Intent(getActivity(), ShopNewActivity.class);
+                intent.putExtra("shopid", FMHomePage.shopid);
+                intent.putExtra("shopname", FMHomePage.shopName);
+                intent.putExtra("startTime", FMHomePage.startTime);
+                intent.putExtra("mapphone", FMHomePage.mapphone);
+                intent.putExtra("address", FMHomePage.address);
+
+                intent.putExtra("lat", FMHomePage.latitude);
+                intent.putExtra("lng", FMHomePage.longtitude);
+                startActivity(intent);
+
 
             } else {
                 //错误
@@ -222,16 +268,19 @@ public class FMOrderState extends Fragment implements PullToRefreshView.OnHeader
      *
      * @param orderid
      */
-    public void getOrderDetaile(final String orderid, String phone) {
+    public void getOrderDetaile(String uid, String pwd, final String orderid) {
 
-        PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET + "orderid=" + orderid;
+//        PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET + "orderid=" + orderid;
 
-//        if(userInfo.getCode().equals("0")){
-//            PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET + "orderid=" + orderid;
-//        }else{
-//            PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET + "orderid=" + orderid+
-//            "&logintype=phone"+"&loginphone="+phone;
-//        }
+        if (userInfo.getCode().equals("0")) {
+            PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET +
+                    "uid=" + uid + "&pwd=" + pwd + "&orderid=" + orderid;
+        } else {
+            PATH = HttpPath.PATH + HttpPath.ORDER_NEWDET +
+                    "logintype=" + uid + "&loginphone=" + phone + "&orderid=" + orderid;
+        }
+
+        System.out.println("订单详情" + PATH);
 
         RequestParams params = new RequestParams(PATH);
         x.http().get(params,
@@ -246,6 +295,7 @@ public class FMOrderState extends Fragment implements PullToRefreshView.OnHeader
                         orderids = orderDetaile.getMsg().getId();
                         shopcost = orderDetaile.getMsg().getAllcost();
                         status = orderDetaile.getMsg().getStatus();
+                        is_reback = orderDetaile.getMsg().getIs_reback();
 
                         allcost = orderDetaile.getMsg().getAllcost();
                         pstype = orderDetaile.getMsg().getPstype();
@@ -303,9 +353,10 @@ public class FMOrderState extends Fragment implements PullToRefreshView.OnHeader
                         + Calendar.getInstance().getTime().toLocaleString());
                 pullToRefreshView.onHeaderRefreshComplete();
                 if(userInfo.getCode().equals("0")){
-                    getOrderDetaile(orderid, "");
-                }else{
-                    getOrderDetaile(orderid, phone);
+                    getOrderDetaile(orderid, pwd, orderid);
+                } else if (userInfo.getCode().equals("1")) {
+                    getOrderDetaile("phone", phone, orderid);
+                } else {
                 }
 
 
@@ -334,9 +385,10 @@ public class FMOrderState extends Fragment implements PullToRefreshView.OnHeader
                     || resultCode == CodeUtils.REQUEST_CODE_ORDER_CONTROL) {
 
                 if (userInfo.getCode().equals("0")) {
-                    getOrderDetaile(orderid, "");
+                    getOrderDetaile(uid, pwd, orderid);
+                } else if (userInfo.getCode().equals("1")) {
+                    getOrderDetaile("phone", phone, orderid);
                 } else {
-                    getOrderDetaile(orderid, phone);
                 }
 
                 setResult();

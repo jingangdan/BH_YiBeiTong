@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bh.yibeitong.R;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.ui.QuickLoginActivity;
 import com.bh.yibeitong.ui.loginregist.FindCodeActivity;
@@ -309,7 +309,7 @@ public class FMLongin extends Fragment implements View.OnClickListener, View.OnL
             public void onError(Throwable ex, boolean isOnCallback) {
                 System.out.println("onError");
 
-                Error error = GsonUtil.gsonIntance().gsonToBean(str_result, Error.class);
+                Errors error = GsonUtil.gsonIntance().gsonToBean(str_result, Errors.class);
                 Toast.makeText(getActivity(), error.getMsg().toString(), Toast.LENGTH_SHORT).show();
 
 //                Toast.makeText(getActivity(), "登录失败,请检查账户和密码是否有误", Toast.LENGTH_SHORT).show();

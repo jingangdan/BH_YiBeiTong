@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.base.BaseTextActivity;
 import com.bh.yibeitong.bean.Address;
-import com.bh.yibeitong.bean.Error;
+import com.bh.yibeitong.bean.Errors;
 import com.bh.yibeitong.bean.GoodsIndex;
 import com.bh.yibeitong.bean.OrderReturn;
 import com.bh.yibeitong.bean.PSCost;
@@ -1014,7 +1014,7 @@ public class OrderActivity extends BaseTextActivity {
                     public void onError(Throwable ex, boolean isOnCallback) {
                         System.out.println("错误");
 
-                        Error error = GsonUtil.gsonIntance().gsonToBean(str_result, Error.class);
+                        Errors error = GsonUtil.gsonIntance().gsonToBean(str_result, Errors.class);
                         toast(error.getMsg().toString());
 
                     }
