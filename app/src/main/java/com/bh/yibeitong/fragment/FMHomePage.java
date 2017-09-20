@@ -218,7 +218,6 @@ public class FMHomePage extends BaseFragment implements
 
             mLocationClient.stop();
 
-
         }
 
     };
@@ -255,7 +254,6 @@ public class FMHomePage extends BaseFragment implements
     /*记录购物车商品id字符串*/
     private List<ShopCart.MsgBean.ListBean> shopMsg = new ArrayList<>();
     private String str_id2 = "";//记录购物车商品数量
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -298,7 +296,6 @@ public class FMHomePage extends BaseFragment implements
 
         return view;
     }
-
 
     /*开始dialog*/
     private void startProgressDialog() {
@@ -1213,11 +1210,13 @@ public class FMHomePage extends BaseFragment implements
 
     @Override
     public void onReceiveLocation(BDLocation bdLocation) {
-        locationLatLng = new LatLng(bdLocation.getAltitude(), bdLocation.getLongitude());
+        //locationLatLng = new LatLng(bdLocation.getAltitude(), bdLocation.getLongitude());
+
+        locationLatLng = new LatLng(bdLocation.getLatitude(), bdLocation.getLongitude());
 
         latitude = String.valueOf(locationLatLng.latitude);
-        longtitude = String.valueOf(locationLatLng.longitude);
 
+        longtitude = String.valueOf(locationLatLng.longitude);
 
         // 创建GeoCoder实例对象
         geoCoder = GeoCoder.newInstance();
@@ -1636,7 +1635,6 @@ public class FMHomePage extends BaseFragment implements
                         System.out.println("获取店铺推荐区" + result);
                         Recommed recommed = GsonUtil.gsonIntance().gsonToBean(result, Recommed.class);
                         msgBeanCate = recommed.getMsg();
-
 
                         userInfo.saveClassify(new Gson().toJson(recommed.getMsg()));
 

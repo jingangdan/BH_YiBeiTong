@@ -67,7 +67,8 @@ public class LocationTestActivity extends Activity implements
         BaiduMap.OnMapStatusChangeListener,
         BDLocationListener,
         OnGetGeoCoderResultListener,
-        OnGetPoiSearchResultListener, OnGetSuggestionResultListener {
+        OnGetPoiSearchResultListener,
+        OnGetSuggestionResultListener {
     private ImageView iv_left;
     protected static final String TAG = "MoreAddressActivity";
     private ListView lv_near_address;
@@ -151,7 +152,6 @@ public class LocationTestActivity extends Activity implements
                                           int arg2, int arg3) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2,
                                       int arg3) {
@@ -332,7 +332,7 @@ public class LocationTestActivity extends Activity implements
         mLocClient = new LocationClient(this);
         //mLocClient = new LocationService(getApplication());
         // 注册定位监听
-        //mLocClient.registerLocationListener(this);
+        //mLocClient.registerLocationListener(this);吧
         //mLocClient.registerListener(this);
         mLocClient.registerLocationListener(this);
 
@@ -425,6 +425,7 @@ public class LocationTestActivity extends Activity implements
     public void onMapStatusChange(MapStatus mapStatus) {
 
     }
+
 
     @Override
     public void onMapStatusChangeFinish(MapStatus mapStatus) {

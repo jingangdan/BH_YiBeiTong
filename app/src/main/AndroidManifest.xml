@@ -71,21 +71,21 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote">`
+            android:process=":remote">
             <intent-filter>
                 <action android:name="com.baidu.location.service_v2.2"></action>
             </intent-filter>
         </service>
 
         <!--debug测试签名-->
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="la0Zv3yzToywvA7hneDCO3xDYmlfmkPd" />
+        <!--<meta-data-->
+            <!--android:name="com.baidu.lbsapi.API_KEY"-->
+            <!--android:value="la0Zv3yzToywvA7hneDCO3xDYmlfmkPd" />-->
 
         <!--打包签名-->
-        <!--<meta-data-->
-        <!--android:name="com.baidu.lbsapi.API_KEY"-->
-        <!--android:value="MgZvcqQvAzo64r3kmHAeMWBr6RyuOSC1" />-->
+        <meta-data
+        android:name="com.baidu.lbsapi.API_KEY"
+        android:value="MgZvcqQvAzo64r3kmHAeMWBr6RyuOSC1" />
 
 
         <!-- 【必须】 信鸽receiver广播接收 -->

@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.MapStatusUpdate;
@@ -32,7 +31,6 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.bh.yibeitong.LocationService;
 import com.bh.yibeitong.R;
-import com.bh.yibeitong.application.CatchExcep;
 import com.bh.yibeitong.bean.Address;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.refresh.MyListView;
@@ -412,6 +410,8 @@ public class LocationAddressActivity extends Activity implements
 
         latitude = String.valueOf(locationLatLng.latitude);
         longitude = String.valueOf(locationLatLng.longitude);
+
+        System.out.println("5555 = " + latitude);
 
 
         // 获取城市，待会用于POISearch
