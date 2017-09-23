@@ -663,14 +663,36 @@ public class FMShopCar extends BaseFragment implements PullToRefreshView.OnHeade
 
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CodeUtils.REQUEST_CODE_SHOPPING) {
             if (resultCode == CodeUtils.REQUEST_CODE_ORDER) {
 
-                System.out.println("bbbbbbbbbbbbbbbbbbbb");
-                listBean.clear();
+                jingang = userInfo.getLogin();
+
+                tv_all_pay.setText("0.00");
+
+                but_pay.setText("");
+
+                tv_shopcart_num.setText("0");
+
+                //店铺id
+                shopid = userInfo.getShopInfo();
+
+                //店铺起送价格
+
+                if(!"".equals(""+userInfo.getShopDet())){
+                    limitcost = Double.parseDouble(userInfo.getShopDet());
+                }else{
+
+                }
+
+                getShopCart(shopid);
+
+//                System.out.println("bbbbbbbbbbbbbbbbbbbb");
+                //listBean.clear();
                 shopCartAdapter.notifyDataSetChanged();
             }
         }

@@ -65,6 +65,7 @@ import com.bh.yibeitong.ui.CateFoodDetailsActivity;
 import com.bh.yibeitong.ui.CateInfoActivity;
 import com.bh.yibeitong.ui.LoginRegisterActivity;
 import com.bh.yibeitong.ui.ShopNewActivity;
+import com.bh.yibeitong.ui.ShopNewTwoActivity;
 import com.bh.yibeitong.ui.homepage.JoinActivity;
 import com.bh.yibeitong.ui.homepage.LocationAddressActivity;
 import com.bh.yibeitong.ui.homepage.SpecialActivity;
@@ -1699,7 +1700,8 @@ public class FMHomePage extends BaseFragment implements
                                     //toast("fenlei" + msgBeanList.get(i).getName());
 
                                     if (isNetworkUtils()) {
-                                        intent = new Intent(getActivity(), ShopNewActivity.class);
+                                        intent = new Intent(getActivity(), ShopNewTwoActivity.class);
+                                        //intent = new Intent(getActivity(), ShopNewActivity.class);
                                         intent.putExtra("shopid", shopid);
                                         intent.putExtra("shopname", shopName);
                                         intent.putExtra("startTime", startTime);
@@ -1841,7 +1843,8 @@ public class FMHomePage extends BaseFragment implements
             case R.id.rel_gointo_shop:
                 //进入店铺
                 if (isNetworkUtils()) {
-                    intent = new Intent(getActivity(), ShopNewActivity.class);
+                    intent = new Intent(getActivity(), ShopNewTwoActivity.class);
+                    //intent = new Intent(getActivity(), ShopNewActivity.class);
                     intent.putExtra("shopid", shopid);
                     intent.putExtra("shopname", shopName);
                     intent.putExtra("startTime", startTime);

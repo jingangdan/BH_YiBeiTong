@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 
 import com.bh.yibeitong.R;
 import com.bh.yibeitong.actitvity.ActivityCollector;
@@ -11,7 +12,6 @@ import com.bh.yibeitong.adapter.SimpleFragmentPagerAdapter;
 import com.bh.yibeitong.base.BaseTextActivity;
 import com.bh.yibeitong.fragment.FMOrderDetaile;
 import com.bh.yibeitong.fragment.FMOrderState;
-import com.bh.yibeitong.utils.CodeUtils;
 import com.bh.yibeitong.view.NoScrollViewPager;
 
 import java.util.ArrayList;
@@ -95,6 +95,16 @@ public class OrderDetaileActivity extends BaseTextActivity implements
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        toast("0000000");
+
+        intent = new Intent();
+        setResult(100, intent);
+        OrderDetaileActivity.this.finish();
+        return false;
     }
 
     /**

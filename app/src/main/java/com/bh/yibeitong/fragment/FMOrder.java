@@ -531,6 +531,10 @@ public class FMOrder extends BaseFragment implements
                 isLogin();
             } else if (resultCode == CodeUtils.REQUEST_CODE_ORDER_COMMENT) {
                 isLogin();
+            } else if (resultCode == 100) {
+                System.out.println("00000000");
+                isLogin();
+                //orderAdapter.notifyDataSetChanged();
             }
         }
 

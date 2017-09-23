@@ -94,6 +94,8 @@ public class PayActivity extends BaseTextActivity {
 
                         //startActivity(new Intent(PayActivity.this, OrderDetaileActivity.class));
 
+                        setResult();
+
                         PayActivity.this.finish();
 
                     } else {
@@ -590,7 +592,14 @@ public class PayActivity extends BaseTextActivity {
         intent = new Intent();
         setResult(CodeUtils.REUEST_CODE_PAY, intent);
 
+        setResult();
         PayActivity.this.finish();
+    }
+
+    /**/
+    public void setResult() {
+        intent = new Intent();
+        setResult(CodeUtils.REUEST_CODE_PAY, intent);
     }
 
 }

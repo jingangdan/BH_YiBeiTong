@@ -89,6 +89,18 @@ public class HttpPath {
     /*商店 商品详细信息*/
     public static String GETSHOPNEW = "action=getshopnew&";
 
+    /*获取店铺分类（新版进入商店）
+    * 参数：shopid
+    * */
+    public static String GET_CATELIST = "action=getcatelist&";
+
+    /**
+     * 分类下子分类和商品
+     * 参数：shopid
+     * typeid 上层分类id
+     */
+    public static String GET_GOODSBYCATE = "action=getgoodsbycate&";
+
     /**/
     public static String GOODSONE = "action=goodsone&";
 
@@ -594,6 +606,38 @@ public class HttpPath {
     * */
     public static String APP_MANAGESCOMMT = "action=managescommt&";
 
+    /*超市商家获取一级商品分类（商家端）
+    * 参数：登录验证
+    * uid
+    * pwd
+    * */
+    public static String APP_MARKERFOODSTYPE = "MarketFgoodstype";
+
+    /*超市商家获取二级商品分类
+    * 参数：
+    * uid
+    * pwd
+    * ftype 上级分类
+    * */
+    public static String APP_MARKERTGOODSTYPE = "MarketTgoodstype";
+
+    /*超市商家添加一级商品分类
+    * 参数：
+    *  id  修改时传的id
+    *  name 名称
+    *  orderid排序
+     *  */
+    public static String APP_ADDMARKERFGOODSTYPE = "addMarketFgoostype";
+
+    /*超市商家添加二级商品分类
+    * 参数：
+    *  id  修改时传的id
+    *  ftype 上级分类
+    *  name 名称
+    *  orderid排序
+    * */
+    public static String APP_ADDMARKERTGOODSTYPE = "addMarketTgoostype\n";
+
 
 
     /**
@@ -686,5 +730,7 @@ public class HttpPath {
      * 获取支付宝 信息
      * http://www.ybt9.com/index.php?ctrl=app&source=1&action=apppaydata&uid=13&pwd=aaaaaa&datatype=json&type=acount&cost=43&orderid=type=order&orderid=22670
      */
+
+
 
 }

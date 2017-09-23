@@ -541,9 +541,20 @@ public class OrderActivity extends BaseTextActivity {
         }
     }
 
+    public void setResult() {
+        intent = new Intent();
+        setResult(CodeUtils.REQUEST_CODE_ORDER, intent);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CodeUtils.REQUEST_CODE_NEWSHOP) {
+            if (resultCode == CodeUtils.REUEST_CODE_PAY) {
+                setResult();
+                OrderActivity.this.finish();
+            }
+        }
         if (requestCode == 1 && resultCode == 2) {
             Bundle bundle = data.getExtras();
 
@@ -983,7 +994,7 @@ public class OrderActivity extends BaseTextActivity {
 
                             if (payline.equals("0")) {
                                 //货到付款 跳到订单详情
-                                OrderActivity.this.finish();
+                                //OrderActivity.this.finish();
                             } else if (payline.equals("1")) {
                                 //跳到支付界面
                                 Intent intent = new Intent(OrderActivity.this, PayActivity.class);
@@ -1000,8 +1011,8 @@ public class OrderActivity extends BaseTextActivity {
                                 intent.putExtra("orderid", orderid);
                                 intent.putExtra("type", "order");
 
-                                startActivity(intent);
-                                OrderActivity.this.finish();
+                                startActivityForResult(intent, CodeUtils.REQUEST_CODE_ORDER);
+                                //OrderActivity.this.finish();
 
                             }
                             intent = new Intent();
@@ -1013,9 +1024,11 @@ public class OrderActivity extends BaseTextActivity {
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
                         System.out.println("错误");
+                        System.out.println("5555" + str_result);
+                        toast("下单失败，请重试！");
 
-                        Errors error = GsonUtil.gsonIntance().gsonToBean(str_result, Errors.class);
-                        toast(error.getMsg().toString());
+//                        Errors error = GsonUtil.gsonIntance().gsonToBean(str_result, Errors.class);
+//                        toast(error.getMsg().toString());
 
                     }
 
