@@ -22,6 +22,7 @@ import com.bh.yibeitong.base.BaseActivity;
 import com.bh.yibeitong.bean.Register;
 import com.bh.yibeitong.bean.seller.NewShoptj;
 import com.bh.yibeitong.refresh.MyGridView;
+import com.bh.yibeitong.refresh.PullToRefreshView;
 import com.bh.yibeitong.seller.ui.SAppShopActivity;
 import com.bh.yibeitong.seller.ui.SManageCommtActivity;
 import com.bh.yibeitong.seller.ui.SOrderManageActivity;
@@ -42,6 +43,7 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +52,11 @@ import java.util.Map;
  * Created by jingang on 2017/3/14.
  * 商家端界面
  */
-public class SellerActivity extends BaseActivity implements View.OnClickListener {
+public class SellerActivity extends BaseActivity implements
+        View.OnClickListener,
+        PullToRefreshView.OnHeaderRefreshListener {
+
+    private SellerActivity TAG = SellerActivity.this;
 
     /*侧边栏*/
     private SlideMenuView slideMenuView;
@@ -112,6 +118,9 @@ public class SellerActivity extends BaseActivity implements View.OnClickListener
 
     /*是否绑定账号注册测成功*/
     //private boolean isRegisterPush = false;
+
+    private PullToRefreshView mPullToRefreshView;
+    private ImageView iv_refresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -305,6 +314,12 @@ public class SellerActivity extends BaseActivity implements View.OnClickListener
         tv_turnover = (TextView) findViewById(R.id.tv_seller_turnover);
         tv_order_num = (TextView) findViewById(R.id.tv_seller_order_num);
 
+        mPullToRefreshView = (PullToRefreshView) findViewById(R.id.puToRefreshView_seller);
+        mPullToRefreshView.setOnHeaderRefreshListener(this);
+
+        iv_refresh = (ImageView) findViewById(R.id.iv_seller_refresh);
+        iv_refresh.setOnClickListener(this);
+
 
          /*获取订单数和营业额*/
 //        SellerLogin sellerLogin = GsonUtil.gsonIntance().gsonToBean(userInfo.getUserInfo(), SellerLogin.class);
@@ -324,6 +339,10 @@ public class SellerActivity extends BaseActivity implements View.OnClickListener
 
                 } else if (i == 1) {
                     //商店管理
+                    intent = new Intent(TAG, SAppGoodsActivity.class);
+                    intent.putExtra("uid", uid);
+                    intent.putExtra("pwd", pwd);
+                    startActivity(intent);
 
                 } else if (i == 2) {
                     //店铺管理
@@ -371,6 +390,13 @@ public class SellerActivity extends BaseActivity implements View.OnClickListener
                     slideMenuView.closeMenu();
                 }
                 break;
+
+            case R.id.iv_seller_refresh:
+                //刷新
+                newShoptj(uid, pwd);
+
+                break;
+
             case R.id.tv_sm_home_page:
                 //首页
                 slideMenuView.closeMenu();
@@ -451,6 +477,7 @@ public class SellerActivity extends BaseActivity implements View.OnClickListener
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
+                        toast("");
                         System.out.println("商家端订单数和营业额" + result);
 
                         NewShoptj newShoptj = GsonUtil.gsonIntance().gsonToBean(result, NewShoptj.class);
@@ -482,6 +509,23 @@ public class SellerActivity extends BaseActivity implements View.OnClickListener
                     }
                 });
 
+    }
+
+    @Override
+    public void onHeaderRefresh(PullToRefreshView view) {
+        mPullToRefreshView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //刷新数据
+                mPullToRefreshView.onHeaderRefreshComplete("更新于:"
+                        + Calendar.getInstance().getTime().toLocaleString());
+                mPullToRefreshView.onHeaderRefreshComplete();
+
+                toast("刷新数据");
+
+            }
+
+        }, 1000);
     }
 
     /**

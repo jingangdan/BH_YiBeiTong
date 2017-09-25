@@ -480,6 +480,9 @@
         <!--评价留言（商家端）-->
         <activity android:name=".seller.ui.SManageCommtActivity"/>
 
+        <!--商店管理（商家端）-->
+        <activity android:name=".seller.activity.SAppGoodsActivity"></activity>
+
         <!--开启服务下载新版本-->
         <!--<service android:name="com.bh.yibeitong.updateversion.UpdateVersionService"></service>-->
 
