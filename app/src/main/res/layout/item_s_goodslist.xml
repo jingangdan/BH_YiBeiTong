@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:gravity="center"
+    android:background="#fff">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/item_iv_s_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_adai"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/item_tv_s_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="商品名称"
+            style="@style/setting_text"
+            android:textColor="#000"
+            android:ellipsize="end"
+            android:singleLine="true"/>
+
+        <TextView
+            android:id="@+id/item_tv_s_count"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="库存"
+            android:textSize="12dp"/>
+
+        <TextView
+            style="@style/text_cost"
+            android:textSize="14dp"
+            android:id="@+id/item_tv_s_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="价格"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/item_but_s_is_live"
+            android:layout_width="45dp"
+            android:background="@null"
+            android:drawableTop="@mipmap/home_addbutton"
+            android:layout_height="wrap_content"
+            android:text="下架"/>
+
+        <Button
+            android:id="@+id/item_but_s_update"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableTop="@mipmap/home_addbutton"
+            android:text="修改"/>
+
+        <Button
+            android:id="@+id/item_but_s_delete"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawableTop="@mipmap/home_addbutton"
+            android:text="删除"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>

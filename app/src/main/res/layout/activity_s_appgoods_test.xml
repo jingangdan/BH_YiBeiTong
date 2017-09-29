@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_base"></include>
+
+    <com.bh.yibeitong.refresh.PullToRefreshView
+        android:id="@+id/pullToRefreshView_appgoods"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.bh.yibeitong.view.MyScrollView
+            android:id="@+id/msv_appgoods"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.bh.yibeitong.refresh.MyGridView
+                    android:id="@+id/gv_marketfgoods"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:listSelector="@android:color/transparent"
+                    android:numColumns="4">
+
+                </com.bh.yibeitong.refresh.MyGridView>
+
+                <com.bh.yibeitong.refresh.MyGridView
+                    android:id="@+id/gv_markettgoods"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:listSelector="@android:color/transparent"
+                    android:numColumns="4">
+
+                </com.bh.yibeitong.refresh.MyGridView>
+
+                <com.bh.yibeitong.refresh.MyGridView
+                    android:id="@+id/gv_goodslist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:listSelector="@android:color/transparent"
+                    android:numColumns="2">
+
+                </com.bh.yibeitong.refresh.MyGridView>
+
+            </LinearLayout>
+
+        </com.bh.yibeitong.view.MyScrollView>
+
+    </com.bh.yibeitong.refresh.PullToRefreshView>
+
+
+</LinearLayout>

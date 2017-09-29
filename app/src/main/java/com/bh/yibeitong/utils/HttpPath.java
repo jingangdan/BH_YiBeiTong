@@ -611,7 +611,7 @@ public class HttpPath {
     * uid
     * pwd
     * */
-    public static String APP_MARKERFOODSTYPE = "MarketFgoodstype";
+    public static String APP_MARKERFGOODSTYPE = "action=MarketFgoodstype&";
 
     /*超市商家获取二级商品分类
     * 参数：
@@ -619,7 +619,16 @@ public class HttpPath {
     * pwd
     * ftype 上级分类
     * */
-    public static String APP_MARKERTGOODSTYPE = "MarketTgoodstype";
+    public static String APP_MARKERTGOODSTYPE = "action=MarketTgoodstype&";
+
+    /*
+    * 商家获取商品（商家端）
+    * 参数：
+    * typeid 分类id
+    * page:分页
+    * pagesize：每页个数
+    * */
+    public static String APP_GOODSLIST= "action=goodslist&";
 
     /*超市商家添加一级商品分类
     * 参数：
@@ -627,7 +636,7 @@ public class HttpPath {
     *  name 名称
     *  orderid排序
      *  */
-    public static String APP_ADDMARKERFGOODSTYPE = "addMarketFgoostype";
+    public static String APP_ADDMARKERFGOODSTYPE = "action=addMarketFgoostype&";
 
     /*超市商家添加二级商品分类
     * 参数：
@@ -636,7 +645,57 @@ public class HttpPath {
     *  name 名称
     *  orderid排序
     * */
-    public static String APP_ADDMARKERTGOODSTYPE = "addMarketTgoostype\n";
+    public static String APP_ADDMARKERTGOODSTYPE = "action=addMarketTgoostype&";
+
+    /*
+    * 超市商家添加商品
+    * 参数
+    * uid
+    * pwd
+    * id
+    * name
+    * cost
+    * bagcost
+    * count
+    * typeid
+     * */
+    public static String APP_ADDGOODS = "action=addgoos&have_det=0&";
+
+    /*
+    * 超市商家删除一级商品分类
+    * 参数：
+    * uid
+    * pwd
+    * id*/
+    public static String APP_DELMARKERFGOODSTYPE = "action=delMarketFgoostype&";
+
+    /*
+     * 超市商家删除二级商品分类
+     * 参数：
+     * uid
+     * pwd
+     * id
+     * ftype*/
+    public static String APP_DELMARKERTGOODSTYPE = "action=delMarketTgoostype&";
+
+    /*
+    * 商家删除商品
+    * 参数：
+    * uid
+    * pwd
+    * id
+    * */
+    public static String APP_DELGOODS= "action=delgoos&";
+
+    /*
+    * 商品上、下架（商家端）
+    * 参数：
+    * uid
+    * pwd
+    * goodsid
+    * is_live 0/1
+    * */
+    public static  String APP_EDITGOODSLIVE = "action=editgoodslive&";
 
 
 

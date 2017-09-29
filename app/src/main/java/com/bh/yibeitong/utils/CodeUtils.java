@@ -73,5 +73,30 @@ public class CodeUtils {
     public static final int REQUEST_CODE_ORDER_CONTROL = 0x22;
 
 
+    /*
+    * 商家端 从0x50开始吧
+    * */
+
+    /*首页*/
+    public static final int CODE_SELLER = 0x50;
+
+    /*订单管理*/
+    public static final int CODE_SELLER_ORDER = 0x51;
+
+    /*商店管理（商品管理）*/
+    public static final int CODE_SELLER_GOODS_ONE = 0x52;
+
+    /*添加（修改）一级分类*/
+    public static final int CODE_SELLER_CLASSIFY_ADD = 0x53;
+
+    /*商店管理（商品二级分类管理）*/
+    public static final int CODE_SELLER_GOODS_TWO = 0x54;
+
+    /*商店管理（商品一级分类管理）*/
+    public static final int CODE_SELLER_GOODS = 0x55;
+
+    /*添加（修改）商品*/
+    public static final int CODE_SELLER_GOODS_ADD = 0x56;
+
 
 }

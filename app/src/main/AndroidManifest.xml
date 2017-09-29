@@ -78,14 +78,14 @@
         </service>
 
         <!--debug测试签名-->
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="la0Zv3yzToywvA7hneDCO3xDYmlfmkPd" />
+        <!--<meta-data-->
+            <!--android:name="com.baidu.lbsapi.API_KEY"-->
+            <!--android:value="la0Zv3yzToywvA7hneDCO3xDYmlfmkPd" />-->
 
         <!--打包签名-->
-        <!--<meta-data-->
-        <!--android:name="com.baidu.lbsapi.API_KEY"-->
-        <!--android:value="MgZvcqQvAzo64r3kmHAeMWBr6RyuOSC1" />-->
+        <meta-data
+        android:name="com.baidu.lbsapi.API_KEY"
+        android:value="MgZvcqQvAzo64r3kmHAeMWBr6RyuOSC1" />
 
         <!-- 【必须】 信鸽receiver广播接收 -->
         <receiver
@@ -480,8 +480,23 @@
         <!--评价留言（商家端）-->
         <activity android:name=".seller.ui.SManageCommtActivity"/>
 
-        <!--商店管理（商家端）-->
-        <activity android:name=".seller.activity.SAppGoodsActivity"></activity>
+        <!--商店管理（商家端） 测试-->
+        <activity android:name=".seller.activity.SAppGoodsTestActivity"></activity>
+
+        <!--商店管理（商家端）（一级分类管理）-->
+        <activity android:name=".seller.ui.sappgoods.SAppClassifyOneActivity" />
+
+        <!--商店管理（商家端）（二级分类管理）-->
+        <activity android:name=".seller.ui.sappgoods.SAppClassifyTwoActivity"/>
+
+        <!--商家获取商品（商家端）-->
+        <activity android:name=".seller.ui.sappgoods.SAppGoodsActivity"/>
+
+        <!--添加分类（商家端）-->
+        <activity android:name=".seller.ui.sappgoods.SAddClassiflyActivity" />
+
+        <!--添加商品（商家端）-->
+        <activity android:name=".seller.ui.sappgoods.SAddGoodsActivity"/>
 
         <!--开启服务下载新版本-->
         <!--<service android:name="com.bh.yibeitong.updateversion.UpdateVersionService"></service>-->

@@ -27,6 +27,7 @@ import com.bh.yibeitong.seller.ui.SAppShopActivity;
 import com.bh.yibeitong.seller.ui.SManageCommtActivity;
 import com.bh.yibeitong.seller.ui.SOrderManageActivity;
 import com.bh.yibeitong.seller.ui.SShopcostlogActivity;
+import com.bh.yibeitong.seller.ui.sappgoods.SAppClassifyOneActivity;
 import com.bh.yibeitong.utils.GsonUtil;
 import com.bh.yibeitong.utils.HttpPath;
 import com.bh.yibeitong.view.SlideMenuView;
@@ -339,7 +340,7 @@ public class SellerActivity extends BaseActivity implements
 
                 } else if (i == 1) {
                     //商店管理
-                    intent = new Intent(TAG, SAppGoodsActivity.class);
+                    intent = new Intent(TAG, SAppClassifyOneActivity.class);
                     intent.putExtra("uid", uid);
                     intent.putExtra("pwd", pwd);
                     startActivity(intent);
@@ -477,7 +478,6 @@ public class SellerActivity extends BaseActivity implements
                 new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
-                        toast("");
                         System.out.println("商家端订单数和营业额" + result);
 
                         NewShoptj newShoptj = GsonUtil.gsonIntance().gsonToBean(result, NewShoptj.class);
